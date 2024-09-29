@@ -168,10 +168,6 @@ FodyWeavers.xsd
 **/*.exe
 **/*.pdb
 
-# Ignore compiled views
-**/*.cshtml
-**/*.html
-
 # Ignore log files
 *.log
 *.vspscc
