@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Data\" />
-    <Folder Include="Pages\Admin\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\admin\" />
@@ -27,6 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
