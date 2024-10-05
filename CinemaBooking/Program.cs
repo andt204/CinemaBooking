@@ -1,8 +1,12 @@
+using CinemaBooking.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace CinemaBooking {
     public class Program {
         public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddDbContext<CinemaBookingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
             // Add services to the container.
             builder.Services.AddRazorPages();
 
