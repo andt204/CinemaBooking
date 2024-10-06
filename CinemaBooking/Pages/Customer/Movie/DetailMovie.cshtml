@@ -1,0 +1,34 @@
+﻿@page
+@model CinemaBooking.Pages.Customer.Movie.DetailMovieModel
+@{
+}
+@{
+    Layout = "~/Pages/Shared/_UserLayout.cshtml";
+}
+<main class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/api/placeholder/400/600" alt="Movie Poster" class="img-fluid movie-poster">
+        </div>
+        <div class="col-md-8">
+            <h1 class="mb-3">Movie Title</h1>
+            <p class="lead">A brief tagline or description of the movie.</p>
+            <div class="mb-3">
+                <span class="badge bg-primary me-2">Genre 1</span>
+                <span class="badge bg-primary me-2">Genre 2</span>
+                <span class="badge bg-primary">Genre 3</span>
+            </div>
+            <p><strong>Director:</strong> Director Name</p>
+            <p><strong>Cast:</strong> Actor 1, Actor 2, Actor 3</p>
+            <p><strong>Release Date:</strong> MM/DD/YYYY</p>
+            <p><strong>Duration:</strong> 2h 30min</p>
+            <p><strong>Rating:</strong> PG-13</p>
+            <div class="mb-3">
+                <button class="btn btn-primary me-2">Book Tickets</button>
+                <button class="btn btn-outline-primary">Add to Wishlist</button>
+            </div>
+        </div>
+    </div>
+
+
+</main>
