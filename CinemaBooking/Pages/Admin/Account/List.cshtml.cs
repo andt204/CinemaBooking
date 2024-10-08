@@ -1,23 +1,22 @@
-﻿using CinemaBooking.Data;
+﻿using CinemaBooking.Repositories;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Admin.Account;
 
-public class List : PageModel
+public class List : PageModel 
 {
-   private readonly CinemaBookingContext _context;
-
-   public List(CinemaBookingContext context)
+   private readonly IAccountRepository _accountRepository;
+   public List(IAccountRepository accountRepository)
    {
-       _context = context;
+     _accountRepository = accountRepository;
    }
-   public List<Data.Account> Accounts { get; set; }
+   public IEnumerable<Data.Account> Accounts { get; set; }
    
-    //public async Task OnGetAsync()
-    //{
-    //    Accounts = await _context.Accounts.ToListAsync();
-    //}
+   
+    // public async Task OnGetAsync()
+    // {
+    //     Accounts = await _accountRepository.GetListAsync();
+    // }
     public  void OnGet()
     {
         //Accounts =  _context.Accounts.ToList();

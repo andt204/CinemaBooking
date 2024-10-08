@@ -1,9 +1,9 @@
 ﻿@page
-@model CinemaBooking.Pages.Admin.Account.Add
+@model CinemaBooking.Pages.Admin.Account.Edit
 
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Add Account";
+    ViewData["Title"] = "Edit Account";
 }
 
 <!DOCTYPE html>
@@ -12,8 +12,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
-    <title>Create New Movie</title>
+    
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
@@ -27,10 +26,11 @@
     <div class="content">
         <div class="row">
             <div class="col-sm-4 col-3">
-                <h4 class="page-title">Create New Account</h4>
+                <h4 class="page-title">Edit Account</h4>
             </div>
         </div>
         <form method="post" enctype="multipart/form-data">
+            <input asp-for="Account.AccountId" type="hidden" />
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -115,7 +115,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Create User</button>
+            <button type="submit" class="btn btn-primary">Edit User</button>
         </form>
 
     </div>
