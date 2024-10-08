@@ -1,0 +1,102 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Room.CreateRoomModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Movie List";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Create New Room</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container mt-5">
+                    <!-- Room Name -->
+                    <div class="form-group">
+                        <label for="roomName">Room Name</label>
+                        <input type="text" class="form-control" id="roomName" name="roomName" placeholder="Enter room name" required>
+                    </div>
+
+                    <!-- Room Type -->
+                    <div class="form-group">
+                        <label for="roomType">Room Type</label>
+                        <select class="form-control" id="roomType" name="roomType" required>
+                            <option value="">Select Room Type</option>
+                            <option value="1">VIP</option>
+                            <option value="2">Standard</option>
+                            <option value="3">IMAX</option>
+                            <option value="4">4DX</option>
+                            <!-- Thêm các loại phòng khác nếu cần -->
+                        </select>
+                    </div>
+
+                    <!-- Number of Rows -->
+                    <div class="form-group">
+                        <label for="numRows">Number of Rows</label>
+                        <input type="number" class="form-control" id="numRows" name="numRows" placeholder="Enter number of rows" required>
+                    </div>
+
+                    <!-- Number of Columns -->
+                    <div class="form-group">
+                        <label for="numColumns">Number of Columns</label>
+                        <input type="number" class="form-control" id="numColumns" name="numColumns" placeholder="Enter number of columns" required>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="Available">Available</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </div>
+
+                    <!-- Seat Type (for all seats in the room) -->
+                    <div class="form-group">
+                        <label for="seatType">Seat Type</label>
+                        <select class="form-control" id="seatType" name="seatType" required>
+                            <option value="">Select Seat Type</option>
+                            <option value="1">Standard</option>
+                            <option value="2">VIP</option>
+                            <!-- Thêm các loại ghế khác nếu cần -->
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Create Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

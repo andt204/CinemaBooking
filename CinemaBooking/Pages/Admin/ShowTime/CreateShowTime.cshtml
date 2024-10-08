@@ -1,0 +1,107 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.ShowTime.CreateShowTimeModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Movie List";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Create Showtime</h4>
+                </div>
+                <div class="col-sm-8 col-9 text-right m-b-20"></div>
+                <a href="/Admin/ShowTime/ShowTimeList" class="btn btn-primary float-right btn-rounded"><i class="fa fa-list"></i> Showtime List</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <form action="/create-showtime" method="POST">
+                    <!-- Movie Selection -->
+                    <div class="form-group">
+                        <label for="movie">Movie</label>
+                        <select class="form-control" id="movie" name="movieId" required>
+                            <option value="">Select Movie</option>
+                            <option value="1">Inception</option>
+                            <option value="2">Interstellar</option>
+                            <option value="3">The Dark Knight</option>
+                            <!-- Thêm các phim khác từ DB -->
+                        </select>
+                    </div>
+
+                    <!-- Room Selection -->
+                    <div class="form-group">
+                        <label for="room">Room</label>
+                        <select class="form-control" id="room" name="roomId" required>
+                            <option value="">Select Room</option>
+                            <option value="1">Room A</option>
+                            <option value="2">Room B</option>
+                            <option value="3">Room C</option>
+                            <!-- Thêm các phòng chiếu khác từ DB -->
+                        </select>
+                    </div>
+
+                    <!-- Show Date -->
+                    <div class="form-group">
+                        <label for="showDate">Show Date</label>
+                        <input type="date" class="form-control" id="showDate" name="showDate" required>
+                    </div>
+
+                    <!-- Start Time -->
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <input type="time" class="form-control" id="startTime" name="startTime" required>
+                    </div>
+
+                    <!-- End Time -->
+                    <div class="form-group">
+                        <label for="endTime">End Time</label>
+                        <input type="time" class="form-control" id="endTime" name="endTime" required>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Create Showtime</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

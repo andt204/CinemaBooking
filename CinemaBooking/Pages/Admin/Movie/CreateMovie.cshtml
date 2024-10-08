@@ -1,0 +1,137 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Movie.CreateMovieModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Movie List";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <title>Create New Movie</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-sm-4 col-3">
+                        <h4 class="page-title">Create New Movie</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="title">Movie Title</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                   placeholder="Enter movie title" required>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <input type="text" class="form-control" id="category" name="category"
+                                   placeholder="Enter category" required>
+                        </div>
+
+                        <!-- Length -->
+                        <div class="form-group">
+                            <label for="length">Length (minutes)</label>
+                            <input type="number" class="form-control" id="length" name="length"
+                                   placeholder="Enter movie length" required>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"
+                                      placeholder="Enter movie description" required></textarea>
+                        </div>
+
+                        <!-- Age Limit -->
+                        <div class="form-group">
+                            <label for="ageLimit">Age Limit</label>
+                            <input type="number" class="form-control" id="ageLimit" name="ageLimit"
+                                   placeholder="Enter age limit" required>
+                        </div>
+
+                        <!-- Warning Text -->
+                        <div class="form-group">
+                            <label for="warningText">Warning Text</label>
+                            <input type="text" class="form-control" id="warningText" name="warningText"
+                                   placeholder="Enter warning text (if any)">
+                        </div>
+
+                        <!-- Publish Time -->
+                        <div class="form-group">
+                            <label for="publishTime">Publish Time</label>
+                            <input type="datetime-local" class="form-control" id="publishTime" name="publishTime"
+                                   required>
+                        </div>
+
+                        <!-- Origin -->
+                        <div class="form-group">
+                            <label for="origin">Origin</label>
+                            <input type="text" class="form-control" id="origin" name="origin"
+                                   placeholder="Enter movie origin" required>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="form-group">
+                            <label for="image">Movie Poster</label>
+                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*"
+                                   required>
+                        </div>
+
+                        <!-- Image Background -->
+                        <div class="form-group">
+                            <label for="imageBackground">Background Image</label>
+                            <input type="file" class="form-control-file" id="imageBackground" name="imageBackground"
+                                   accept="image/*">
+                        </div>
+
+                        <!-- Status -->
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="Released">Released</option>
+                                <option value="Unreleased">Unreleased</option>
+                            </select>
+                        </div>
+
+                        <!-- Director ID -->
+                        <div class="form-group">
+                            <label for="directorId">Director ID</label>
+                            <input type="number" class="form-control" id="directorId" name="directorId"
+                                   placeholder="Enter director ID" required>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Create Movie</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

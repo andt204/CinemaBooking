@@ -1,0 +1,271 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Movie.ListMovieModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Movie List";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body> 
+    <div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-4 col-3">
+                <h4 class="page-title">Employee</h4>
+            </div>
+            <div class="col-sm-8 col-9 text-right m-b-20">
+                <a href="/Admin/Movie/CreateMovie" class="btn btn-primary float-right btn-rounded">
+                    <i class="fa fa-plus"></i> Add Movie
+                </a>
+            </div>
+        </div>
+        <div class="row filter-row">
+            <!-- Movie ID Filter -->
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <label class="focus-label">Movie ID</label>
+                    <input type="text" class="form-control floating" name="movieId">
+                </div>
+            </div>
+            <!-- Movie Title Filter -->
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <label class="focus-label">Movie Title</label>
+                    <input type="text" class="form-control floating" name="title">
+                </div>
+            </div>
+            <!-- Category Filter -->
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus">
+                    <label class="focus-label">Category</label>
+                    <select class="select floating" name="category">
+                        <option value="">Select Category</option>
+                        <option>Action</option>
+                        <option>Comedy</option>
+                        <option>Drama</option>
+                        <option>Horror</option>
+                        <option>Sci-Fi</option>
+                        <!-- Thêm các thể loại khác nếu cần -->
+                    </select>
+                </div>
+            </div>
+            <!-- Status Filter -->
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus">
+                    <label class="focus-label">Status</label>
+                    <select class="select floating" name="status">
+                        <option value="">Select Status</option>
+                        <option>Released</option>
+                        <option>Unreleased</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Search Button -->
+            <div class="col-sm-6 col-md-3">
+                <button type="submit" class="btn btn-success btn-block">Search</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table">
+                        <thead>
+                            <tr>
+                                <th>Movie ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Length</th>
+                                <th>Description</th>
+                                <th>Age Limit</th>
+                                <th>Warning</th>
+                                <th>Publish Time</th>
+                                <th>Origin</th>
+                                <th>Status</th>
+                                <th>Director ID</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Inception</td>
+                                <td>Sci-Fi</td>
+                                <td>148</td>
+                                <td>A mind-bending thriller...</td>
+                                <td>13+</td>
+                                <td>Violence</td>
+                                <td>2010-07-16</td>
+                                <td>USA</td>
+                                <td>Released</td>
+                                <td>123</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="/Admin/Movie/UpdateMovie">
+                                                <i class="fa fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Inception</td>
+                                <td>Sci-Fi</td>
+                                <td>148</td>
+                                <td>A mind-bending thriller...</td>
+                                <td>13+</td>
+                                <td>Violence</td>
+                                <td>2010-07-16</td>
+                                <td>USA</td>
+                                <td>Released</td>
+                                <td>123</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="/Admin/Movie/UpdateMovie">
+                                                <i class="fa fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Inception</td>
+                                <td>Sci-Fi</td>
+                                <td>148</td>
+                                <td>A mind-bending thriller...</td>
+                                <td>13+</td>
+                                <td>Violence</td>
+                                <td>2010-07-16</td>
+                                <td>USA</td>
+                                <td>Released</td>
+                                <td>123</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="/Admin/Movie/UpdateMovie">
+                                                <i class="fa fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Inception</td>
+                                <td>Sci-Fi</td>
+                                <td>148</td>
+                                <td>A mind-bending thriller...</td>
+                                <td>13+</td>
+                                <td>Violence</td>
+                                <td>2010-07-16</td>
+                                <td>USA</td>
+                                <td>Released</td>
+                                <td>123</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="/Admin/Movie/UpdateMovie">
+                                                <i class="fa fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Inception</td>
+                                <td>Sci-Fi</td>
+                                <td>148</td>
+                                <td>A mind-bending thriller...</td>
+                                <td>13+</td>
+                                <td>Violence</td>
+                                <td>2010-07-16</td>
+                                <td>USA</td>
+                                <td>Released</td>
+                                <td>123</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                           aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="/Admin/Movie/UpdateMovie">
+                                                <i class="fa fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="delete_movie" class="modal fade delete-modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img src="assets/img/sent.png" alt="" width="50" height="46">
+                    <h3>Are you sure want to delete this Movie?</h3>
+                    <div class="m-t-20">
+                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

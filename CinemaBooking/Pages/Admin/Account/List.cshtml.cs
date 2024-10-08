@@ -14,8 +14,12 @@ public class List : PageModel
    }
    public List<Data.Account> Accounts { get; set; }
    
-    public async Task OnGetAsync()
-        {
-            Accounts = await _context.Accounts.ToListAsync();
-        }
+    //public async Task OnGetAsync()
+    //{
+    //    Accounts = await _context.Accounts.ToListAsync();
+    //}
+    public  void OnGet()
+    {
+        //Accounts =  _context.Accounts.ToList();
+    }
 }
