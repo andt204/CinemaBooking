@@ -1,0 +1,63 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Ticket.UpdateTicketModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Update Ticket";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <h4 class="page-title">Update Ticket</h4>
+            <form method="post">
+                <input type="hidden" name="ticketId" value="1">
+                <div class="form-group">
+                    <label>Seat ID</label>
+                    <input type="number" class="form-control" name="seatId" value="10" required>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <select class="form-control" name="priceId" required>
+                        <option value="1">$10.00</option>
+                        <option value="2" selected>$12.00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" name="status" required>
+                        <option value="Available" selected>Available</option>
+                        <option value="Sold Out">Sold Out</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Booking Time</label>
+                    <select class="form-control" name="bookingTime" required>
+                        <option value="">Select Booking Time</option>
+                        <option value="2024-10-09T12:30">2024-10-09 12:30</option>
+                        <option value="2024-10-09T15:00">2024-10-09 15:00</option>
+                        <option value="2024-10-09T18:00">2024-10-09 18:00</option>
+                        <option value="2024-10-10T12:30">2024-10-10 12:30</option>
+                        <option value="2024-10-10T15:00">2024-10-10 15:00</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Ticket</button>
+            </form>
+        </div>
+    </div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>
