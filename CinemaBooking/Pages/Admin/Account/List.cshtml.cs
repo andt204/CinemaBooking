@@ -13,12 +13,12 @@ public class List : PageModel
    public IEnumerable<Data.Account> Accounts { get; set; }
    
    
-    // public async Task OnGetAsync()
-    // {
-    //     Accounts = await _accountRepository.GetListAsync();
-    // }
-    public  void OnGet()
+    public async Task OnGetAsync()
     {
-        //Accounts =  _context.Accounts.ToList();
+        Accounts = await _accountRepository.GetListAsync();
     }
+    // public  void OnGet()
+    // {
+    //     //Accounts =  _context.Accounts.ToList();
+    // }
 }
