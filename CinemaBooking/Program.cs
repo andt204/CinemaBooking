@@ -1,5 +1,6 @@
 using CinemaBooking.Data;
 using CinemaBooking.Repositories;
+using CinemaBooking.Repositories.Role;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking {
@@ -8,6 +9,8 @@ namespace CinemaBooking {
             var builder = WebApplication.CreateBuilder(args);
             
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+          
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));

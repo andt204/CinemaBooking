@@ -2,18 +2,123 @@
 @model CinemaBooking.Pages.Admin.Post.List
 
 @{
-    Layout = null;
+Layout = "/Pages/Shared/_AdminLayout.cshtml";
+ViewData["Title"] = "Post List";
 }
 
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Employee</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+    <title>vcl</title>
 </head>
 <body>
-<div>
-    
+
+<div class="main-wrapper">
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Post</h4>
+                </div>
+                <div class="col-sm-8 col-9 text-right m-b-20">
+                    <a href="/Admin/Post/Add" class="btn btn-primary float-right btn-rounded"><i class="fa fa-plus"></i> Add Post</a>
+                </div>
+            </div>
+            <form action="employee" method="get" class="form-inline">
+                <input class="form-control mr-sm-2" name="searchValue" type="text" placeholder="Search"
+                       aria-label="Search" style="height: 30px;">
+                <button class="btn btn-outline-success my-2 my-sm-0"
+                        type="submit">
+                    Search
+                </button>
+            </form>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+
+                        <table class="table table-striped custom-table mb-0 datatable">
+                            <thead>
+                            <tr>
+                                <th>Post ID</th>
+                                <th style="min-width:200px;">Title</th>
+                                <th>Content</th>
+                                <th>CreatedDate</th>
+                                <th style="min-width: 110px;">ModifiedDate</th>
+                                <th>UserName</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @* @foreach (var account in Model.Accounts) *@
+                            @* { *@
+                            @*     <tr> *@
+                            @*         <td>@account.AccountId</td> *@
+                            @*         <td>@account.Username</td> *@
+                            @*         <td>@account.Email</td> *@
+                            @*         <td>@account.PhoneNumber</td> *@
+                            @*         <td>@account.DateOfBirth?.ToString("yyyy-MM-dd")</td> *@
+                            @*         <td class="text-right"> *@
+                            @*             <!-- Thêm các nút hành động tại đây --> *@
+                            @*             <a href="#" class="btn btn-primary">Edit</a> *@
+                            @*             <a href="#" class="btn btn-danger">Delete</a> *@
+                            @*         </td> *@
+                            @*     </tr> *@
+                            @* } *@
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                       aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        
+                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
+                                            <i class="fa fa-trash-o m-r-5"></i> Hidden
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<div id="delete_movie" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Are you sure want to delete this Account?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar-overlay" data-reff=""></div>
+<script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+<script src="~/admin/assets/js/popper.min.js"></script>
+<script src="~/admin/assets/js/bootstrap.min.js"></script>
+<script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+<script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/admin/assets/js/select2.min.js"></script>
+<script src="~/admin/assets/js/moment.min.js"></script>
+<script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/admin/assets/js/app.js"></script>
 </body>
 </html>
