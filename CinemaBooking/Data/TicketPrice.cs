@@ -12,7 +12,6 @@ namespace CinemaBooking.Data
 
         public int TicketPriceId { get; set; }
         public decimal TicketPrice1 { get; set; }
-        public byte Status { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; }
     }

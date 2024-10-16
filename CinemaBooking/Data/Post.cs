@@ -5,6 +5,11 @@ namespace CinemaBooking.Data
 {
     public partial class Post
     {
+        public Post()
+        {
+            Comments = new HashSet<Comment>();
+        }
+
         public int PostId { get; set; }
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
@@ -14,5 +19,6 @@ namespace CinemaBooking.Data
         public byte Status { get; set; }
 
         public virtual Account Account { get; set; } = null!;
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

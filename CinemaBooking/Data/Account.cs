@@ -9,10 +9,12 @@ namespace CinemaBooking.Data
         {
             Comments = new HashSet<Comment>();
             Posts = new HashSet<Post>();
+            Tickets = new HashSet<Ticket>();
+            Votes = new HashSet<Vote>();
         }
 
         public int AccountId { get; set; }
-        public string Username { get; set; } = null!;
+        public string FullName { get; set; } = null!;
         public string? Avatar { get; set; }
         public string Gender { get; set; } = null!;
         public string? PhoneNumber { get; set; }
@@ -25,5 +27,7 @@ namespace CinemaBooking.Data
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 }
