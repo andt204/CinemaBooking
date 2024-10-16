@@ -27,8 +27,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<script type="text/javascript" src="~/customer/assets1/js/jquery.leanModal.min.js"></script>
 	<link rel="stylesheet" href="~/customer/assets1/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="~/customer/assets1/css/menu.css" />
-	<link href="~/customer/assets1/css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
-	<script src="~/customer/assets1/js/jquery.magnific-popup.js" type="text/javascript"></script>
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -48,6 +46,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<!---- start-smoth-scrolling---->
 </head>
 <body>
+
 	<div class="header-top-strip">
 		<div class="container">
 			<div class="header">
@@ -102,7 +101,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<!-- Button trigger modal  -->
 @* 				<a class="play-icon popup-with-zoom-anim" href="#small-dialog1">Select a Region</a>
  *@				<!---pop-up-box---->
-				
+				<link href="~/customer/assets1/css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
+				<script src="~/customer/assets1/js/jquery.magnific-popup.js" type="text/javascript"></script>
 				<!---//pop-up-box---->
 				<div id="small-dialog1" class="mfp-hide">
 					<div class="select-city">
@@ -129,9 +129,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					});
 				</script>
 				<!-- Large modal -->
-				<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-					Login
-				</button>
+				<div class="navbar-right">
+					<img src="~/customer/assets1/images/avatar.png" alt="Avatar" class="avatar" />
+					<span class="navbar-text">Hello, username!</span>
+				</div>
 				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
 					 aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -257,8 +258,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 											</div>
 											<div class="col-md-12">
 												<div class="btn-group btn-group-justified">
-													@* <a href="#" class="btn btn-primary">Facebook</a>  *@
-													<a href="#" class="btn btn-danger">
+													<a href="#" class="btn btn-primary">Facebook</a> <a href="#" class="btn btn-danger">
 														Google
 													</a>
 												</div>
