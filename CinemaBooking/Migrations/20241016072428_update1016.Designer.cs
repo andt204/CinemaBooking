@@ -4,6 +4,7 @@ using CinemaBooking.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    partial class CinemaBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20241016072428_update1016")]
+    partial class update1016
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,11 +60,6 @@ namespace CinemaBooking.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -83,11 +80,16 @@ namespace CinemaBooking.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("AccountId");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex(new[] { "FullName" }, "UQ__account__F3DBC57261217132")
+                    b.HasIndex(new[] { "Username" }, "UQ__account__F3DBC57261217132")
                         .IsUnique();
 
                     b.ToTable("Account", (string)null);
