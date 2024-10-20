@@ -1,6 +1,13 @@
 using CinemaBooking.Data;
 using CinemaBooking.Repositories;
+using CinemaBooking.Repositories.Movie;
 using CinemaBooking.Repositories.Role;
+using CinemaBooking.Repositories.Room;
+using CinemaBooking.Repositories.Seat;
+using CinemaBooking.Repositories.Showtime;
+using CinemaBooking.Repositories.Ticket;
+using CinemaBooking.Repositories.TicketMovie;
+using CinemaBooking.Repositories.TicketPrice;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking {
@@ -11,6 +18,14 @@ namespace CinemaBooking {
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
           
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            
+            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+            builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+            builder.Services.AddScoped<ITicketPriceRepository, TicketPriceRepository>();
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddScoped<IShowtimeRepository, ShowtimeRepository>();
+            builder.Services.AddScoped<ITicketMovieRepository, TicketMovieRepository>();
             
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
