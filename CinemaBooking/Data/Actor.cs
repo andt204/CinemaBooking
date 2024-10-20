@@ -7,12 +7,12 @@ namespace CinemaBooking.Data
     {
         public Actor()
         {
-            Movies = new HashSet<Movie>();
+            ActorMovieAssignments = new HashSet<ActorMovieAssignment>();
         }
 
         public int ActorId { get; set; }
         public string ActorName { get; set; } = null!;
 
-        public virtual ICollection<Movie> Movies { get; set; }
+        public virtual ICollection<ActorMovieAssignment> ActorMovieAssignments { get; set; }
     }
 }
