@@ -444,7 +444,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasIndex("ShowtimeId");
 
-                    b.ToTable("ShowtimeMovieAssignments");
+                    b.ToTable("ShowtimeMovieAssignments", (string)null);
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.Ticket", b =>
@@ -512,7 +512,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("TicketMovieAssignments");
+                    b.ToTable("TicketMovieAssignments", (string)null);
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.TicketPrice", b =>

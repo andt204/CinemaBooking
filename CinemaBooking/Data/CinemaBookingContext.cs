@@ -18,10 +18,12 @@ namespace CinemaBooking.Data
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Actor> Actors { get; set; } = null!;
+        public virtual DbSet<ActorMovieAssignment> ActorMovieAssignments { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Director> Directors { get; set; } = null!;
         public virtual DbSet<Movie> Movies { get; set; } = null!;
+        public virtual DbSet<MovieCategoryAssignment> MovieCategoryAssignments { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
@@ -35,11 +37,12 @@ namespace CinemaBooking.Data
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            string connectStr = config.GetConnectionString("CinemaBooking");
-            if (!optionsBuilder.IsConfigured) {
-                optionsBuilder.UseSqlServer(connectStr);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =localhost; database =CinemaBooking;uid=sa;pwd=123;TrustServerCertificate=true;");
             }
         }
 
@@ -78,6 +81,26 @@ namespace CinemaBooking.Data
                 entity.ToTable("Actor");
 
                 entity.Property(e => e.ActorName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ActorMovieAssignment>(entity =>
+            {
+                entity.HasKey(e => e.ActorMovieId)
+                    .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
+
+                entity.Property(e => e.ActorMovieId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Actor)
+                    .WithMany(p => p.ActorMovieAssignments)
+                    .HasForeignKey(d => d.ActorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MovieActo__Actor__6C190EBB");
+
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.ActorMovieAssignments)
+                    .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__MovieActo__Movie__6B24EA82");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -140,32 +163,25 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.DirectorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Movie_Director");
+            });
 
-                entity.HasMany(d => d.Actors)
-                    .WithMany(p => p.Movies)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "ActorMovieAssignment",
-                        l => l.HasOne<Actor>().WithMany().HasForeignKey("ActorId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__MovieActo__Actor__6C190EBB"),
-                        r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__MovieActo__Movie__6B24EA82"),
-                        j =>
-                        {
-                            j.HasKey("MovieId", "ActorId").HasName("PK__MovieAct__EEA9AABEAA76A3E9");
+            modelBuilder.Entity<MovieCategoryAssignment>(entity =>
+            {
+                entity.HasKey(e => e.MovieCategoryId);
 
-                            j.ToTable("ActorMovieAssignments");
-                        });
+                entity.Property(e => e.MovieCategoryId).ValueGeneratedNever();
 
-                entity.HasMany(d => d.Categories)
-                    .WithMany(p => p.Movies)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "MovieCategoryAssignment",
-                        l => l.HasOne<Category>().WithMany().HasForeignKey("CategoryId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_MovieCategoryAssignment_Category"),
-                        r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_MovieCategoryAssignment_Movie"),
-                        j =>
-                        {
-                            j.HasKey("MovieId", "CategoryId");
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.MovieCategoryAssignments)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MovieCategoryAssignments_Category");
 
-                            j.ToTable("MovieCategoryAssignment");
-                        });
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.MovieCategoryAssignments)
+                    .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MovieCategoryAssignments_Movie");
             });
 
             modelBuilder.Entity<Post>(entity =>
