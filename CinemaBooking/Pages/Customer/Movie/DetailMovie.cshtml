@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Web
 @model CinemaBooking.Pages.Customer.Movie.DetailMovieModel
 @{
     Layout = "~/Pages/Shared/_UserLayout1.cshtml";
@@ -12,483 +13,335 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html>
 <head>
-	<title>My Show a Entertainment Category Flat Bootstarp responsive Website Template | Movies single_page :: w3layouts</title>
-	<link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <title>My Show a Entertainment Category Flat Bootstarp responsive Website Template | Movies single_page :: w3layouts</title>
+    <link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' />
 
-	<!-- Custom Theme files -->
-	<link href="~/customer/assets1/css/style.css" rel="stylesheet" type="text/css" media="all" />
-	<!-- Custom Theme files -->
-	<script src="~/customer/assets1/js/jquery.min.js"></script>
-	<script src="~/customer/assets1/js/bootstrap.min.js"></script>
-	<!-- Custom Theme files -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+    <!-- Custom Theme files -->
+    <link href="~/customer/assets1/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <script src="~/customer/assets1/js/jquery.min.js"></script>
+    <script src="~/customer/assets1/js/bootstrap.min.js"></script>
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-	<!--webfont-->
-	<link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
-	<!-- start menu -->
-	<link href="~/customer/assets1/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
-	<script type="text/javascript" src="~/customer/assets1/js/megamenu.js"></script>
-	<script>$(document).ready(function () { $(".megamenu").megamenu(); });</script>
-	<script type="text/javascript" src="~/customer/assets1/js/jquery.leanModal.min.js"></script>
-	<link rel="stylesheet" href="~/customer/assets1/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="~/customer/assets1/css/menu.css" />
-	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-	<![endif]-->
-	<!---- start-smoth-scrolling---->
-	<script type="text/javascript" src="~/customer/assets1/js/move-top.js"></script>
-	<script type="text/javascript" src="~/customer/assets1/js/easing.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function ($) {
-			$(".scroll").click(function (event) {
-				event.preventDefault();
-				$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1200);
-			});
-		});
-	</script>
-	<!---- start-smoth-scrolling---->
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!--webfont-->
+    <link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <!-- start menu -->
+    <link href="~/customer/assets1/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" src="~/customer/assets1/js/megamenu.js"></script>
+    <script>$(document).ready(function () { $(".megamenu").megamenu(); });</script>
+    <script type="text/javascript" src="~/customer/assets1/js/jquery.leanModal.min.js"></script>
+    <link rel="stylesheet" href="~/customer/assets1/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/customer/assets1/css/menu.css" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <!---- start-smoth-scrolling---->
+    <script type="text/javascript" src="~/customer/assets1/js/move-top.js"></script>
+    <script type="text/javascript" src="~/customer/assets1/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1200);
+            });
+        });
+    </script>
+    <!---- start-smoth-scrolling---->
 </head>
 <body>
-	<div class="container">
-		<div class="main-content">
-			<div class="bootstrap_container">
-				<nav class="navbar navbar-default w3_megamenu" role="navigation">
-					<div class="navbar-header">
-						<button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
-					</div><!-- end navbar-header -->
+    <div class="container">
+        <div class="main-content">
+            <div class="bootstrap_container">
+                <nav class="navbar navbar-default w3_megamenu" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
+                    </div><!-- end navbar-header -->
 
-					<div id="defaultmenu" class="navbar-collapse collapse">
-						<ul class="nav navbar-nav">
-							<li><a href="index.html">Home</a></li>
-							<!-- Mega Menu -->
-							<li class="dropdown w3_megamenu-fw active">
-								<a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b class="caret"></b></a>
-								<ul class="dropdown-menu fullwidth">
-									<li class="w3_megamenu-content">
-										<div class="row">
-											<h5 class="movies-page">for movies page - <a href="movies.html">Click here</a> </h5>
-											<div class="col-sm-4">
-												<h3 class="title">Now Showing</h3>
-												<ul class="mov_list">
-													<li>99%</li>
-													<li><a href="movie-single.html">Baahubali (Telugu) (U/A)</a></li>
-												</ul>
-												<ul class="mov_list">
-													<li>100%</li>
-													<li><a href="movie-single.html">Baahubali (Hindi) (U/A)</a></li>
-												</ul>
-												<ul class="mov_list">
-													<li>98%</li>
-													<li><a href="movie-single.html">Baahubali (English) (U/A)</a></li>
-												</ul>
-												<ul class="mov_list">
-													<li>80%</li>
-													<li><a href="movie-single.html">Jurassic World (3D Hindi) (U/A)</a></li>
-												</ul>
-												<ul class="mov_list">
-													<li>65%</li>
-													<li><a href="movie-single.html">Hamari Adhuri Kahani (U)</a></li>
-												</ul>
-											</div><!-- end col-4 -->
-											<div class="col-sm-4 movie-dd">
-												<h3 class="title">Next Change</h3>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-											</div><!-- end col-4 -->
-											<div class="col-sm-4 movie-dd">
-												<h3 class="title">Comming Soon</h3>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-											</div><!-- end col-4 -->
-											<div class="clearfix"></div>
-											<div class="menu-featured-movies">
-												<h3 class="title">Featured Trailers</h3>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf1.jpg" alt="" /></a>
-												</div>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf2.jpg" alt="" /></a>
-												</div>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf3.jpg" alt="" /></a>
-												</div>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf3.jpg" alt="" /></a>
-												</div>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf3.jpg" alt="" /></a>
-												</div>
-												<div class="col-md-2 menu-featured-movies-img">
-													<a href="movie-single.html"><img src="images/mf3.jpg" alt="" /></a>
-												</div>
-												<div class="clearfix"></div>
-											</div>
-										</div><!-- end row -->
-										<hr>
+                    <div id="defaultmenu" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="index.html">Home</a></li>
+                            <!-- Mega Menu -->
+                            <li class="dropdown w3_megamenu-fw active">
+                                <a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b class="caret"></b></a>
+                            </li>
+                        </ul>
+                    </div><!-- end #navbar-collapse-1 -->
 
-									</li>
-								</ul>
-							</li>
-							<!-- end standard drop down -->
-							<!-- end dropdown w3_megamenu-fw -->
-						</ul><!-- end nav navbar-nav -->
+                </nav><!-- end navbar navbar-default w3_megamenu -->
+            </div><!-- end container -->
+            <!-- AddThis Smart Layers END -->
+            <div class="m-single-article">
+                <div class="article-left">
+                    <h3>@Model.Movie.Title <span>@* <i class="fa fa-heart"></i> *@ @Model.Movie.AgeLimit +</span></h3>
+                    @* <p><a class="m-green" href="#">@Model.Categories</a></p> *@
+                    <p>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <a class="m-green" href="#">@category.CategoryName</a> <!-- Adjust 'Name' based on the actual property in the Category class -->
+                        }
+                    </p>
 
-						<ul class="nav navbar-nav navbar-right">
-							@* <li class="dropdown">
-								<a href="#" data-toggle="dropdown" class="dropdown-toggle">Contact Us<b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li>
-										<form id="contact1" action="#" name="contactform" method="post">
-											<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-												<input type="text" name="name" id="name1" class="form-control" placeholder="Name">
-												<input type="text" name="email" id="email1" class="form-control" placeholder="Email">
-											</div>
-											<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-												<input type="text" name="phone" id="phone1" class="form-control" placeholder="Phone">
-												<input type="text" name="subject" id="subject1" class="form-control" placeholder="Subject">
-											</div>
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<textarea class="form-control" name="comments" id="comments1" rows="6" placeholder="Your Message ..."></textarea>
-											</div>
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="pull-right">
-													<input type="submit" value="SEND" id="submit1" class="btn btn-primary small">
-												</div>
-											</div>
-											<div class="clearfix"></div>
-										</form>
-									</li>
-								</ul>
-							</li> *@
-						</ul><!-- end nav navbar-nav navbar-right -->
-					</div><!-- end #navbar-collapse-1 -->
+                    <div class="clearfix"></div>
+                    <div class="article-time-strip">
+                        <div class="article-time-strip-left">
+                            <p>
+                                Country: <span>
+                                    <i class="fa fa-flag"></i>
+                                    @Model.Movie.Country
+                                </span> &nbsp;&nbsp; Release Date: <span><i class="fa fa-calendar"></i>@Model.Movie.PublishTime.ToShortDateString()</span>
+                            </p>
+                            @* <p>Duration <span><i class="fa fa-clock-o"></i>2 hrs 30 mins </span>  &nbsp;&nbsp; Release Date <span><i class="fa fa-calendar"></i>Jun 10, 2024</span></p> *@
+                        </div>
+                        <div class="clearfix"></div>
+                        @{
+                            // Hàm chuyển đổi URL YouTube sang định dạng nhúng
+                            string GetEmbedUrl(string url)
+                            {
+                                var uri = new Uri(url);
+                                var query = HttpUtility.ParseQueryString(uri.Query);
+                                var videoId = query["v"];
+                                return $"https://www.youtube.com/embed/{videoId}";
+                            }
+                        }
+                        <div class="article-img">
+                            @* <iframe src="https://www.youtube.com/embed/@Model.Movie.VideoTrailer" frameborder="0" allowfullscreen></iframe> *@
+                            <iframe src="@GetEmbedUrl(@Model.Movie.VideoTrailer)" frameborder="0" allowfullscreen></iframe>
+                        </div>
 
-				</nav><!-- end navbar navbar-default w3_megamenu -->
-			</div><!-- end container -->
-			<!-- AddThis Smart Layers END -->
-			<div class="m-single-article">
-				<div class="article-left">
-					<h3>Baahubali Trailer || Prabhas, Rana Daggubati, Anushka, Tamannaah || Bahubali Trailer <span> <i class="fa fa-heart"></i> 99%</span></h3>
-					<p><a class="m-green" href="#">Action</a><a class="m-green" href="#">Thriller</a><a class="m-orange" href="#">English</a></p>
-					<div class="clearfix"></div>
-					<div class="article-time-strip">
-						<div class="article-time-strip-left">
-							<p>Duration <span><i class="fa fa-clock-o"></i>2 hrs 30 mins </span>  &nbsp;&nbsp; Release Date <span><i class="fa fa-calendar"></i>Jun 10, 2024</span></p>
-						</div>
-						<div class="clearfix"></div>
-						<div class="article-img">
-							<iframe src="https://www.youtube.com/embed/VdafjyFK3ko" frameborder="0" allowfullscreen></iframe>
-						</div>
-						<div class="review-info">
-							<h6 class="span88">Baahubali</h6>
-							<p class="dirctr"><a href="">Reagan Gavin Rasquinha, </a>TNN, Mar 12, 2024, 12.47PM IST</p>
-							<p class="ratingview">Critic's Rating:</p>
-							<div class="rating">
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-							</div>
-							<p class="ratingview">
-								&nbsp;3.5/5
-							</p>
-							<div class="clearfix"></div>
-							<p class="ratingview c-rating">Avg Readers' Rating:</p>
-							<div class="rating c-rating">
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-								<span>☆</span>
-							</div>
-							<p class="ratingview c-rating">
-								&nbsp; 3.3/5
-							</p>
-							<div class="clearfix"></div>
-							<div class="yrw">
-								<div class="dropdown-button">
-									<select class="dropdown" tabindex="9" data-settings="{&quot;wrapperClass&quot;:&quot;flat&quot;}">
-										<option value="0">Your rating</option>
-										<option value="1">1.Poor</option>
-										<option value="2">1.5(Below average)</option>
-										<option value="3">2.Average</option>
-										<option value="4">2.5(Above average)</option>
-										<option value="5">3.Watchable</option>
-										<option value="6">3.5(Good)</option>
-										<option value="7">4.5(Very good)</option>
-										<option value="8">5.Outstanding</option>
-									</select>
-								</div>
-								<div class="rtm text-center">
-									<a href="#">REVIEW THIS MOVIE</a>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<p class="info"><strong>CAST</strong>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Prabhas, Rana Daggubati, Anushka, Tamannaah.</p>
-							<p class="info"><strong>DIRECTION</strong>: &nbsp;&nbsp;&nbsp;&nbsp;S.S. Rajamouli.</p>
-							<p class="info"><strong>STORY</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V. Vijayendra Prasad.</p>
-							<p class="info"><strong>DURATION</strong>:&nbsp;&nbsp;&nbsp; &nbsp; 2 hour 30 minutes.</p>
-						</div>
-					</div>
-				</div>
-				<div class="article-right">
-					<div class="grid_3 grid_5">
-						<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
-							<ul id="myTab" class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Tue-30</a></li>
-								<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">WED-1</a></li>
-							</ul>
-							<div id="myTabContent" class="tab-content">
-								<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
-									<p class="m-s-t">INOX: Lorem Mall, Chicago</p>
-									<a class="show-time" href="/Customer/CinemaSelection/CinemaSelection">06:30 PM</a>
-									<div class="clearfix"></div>
-									<a class="more-show-time" href="/Customer/CinemaSelection/CinemaSelection">More Show Times</a>
-								</div>
-								<div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
-									<p class="m-s-t">INOX: Lorem Mall, Chicago</p>
-									<a class="show-time" href="/Customer/CinemaSelection/CinemaSelection">12:45 PM</a><a class="show-time" href="/Customer/CinemaSelection/CinemaSelection">06:30 PM</a>
-									<div class="clearfix"></div>
-									<a class="more-show-time" href="/Customer/CinemaSelection/CinemaSelection">More Show Times</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			<div class="reviews-tabs" style="min-height: 300px !important">
-				<!-- Main component for a primary marketing message or call to action -->
-				<ul class="nav nav-tabs responsive hidden-xs hidden-sm" id="myTab">
-					<li class="test-class active"><a class="deco-none misc-class" href="#how-to"> Synopsis</a></li>
-					<li class="test-class"><a href="#features">Critic Reviews (1)</a></li>
-					<li><a class="deco-none" href="#source">User Reviews (11)</a></li>
-				</ul>
+                        <div class="review-info">
+                            <h6 class="span88">Baahubali</h6>
+                            <p class="dirctr"><a href="">Reagan Gavin Rasquinha, </a>TNN, Mar 12, 2024, 12.47PM IST</p>
+                            <p class="ratingview">Critic's Rating:</p>
+                            <div class="rating">
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                            </div>
+                            <p class="ratingview">
+                                &nbsp;3.5/5
+                            </p>
+                            <div class="clearfix"></div>
+                            <p class="ratingview c-rating">Avg Readers' Rating:</p>
+                            <div class="rating c-rating">
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                                <span>☆</span>
+                            </div>
+                            <p class="ratingview c-rating">
+                                &nbsp; 3.3/5
+                            </p>
+                            <div class="clearfix"></div>
+                            <div class="yrw">
+                                <div class="dropdown-button">
+                                    <select class="dropdown" tabindex="9" data-settings="{&quot;wrapperClass&quot;:&quot;flat&quot;}">
+                                        <option value="0">Your rating</option>
+                                        <option value="1">1.Poor</option>
+                                        <option value="2">1.5(Below average)</option>
+                                        <option value="3">2.Average</option>
+                                        <option value="4">2.5(Above average)</option>
+                                        <option value="5">3.Watchable</option>
+                                        <option value="6">3.5(Good)</option>
+                                        <option value="7">4.5(Very good)</option>
+                                        <option value="8">5.Outstanding</option>
+                                    </select>
+                                </div>
+                                <div class="rtm text-center">
+                                    <a href="#">REVIEW THIS MOVIE</a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <p class="info">
+                            <strong>CAST</strong>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            @string.Join(", ", Model.Actors.Select(actor => actor.ActorName))
+                            </p>
+                            <p class="info"><strong>DIRECTION</strong>: &nbsp;&nbsp;&nbsp;&nbsp;@Model.Director.DirectorName</p>
+                            <p class="info"><strong>STORY</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.Movie.Description</p>
+                            <p class="info"><strong>DURATION</strong>:&nbsp;&nbsp;&nbsp; &nbsp; @Model.Movie.Length minute</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="article-right">
+                    <div class="grid_3 grid_5">
+                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs" role="tablist">
+                                @if (Model.Showtimes.Any())
+                                {
+                                    // Group showtimes by date
+                                    var groupedShowtimes = Model.Showtimes.GroupBy(st => st.Date).ToList();
+                                    var firstTab = true;
 
-				<div class="tab-content responsive hidden-xs hidden-sm">
-					<div class="tab-pane active" id="how-to">
-						<p><strong> Director :</strong> <a href="#">S.S. Rajamouli.</a></p>
-						<p> <strong>Cast & Crew :</strong> <a href="#">Lorem ipsum</a> ,<a href="#">Lorem ipsum</a> ,<a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a></p>
-						<p>
-							No content is available for this movie. Official sources can send relevant information to <br>
-							<a href="mail-to:mail@example.com">content@example.com</a>
-						</p>
+                                    foreach (var group in groupedShowtimes)
+                                    {
+                                        var date = group.Key; // The date for the showtimes
+
+                                        <li role="presentation" class="@(firstTab ? "active" : "")">
+                                            <a href="#@date.ToString("yyyy-MM-dd")" id="tab-@date.ToString("yyyy-MM-dd")" role="tab" data-toggle="tab" aria-controls="@date.ToString("yyyy-MM-dd")">
+                                                @date.ToString("ddd-dd") <!-- Display date as "Tue-30" -->
+                                            </a>
+                                        </li>
+                                        firstTab = false;
+                                    }
+                                }
+                                else
+                                {
+                                    <li role="presentation" class="active">
+                                        <a href="#" id="no-showtimes-tab" role="tab" data-toggle="tab" aria-controls="no-showtimes">No Showtimes</a>
+                                    </li>
+                                }
+                            </ul>
+
+                            <div id="myTabContent" class="tab-content">
+                                @if (Model.Showtimes.Any())
+                                {
+                                    var firstContent = true;
+
+                                    foreach (var group in Model.Showtimes.GroupBy(st => st.Date).ToList())
+                                    {
+                                        var date = group.Key;
+                                        var showtimesForDate = group.ToList(); // Get all showtimes for this date
+
+                                        <div role="tabpanel" class="tab-pane fade @(firstContent ? "in active" : "")" id="@date.ToString("yyyy-MM-dd")" aria-labelledby="tab-@date.ToString("yyyy-MM-dd")">
+                                            @* <p class="m-s-t">Showtimes for @date.ToString("dd/MM/yyyy")</p> *@
+                                            @foreach (var showtime in showtimesForDate)
+                                            {
+                                                @* <p>@showtime.StartHour.ToString(@"hh\:mm")</p> <!-- Displaying each showtime --> *@
+                                                <a class="show-time" href="/Customer/CinemaSelection/CinemaSelection?time=@showtime.StartHour">@showtime.StartHour.ToString(@"hh\:mm")</a>
+                                            }
+                                            <div class="clearfix"></div>
+                                            <a class="more-show-time" href="/Customer/CinemaSelection/CinemaSelection?date=@date.ToString("yyyy-MM-dd")">More Show Times</a>
+                                        </div>
+                                        firstContent = false;
+                                    }
+                                }
+                                else
+                                {
+                                    <div role="tabpanel" class="tab-pane fade in active" id="no-showtimes" aria-labelledby="no-showtimes-tab">
+                                        <p>No showtimes available for this movie.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="reviews-tabs" style="min-height: 300px !important">
+                <!-- Main component for a primary marketing message or call to action -->
+                <ul class="nav nav-tabs responsive hidden-xs hidden-sm" id="myTab">
+                @* <li class="test-class active"><a class="deco-none misc-class" href="#how-to"> Synopsis</a></li> *@
+                @* <li class="test-class"><a href="#features">Critic Reviews (1)</a></li> *@
+                <li><a class="deco-none" href="#source">Reviews (11)</a></li>
+                </ul>
+
+                @* <div class="tab-content responsive hidden-xs hidden-sm"> *@
+                @* <div class="tab-pane active" id="how-to">
+                <p><strong> Director :</strong> <a href="#">S.S. Rajamouli.</a></p>
+                <p> <strong>Cast & Crew :</strong> <a href="#">Lorem ipsum</a> ,<a href="#">Lorem ipsum</a> ,<a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a>, <a href="#">Lorem ipsum</a></p>
+                <p>
+                No content is available for this movie. Official sources can send relevant information to <br>
+                <a href="mail-to:mail@example.com">content@example.com</a>
+                </p>
 
 
-					</div>
-					<div class="tab-pane" id="features">
-						<p class="cr-left"><strong>123Telugu.com</strong></p><div class="rating-cr">
-							<span>☆</span>
-							<span>☆</span>
-							<span>☆</span>
-							<span>☆</span>
-							<span>☆</span>
-						</div>
-						<div class="clearfix"></div>
-						<p>Continuing with the trend of crime comedies, yet another interesting flick titled Where is Vidya Balan has hit the screens today. Lets see how it is.</p>
-						<a href="#">....Read full review</a>
-					</div>
-					<div class="tab-pane" id="source">
-						<div class="response">
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 21, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="media response-info">
-								<div class="media-left response-text-left">
-									<a href="#">
-										<img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
-									</a>
-									<h5><a href="#">Username</a></h5>
-								</div>
-								<div class="media-body response-text-right">
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-									</p>
-									<ul>
-										<li>MARCH 25, 2024</li>
-										<li><a href="single.html">Reply</a></li>
-									</ul>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="write-review">
-								<textarea id="review-text" rows="4" placeholder="Write your review here..." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-								<br>
-								<button class="btn btn-success" id="submit-review" style="margin-top: 10px; padding: 10px 20px; color: white; background-color: #28a745; border: none; border-radius: 4px; cursor: pointer;">Submit Review</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="footer-top-strip">
-				<p><span>Showing in cities : </span><a href="movies.html">Bengaluru</a>, <a href="movies.html">Hyderabad</a>, <a href="movies.html">Khammam</a>, <a href="movies.html">Kurnool</a>, <a href="movies.html">Nizamabad</a>, <a href="movies.html">Vijayawada</a>, <a href="#">Vizag</a>, <a href="movies.html">Vizianagaram</a>, <a href="movies.html">Warangal</a></p>
-				<p><span>Cinemas Nearby : </span><a href="movie-single.html"> INOX: Jyoti Mall, Kurnool </a>|
-				<p><span>Next Change <i>(Friday, 19 Jun) </i>: </span><a href="movie-single.html">Disney's ABCD 2 (3D) (U)</a>, <a href="movie-single.html"> 2 Premi Premache</a> , <a href="movie-single.html">Dekh Ke (Bhojpuri)</a> , <a href="movie-single.html">Disney's ABCD 2 (2D) (U)</a>, <a href="movie-single.html">Dekh Ke (Bhojpuri)</a></p>
-				<p><span>Coming Soon :</span><a href="movie-single.html"> 2 Premi Premache</a>, <a href="movie-single.html">Acharam, Dekh Ke (Bhojpuri)</a>, <a href="movie-single.html">Entourage</a>, <a href="movie-single.html">Kuttram Kadithal</a></p>
-			</div>
-		</div>
-	</div>
-	<script src="~/customer/assets1/js/responsive-tabs.js"></script>
-	<script type="text/javascript">
-		$( '#myTab a' ).click( function ( e ) {
-		  e.preventDefault();
-		  $( this ).tab( 'show' );
-		} );
+                </div> *@
+                @* <div class="tab-pane" id="features">
+                <p class="cr-left"><strong>123Telugu.com</strong></p><div class="rating-cr">
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+                </div>
+                <div class="clearfix"></div>
+                <p>Continuing with the trend of crime comedies, yet another interesting flick titled Where is Vidya Balan has hit the screens today. Lets see how it is.</p>
+                <a href="#">....Read full review</a>
+                </div> *@
+                <div class="tab-pane" id="source">
+                    <div class="response">
+                        <div class="media response-info">
+                            <div class="media-left response-text-left">
+                                <a href="#">
+                                    <img class="media-object" src="~/customer/assets1/images/icon1.png" alt="">
+                                </a>
+                                <h5><a href="#">Username</a></h5>
+                            </div>
+                            <div class="media-body response-text-right">
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,There are many variations of passages of Lorem Ipsum available,
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                                <ul>
+                                    <li>MARCH 25, 2024</li>
+                                    <li><a href="single.html">Reply</a></li>
+                                </ul>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="write-review">
+                            <textarea id="review-text" rows="4" placeholder="Write your review here..." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+                            <br>
+                            <button class="btn btn-success" id="submit-review" style="margin-top: 10px; padding: 10px 20px; color: white; background-color: #28a745; border: none; border-radius: 4px; cursor: pointer;">Submit Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* </div> *@
+            @* <div class="footer-top-strip">
+            <p><span>Showing in cities : </span><a href="movies.html">Bengaluru</a>, <a href="movies.html">Hyderabad</a>, <a href="movies.html">Khammam</a>, <a href="movies.html">Kurnool</a>, <a href="movies.html">Nizamabad</a>, <a href="movies.html">Vijayawada</a>, <a href="#">Vizag</a>, <a href="movies.html">Vizianagaram</a>, <a href="movies.html">Warangal</a></p>
+            <p><span>Cinemas Nearby : </span><a href="movie-single.html"> INOX: Jyoti Mall, Kurnool </a>|
+            <p><span>Next Change <i>(Friday, 19 Jun) </i>: </span><a href="movie-single.html">Disney's ABCD 2 (3D) (U)</a>, <a href="movie-single.html"> 2 Premi Premache</a> , <a href="movie-single.html">Dekh Ke (Bhojpuri)</a> , <a href="movie-single.html">Disney's ABCD 2 (2D) (U)</a>, <a href="movie-single.html">Dekh Ke (Bhojpuri)</a></p>
+            <p><span>Coming Soon :</span><a href="movie-single.html"> 2 Premi Premache</a>, <a href="movie-single.html">Acharam, Dekh Ke (Bhojpuri)</a>, <a href="movie-single.html">Entourage</a>, <a href="movie-single.html">Kuttram Kadithal</a></p>
+            </div> *@
+        </div>
+    </div>
+    <script src="~/customer/assets1/js/responsive-tabs.js"></script>
+    <script type="text/javascript">
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-		$( '#moreTabs a' ).click( function ( e ) {
-		  e.preventDefault();
-		  $( this ).tab( 'show' );
-		} );
+        $('#moreTabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-		( function( $ ) {
-			// Test for making sure event are maintained
-			$( '.js-alert-test' ).click( function () {
-			  alert( 'Button Clicked: Event was maintained' );
-			} );
-			fakewaffle.responsiveTabs( [ 'xs', 'sm' ] );
-		} )( jQuery );
+        (function ($) {
+            // Test for making sure event are maintained
+            $('.js-alert-test').click(function () {
+                alert('Button Clicked: Event was maintained');
+            });
+            fakewaffle.responsiveTabs(['xs', 'sm']);
+        })(jQuery);
 
-	</script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			/*
-			var defaults = {
-				containerID: 'toTop', // fading element id
-				containerHoverID: 'toTopHover', // fading element hover id
-				scrollSpeed: 1200,
-				easingType: 'linear'
-			};
-			*/
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /*
+            var defaults = {
+                containerID: 'toTop', // fading element id
+                containerHoverID: 'toTopHover', // fading element hover id
+                scrollSpeed: 1200,
+                easingType: 'linear'
+            };
+            */
 
-			$().UItoTop({ easingType: 'easeOutQuart' });
+            $().UItoTop({ easingType: 'easeOutQuart' });
 
-		});
-	</script>
-	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+        });
+    </script>
+    <a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 </body>
 </html>
