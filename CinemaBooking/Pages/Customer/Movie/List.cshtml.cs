@@ -1,4 +1,5 @@
 ﻿using CinemaBooking.Data;
+using CinemaBooking.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +9,9 @@ namespace CinemaBooking.Pages.Customer.Movie
     public class ListModel : PageModel
     {
         private readonly CinemaBookingContext _context;
-
-        public List<Data.Movie> NowShowingMovies { get; set; }
+		[BindProperty]
+		public Data.Account account { get; set; }
+		public List<Data.Movie> NowShowingMovies { get; set; }
         public List<Data.Movie> ComingSoonMovies { get; set; }
         public List<Data.Movie> BannerMovies { get; set; }
         public List<string> TrailerVideoUrls { get; set; } = new List<string>();
@@ -54,6 +56,15 @@ namespace CinemaBooking.Pages.Customer.Movie
 
             // Lấy danh sách phim để hiển thị hình ảnh nền
             BannerMovies = recentMovies.Concat(upcomingMovies).ToList();
-        }
+			
+			var token = Request.Cookies["jwtToken"];
+			if (token != null) {
+				var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+				if (email != null) {
+					account = _context.Accounts.FirstOrDefault(x => x.Email == email);
+					ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+				}
+			}
+		}
     }
 }
