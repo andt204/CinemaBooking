@@ -51,7 +51,7 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.FullName, "UQ__account__F3DBC57261217132")
+                entity.HasIndex(e => e.Email, "UQ__account__F3DBC57261217132")
                     .IsUnique();
 
                 entity.Property(e => e.Avatar).HasMaxLength(255);
