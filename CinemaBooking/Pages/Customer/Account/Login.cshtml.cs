@@ -66,7 +66,7 @@ namespace CinemaBooking.Pages.Customer.Account
                     {
                         return RedirectToPage("/HomeAdmin");
                     }
-                    return RedirectToPage("/Customer/Account/ProfileForUser");
+                    return RedirectToPage("/Customer/Movie/List");
                 }
             }
         }

@@ -1,7 +1,7 @@
 ﻿@page
 @model CinemaBooking.Pages.Customer.Booking.CinemaSelectionModel
 @{
-	Layout = "/Pages/Shared/_UserLayout1.cshtml";
+	Layout = "/Pages/Shared/_UserLayout.cshtml";
 	ViewData["Title"] = "Selection Seat";
 }
 <!DOCTYPE html>
@@ -65,7 +65,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="now-showing-list">
 				<div class="col-md-4 movies-by-category movie-booking">
 					<div class="movie-ticket-book">
-						<input type="checkbox" id="c1" name="cc">
 						<div class="clearfix"></div>
 						<img src="@Model.Movie.Image" alt="" />
 						<div class="bahubali-details">
@@ -78,9 +77,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h4>Country:</h4>
 							<p>@Model.Movie.Country</p>
 							<h4>Genre:</h4>
-							<p>@Model.Movie.Categories</p>
+							<p>@Model.Movie.CategoriesAsString</p>
 							<h4>Actors:</h4>
-							<p>@Model.Movie.Actors</p>
+							<p>@Model.Movie.ActorsAsString</p>
 						</div>
 					</div>
 				</div>

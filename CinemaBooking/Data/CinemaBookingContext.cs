@@ -38,21 +38,21 @@ namespace CinemaBooking.Data
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            string connectStr = config.GetConnectionString("CinemaBooking");
-            if (!optionsBuilder.IsConfigured) {
-                optionsBuilder.UseSqlServer(connectStr);
-            }
-        }
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+			var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+			string connectStr = config.GetConnectionString("CinemaBooking");
+			if (!optionsBuilder.IsConfigured) {
+				optionsBuilder.UseSqlServer(connectStr);
+			}
+		}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Email, "UQ__account__F3DBC57261217132")
+                entity.HasIndex(e => e.FullName, "UQ__account__F3DBC57261217132")
                     .IsUnique();
 
                 entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -257,6 +257,11 @@ namespace CinemaBooking.Data
                 entity.ToTable("Showtime");
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.RoomId)
+                    .HasConstraintName("FK_Showtime_Room");
 
                 entity.HasOne(d => d.Theater)
                     .WithMany(p => p.Showtimes)

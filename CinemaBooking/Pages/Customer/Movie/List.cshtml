@@ -2,7 +2,7 @@
 @using System.Web
 @model CinemaBooking.Pages.Customer.Movie.ListModel
 @{
-	Layout = "~/Pages/Shared/_UserLayout1.cshtml";
+	Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
 <!--
 Author: W3layouts
@@ -208,8 +208,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								@foreach (var movie in Model.BannerMovies)
 								{
 									<li>
-										<a href="/Movie/Details/@movie.MovieId">
-											<img src="~/customer/assets1/images/@movie.ImageBackground"
+										<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">
+											<img src="@movie.ImageBackground"
 												class="img-responsive" alt="@movie.Title" />
 										</a>
 									</li>
@@ -282,7 +282,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				{
 					<div class="col-md-4 movie-preview">
 						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
-							<img src="~/customer/assets1/images/@movie.Image" class="img-responsive zoom-img"
+							<img src="@movie.Image" class="img-responsive zoom-img"
 								alt="@movie.Title" />
 							<div class="m-movie-title">
 								<a class="m-movie-link"
@@ -305,7 +305,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				{
 					<div class="col-md-4 movie-preview">
 						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
-							<img src="~/customer/assets1/images/@movie.Image" class="img-responsive zoom-img"
+							<img src="@movie.Image" class="img-responsive zoom-img"
 								alt="@movie.Title" />
 							<div class="m-movie-title">
 								<a class="m-movie-link"
