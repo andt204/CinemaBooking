@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CinemaBooking.Data
+namespace CinemaBooking.Models
 {
     public partial class CinemaBookingContext : DbContext
     {
@@ -18,12 +18,10 @@ namespace CinemaBooking.Data
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Actor> Actors { get; set; } = null!;
-        public virtual DbSet<ActorMovieAssignment> ActorMovieAssignments { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Director> Directors { get; set; } = null!;
         public virtual DbSet<Movie> Movies { get; set; } = null!;
-        public virtual DbSet<MovieCategoryAssignment> MovieCategoryAssignments { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
@@ -32,17 +30,17 @@ namespace CinemaBooking.Data
         public virtual DbSet<SeatType> SeatTypes { get; set; } = null!;
         public virtual DbSet<Showtime> Showtimes { get; set; } = null!;
         public virtual DbSet<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; } = null!;
-        public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            string connectStr = config.GetConnectionString("CinemaBooking");
-            if (!optionsBuilder.IsConfigured) {
-                optionsBuilder.UseSqlServer(connectStr);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server=DESKTOP-8CQ6BQH\\SQLEXPRESS;database=CinemaBooking;uid=sa;pwd=123456");
             }
         }
 
@@ -52,7 +50,9 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Email, "UQ__account__F3DBC57261217132")
+                entity.HasIndex(e => e.RoleId, "IX_Account_RoleId");
+
+                entity.HasIndex(e => e.FullName, "UQ__account__F3DBC57261217132")
                     .IsUnique();
 
                 entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -83,26 +83,6 @@ namespace CinemaBooking.Data
                 entity.Property(e => e.ActorName).HasMaxLength(100);
             });
 
-            modelBuilder.Entity<ActorMovieAssignment>(entity =>
-            {
-                entity.HasKey(e => e.ActorMovieId)
-                    .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
-
-                entity.Property(e => e.ActorMovieId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Actor)
-                    .WithMany(p => p.ActorMovieAssignments)
-                    .HasForeignKey(d => d.ActorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__MovieActo__Actor__6C190EBB");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.ActorMovieAssignments)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__MovieActo__Movie__6B24EA82");
-            });
-
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.ToTable("Category");
@@ -114,7 +94,17 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Comment");
 
-                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+                entity.HasIndex(e => e.AccountId, "IX_Comment_AccountId");
+
+                entity.HasIndex(e => e.MovieId, "IX_Comment_MovieId");
+
+                entity.HasIndex(e => e.PostId, "IX_Comment_PostId");
+
+                entity.Property(e => e.CommentType).HasDefaultValueSql("(CONVERT([tinyint],(0)))");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
@@ -148,6 +138,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Movie");
 
+                entity.HasIndex(e => e.DirectorId, "IX_Movie_DirectorId");
+
                 entity.Property(e => e.Country).HasMaxLength(50);
 
                 entity.Property(e => e.Image).HasMaxLength(255);
@@ -158,35 +150,50 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.Title).HasMaxLength(100);
 
+                entity.Property(e => e.VideoTrailer).HasDefaultValueSql("(N'')");
+
                 entity.HasOne(d => d.Director)
                     .WithMany(p => p.Movies)
                     .HasForeignKey(d => d.DirectorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Movie_Director");
-            });
 
-            modelBuilder.Entity<MovieCategoryAssignment>(entity =>
-            {
-                entity.HasKey(e => e.MovieCategoryId);
+                entity.HasMany(d => d.Actors)
+                    .WithMany(p => p.Movies)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ActorMovieAssignment",
+                        l => l.HasOne<Actor>().WithMany().HasForeignKey("ActorId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__MovieActo__Actor__6C190EBB"),
+                        r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__MovieActo__Movie__6B24EA82"),
+                        j =>
+                        {
+                            j.HasKey("MovieId", "ActorId").HasName("PK__MovieAct__EEA9AABEAA76A3E9");
 
-                entity.Property(e => e.MovieCategoryId).ValueGeneratedNever();
+                            j.ToTable("ActorMovieAssignments");
 
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.MovieCategoryAssignments)
-                    .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MovieCategoryAssignments_Category");
+                            j.HasIndex(new[] { "ActorId" }, "IX_ActorMovieAssignments_ActorId");
+                        });
 
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.MovieCategoryAssignments)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MovieCategoryAssignments_Movie");
+                entity.HasMany(d => d.Categories)
+                    .WithMany(p => p.Movies)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "MovieCategoryAssignment",
+                        l => l.HasOne<Category>().WithMany().HasForeignKey("CategoryId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_MovieCategoryAssignment_Category"),
+                        r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_MovieCategoryAssignment_Movie"),
+                        j =>
+                        {
+                            j.HasKey("MovieId", "CategoryId");
+
+                            j.ToTable("MovieCategoryAssignment");
+
+                            j.HasIndex(new[] { "CategoryId" }, "IX_MovieCategoryAssignment_CategoryId");
+                        });
             });
 
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
+
+                entity.HasIndex(e => e.AccountId, "IX_Post_AccountId");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -212,6 +219,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Room");
 
+                entity.HasIndex(e => e.RoomTypeId, "IX_Room_RoomTypeId");
+
                 entity.Property(e => e.RoomName).HasMaxLength(100);
 
                 entity.HasOne(d => d.RoomType)
@@ -231,6 +240,10 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Seat>(entity =>
             {
                 entity.ToTable("Seat");
+
+                entity.HasIndex(e => e.RoomId, "IX_Seat_RoomId");
+
+                entity.HasIndex(e => e.SeatTypeId, "IX_Seat_SeatTypeId");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Seats)
@@ -257,18 +270,16 @@ namespace CinemaBooking.Data
                 entity.ToTable("Showtime");
 
                 entity.Property(e => e.Date).HasColumnType("date");
-
-                entity.HasOne(d => d.Theater)
-                    .WithMany(p => p.Showtimes)
-                    .HasForeignKey(d => d.TheaterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Showtime_Theater");
             });
 
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.ShowtimeMovieId)
                     .HasName("PK__event_fi__173260FA7EF6F97D");
+
+                entity.HasIndex(e => e.MovieId, "IX_ShowtimeMovieAssignments_MovieId");
+
+                entity.HasIndex(e => e.ShowtimeId, "IX_ShowtimeMovieAssignments_ShowtimeId");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowtimeMovieAssignments)
@@ -283,18 +294,19 @@ namespace CinemaBooking.Data
                     .HasConstraintName("FK__event_fil__event__34C8D9D1");
             });
 
-            modelBuilder.Entity<Theater>(entity =>
-            {
-                entity.ToTable("Theater");
-
-                entity.Property(e => e.TheaterId).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<Ticket>(entity =>
             {
                 entity.ToTable("Ticket");
 
-                entity.Property(e => e.BookingTime).HasColumnType("datetime");
+                entity.HasIndex(e => e.AccountId, "IX_Ticket_AccountId");
+
+                entity.HasIndex(e => e.PriceId, "IX_Ticket_PriceId");
+
+                entity.HasIndex(e => e.SeatId, "IX_Ticket_SeatId");
+
+                entity.Property(e => e.BookingTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Tickets)
@@ -319,6 +331,14 @@ namespace CinemaBooking.Data
             {
                 entity.HasKey(e => e.TicketMovieId)
                     .HasName("PK__ticket_f__0ABAC5AB0860D343");
+
+                entity.HasIndex(e => e.MovieId, "IX_TicketMovieAssignments_MovieId");
+
+                entity.HasIndex(e => e.RoomId, "IX_TicketMovieAssignments_RoomId");
+
+                entity.HasIndex(e => e.ShowtimeMovieId, "IX_TicketMovieAssignments_ShowtimeMovieId");
+
+                entity.HasIndex(e => e.TicketId, "IX_TicketMovieAssignments_TicketId");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)
@@ -357,6 +377,10 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Vote>(entity =>
             {
                 entity.ToTable("Vote");
+
+                entity.HasIndex(e => e.AccountId, "IX_Vote_AccountId");
+
+                entity.HasIndex(e => e.MovieId, "IX_Vote_MovieId");
 
                 entity.Property(e => e.VoteDate)
                     .HasColumnType("datetime")

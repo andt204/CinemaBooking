@@ -1,7 +1,8 @@
 ﻿@page
+@using System.Web
 @model CinemaBooking.Pages.Customer.Movie.ListModel
 @{
-    Layout = "~/Pages/Shared/_UserLayout1.cshtml";
+	Layout = "~/Pages/Shared/_UserLayout1.cshtml";
 }
 <!--
 Author: W3layouts
@@ -11,6 +12,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>My Show a Entertainment Category Flat Bootstarp responsive Website Template | Movies :: w3layouts</title>
 	<link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' />
@@ -24,7 +26,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<script
+		type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 	<!--webfont-->
 	<link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -74,14 +77,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		});
 	</script>
 </head>
+
 <body>
 	<div class="container">
 		<div class="main-content">
-			
+
 			<div class="bootstrap_container">
 				<nav class="navbar navbar-default w3_megamenu" role="navigation">
 					<div class="navbar-header">
-						<button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
+						<button type="button" data-toggle="collapse" data-target="#defaultmenu"
+							class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span
+								class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i
+								class="fa fa-home"></i></a>
 					</div><!-- end navbar-header -->
 
 					<div id="defaultmenu" class="navbar-collapse collapse">
@@ -89,70 +96,93 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<li><a href="index.html">Home</a></li>
 							<!-- Mega Menu -->
 							<li class="dropdown w3_megamenu-fw active">
-								<a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b class="caret"></b></a>
+								<a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b
+										class="caret"></b></a>
 								<ul class="dropdown-menu fullwidth">
 									<li class="w3_megamenu-content">
 										<div class="row">
-											<h5 class="movies-page">for movies page - <a href="movies.html">Click here</a> </h5>
+											<h5 class="movies-page">for movies page - <a href="movies.html">Click
+													here</a> </h5>
 											<div class="col-sm-4">
 												<h3 class="title">Now Showing</h3>
 												<ul class="mov_list">
 													<li>99%</li>
-													<li><a href="/Customer/Movie/DetailMovie">Baahubali (Telugu) (U/A)</a></li>
+													<li><a href="/Customer/Movie/DetailMovie">Baahubali (Telugu)
+															(U/A)</a></li>
 												</ul>
 												<ul class="mov_list">
 													<li>100%</li>
-													<li><a href="/Customer/Movie/DetailMovie">Baahubali (Hindi) (U/A)</a></li>
+													<li><a href="/Customer/Movie/DetailMovie">Baahubali (Hindi)
+															(U/A)</a></li>
 												</ul>
 												<ul class="mov_list">
 													<li>98%</li>
-													<li><a href="/Customer/Movie/DetailMovie">Baahubali (English) (U/A)</a></li>
+													<li><a href="/Customer/Movie/DetailMovie">Baahubali (English)
+															(U/A)</a></li>
 												</ul>
 												<ul class="mov_list">
 													<li>80%</li>
-													<li><a href="/Customer/Movie/DetailMovie">Jurassic World (3D Hindi) (U/A)</a></li>
+													<li><a href="/Customer/Movie/DetailMovie">Jurassic World (3D Hindi)
+															(U/A)</a></li>
 												</ul>
 												<ul class="mov_list">
 													<li>65%</li>
-													<li><a href="/Customer/Movie/DetailMovie">Hamari Adhuri Kahani (U)</a></li>
+													<li><a href="/Customer/Movie/DetailMovie">Hamari Adhuri Kahani
+															(U)</a></li>
 												</ul>
 											</div><!-- end col-4 -->
 											<div class="col-sm-4 movie-dd">
 												<h3 class="title">Next Change</h3>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
 											</div><!-- end col-4 -->
 											<div class="col-sm-4 movie-dd">
 												<h3 class="title">Comming Soon</h3>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
+												<p><a href="/Customer/Movie/DetailMovie">ABCD 2 (3D) (4DX)</a><span>...
+														(Tomorrow, 19 Jun)</span></p>
 											</div><!-- end col-4 -->
 											<div class="clearfix"></div>
 											<div class="menu-featured-movies">
 												<h3 class="title">Featured Trailers</h3>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf1.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf1.jpg"
+															alt="" /></a>
 												</div>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf2.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf2.jpg"
+															alt="" /></a>
 												</div>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg"
+															alt="" /></a>
 												</div>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg"
+															alt="" /></a>
 												</div>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg"
+															alt="" /></a>
 												</div>
 												<div class="col-md-2 menu-featured-movies-img">
-													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg" alt="" /></a>
+													<a href="/Customer/Movie/DetailMovie"><img src="images/mf3.jpg"
+															alt="" /></a>
 												</div>
 												<div class="clearfix"></div>
 											</div>
@@ -175,24 +205,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<section class="slider">
 						<div class="flexslider">
 							<ul class="slides">
-								<li>
-									<img src="~/customer/assets1/images/pic1.jpg" class="img-responsive" alt="" />
-								</li>
-								<li>
-									<img src="~/customer/assets1/images/pic2.jpg" class="img-responsive" alt="" />
-								</li>
-								<li>
-									<img src="~/customer/assets1/images/pic3.jpg" class="img-responsive" alt="" />
-								</li>
-								<li>
-									<img src="~/customer/assets1/images/pic4.jpg" class="img-responsive" alt="" />
-								</li>
+								@foreach (var movie in Model.BannerMovies)
+								{
+									<li>
+										<a href="/Movie/Details/@movie.MovieId">
+											<img src="~/customer/assets1/images/@movie.ImageBackground"
+												class="img-responsive" alt="@movie.Title" />
+										</a>
+									</li>
+								}
 							</ul>
 						</div>
 					</section>
 					<!-- FlexSlider -->
 					<script defer src="~/customer/assets1/js/jquery.flexslider.js"></script>
-					<link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css" media="screen" />
+					<link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css"
+						media="screen" />
 					<script type="text/javascript">
 						$(function () {
 							SyntaxHighlighter.all();
@@ -207,166 +235,111 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						});
 					</script>
 				</div>
-				<div class="col-md-4 banner-right">
-					<div class="slider1">
-						<div class="callbacks_container">
-							<ul class="rslides" id="slider">
-								<li>
-									<iframe src="https://www.youtube.com/embed/c3Fg4yjwc0A" frameborder="0" allowfullscreen></iframe>
-								</li>
-								<li>
-									<iframe src="https://www.youtube.com/embed/62E4FJTwSuc" frameborder="0" allowfullscreen></iframe>
-								</li>
-								<li>
-									<iframe src="https://www.youtube.com/embed/vyX4toD395U" frameborder="0" allowfullscreen></iframe>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<script src="js/responsiveslides.min.js"></script>
-					<script>
-						$(function () {
-							$("#slider").responsiveSlides({
-								auto: true,
-								nav: false,
-								speed: 500,
-								namespace: "callbacks",
-								pager: false,
-							});
-						});
-					</script>
+				@{
+					// Hàm chuyển đổi URL YouTube sang định dạng nhúng
+					string GetEmbedUrl(string url)
+					{
+						var uri = new Uri(url);
+						var query = HttpUtility.ParseQueryString(uri.Query);
+						var videoId = query["v"];
+						return $"https://www.youtube.com/embed/{videoId}";
+					}
+				}
 
-				</div>
+				<div class="col-md-4 banner-right">
+						<div class="slider1">
+							<div class="callbacks_container">
+								<ul class="rslides" id="slider">
+									@foreach (var trailerUrl in Model.TrailerVideoUrls)
+									{
+										<li>
+											<iframe src="@GetEmbedUrl(trailerUrl)" frameborder="0" allowfullscreen></iframe>
+										</li>
+									}
+								</ul>
+							</div>
+						</div>
+						<script>
+							$(function () {
+								$("#slider").responsiveSlides({
+									auto: false,  // Không tự động chuyển slide
+									nav: true,    // Hiện nút điều hướng
+									speed: 500,   // Tốc độ chuyển slide
+									namespace: "callbacks",
+									pager: false, // Không hiển thị pager
+								});
+							});
+						</script>
+					</div>
+
+
+
 				<div class="clearfix"></div>
 			</div>
 			<div class="now-showing-movies">
 				<h3 class="m-head">Now Showing</h3>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m4.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="#">ABCD 2 (3D) (U)</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>19 Jun, 2015</p>
-								<a href="movie-select-show.html">book now</a>
+				@foreach (var movie in Model.NowShowingMovies)
+				{
+					<div class="col-md-4 movie-preview">
+						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
+							<img src="~/customer/assets1/images/@movie.Image" class="img-responsive zoom-img"
+								alt="@movie.Title" />
+							<div class="m-movie-title">
+								<a class="m-movie-link"
+									href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
+								<div class="clearfix"></div>
+								<div class="m-r-date">
+									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>
+									<a href="/Customer/Movie/BookNow?id=@movie.MovieId">Book Now</a>
+								</div>
 							</div>
-							<div class="m-r-like">
-								<i class="fa fa-thumbs-up"></i>
-								<p>rocking</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m5.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="/Customer/Movie/DetailMovie">Insidious: Chapter 3 (A)</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>25 Jun, 2015</p>
-								<a href="movie-select-show.html">book now</a>
-							</div>
-							<div class="m-r-like">
-								<i class="fa fa-thumbs-up"></i>
-								<p>rocking</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m6.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="/Customer/Movie/DetailMovie">Jurassic World (3D) (U/A)</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>11 Jun, 2015</p>
-								<a href="movie-select-show.html">book now</a>
-							</div>
-							<div class="m-r-like">
-								<i class="fa fa-thumbs-up"></i>
-								<p>rocking</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>
+						</a>
+					</div>
+				}
 				<div class="clearfix"></div>
 			</div>
+
 			<div class="now-showing-movies">
-				<h3 class="m-head">Next Change & Coming Soon</h3>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m10.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="/Customer/Movie/DetailMovie">Bezubaan Ishq (U)</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>3 Jul, 2015</p>
+				<h3 class="m-head">Coming Soon</h3>
+				@foreach (var movie in Model.ComingSoonMovies)
+				{
+					<div class="col-md-4 movie-preview">
+						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
+							<img src="~/customer/assets1/images/@movie.Image" class="img-responsive zoom-img"
+								alt="@movie.Title" />
+							<div class="m-movie-title">
+								<a class="m-movie-link"
+								   href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
+								<div class="clearfix"></div>
+								<div class="m-r-date">
+									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>
+								</div>
 							</div>
-							<div class="m-r-like">
-								<p>want to see <span>75</span>%</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m11.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="/Customer/Movie/DetailMovie">Guddu Rangeela (U/A)</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>3 Jul, 2015</p>
-							</div>
-							<div class="m-r-like">
-								<p>want to see <span>94</span>%</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-4 movie-preview">
-					<a href="/Customer/Movie/DetailMovie" class="mask">
-						<img src="~/customer/assets1/images/m12.jpg" class="img-responsive zoom-img" alt="" />
-						<div class="m-movie-title">
-							<a class="m-movie-link" href="/Customer/Movie/DetailMovie">James Bond</a>
-							<div class="clearfix"></div>
-							<div class="m-r-date">
-								<p><i class="fa fa-calendar-o"></i>3 Jul, 2015</p>
-							</div>
-							<div class="m-r-like">
-								<p>want to see <span>91</span>%</p>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-					</a>
-				</div>				
+						</a>
+					</div>
+				}
 				<div class="clearfix"></div>
 			</div>
 		</div>
 	</div>
-	
-	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;">
+		</span></a>
 </body>
 <script type="text/javascript">
 	$(document).ready(function () {
 		/*
-        var defaults = {
-                containerID: 'toTop', // fading element id
-            containerHoverID: 'toTopHover', // fading element hover id
-            scrollSpeed: 1200,
-            easingType: 'linear'
-            };
-        */
+		var defaults = {
+				containerID: 'toTop', // fading element id
+			containerHoverID: 'toTopHover', // fading element hover id
+			scrollSpeed: 1200,
+			easingType: 'linear'
+			};
+		*/
 
 		$().UItoTop({ easingType: 'easeOutQuart' });
 
 	});
 </script>
+
 </html>
