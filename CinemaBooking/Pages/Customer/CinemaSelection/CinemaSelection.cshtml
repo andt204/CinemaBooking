@@ -64,26 +64,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<!-- AddThis Smart Layers END -->
 			<div class="now-showing-list">
 				<div class="col-md-4 movies-by-category movie-booking">
-					<h5>Looking for a specific cinema?</h5>
-					<input type="text" class="text" value="Type a cinema Name to filter" onfocus="this.value = '';" onblur="if (this.value == 'Type a cinema Name to filter') {this.value = 'Search for a movie name';}">
 					<div class="movie-ticket-book">
 						<input type="checkbox" id="c1" name="cc">
-						<label class="lang">Hide Unavailable Shows</label>
 						<div class="clearfix"></div>
-						<img src="~/customer/assets1/images/movie-show.jpg" alt="" />
+						<img src="@Model.Movie.Image" alt="" />
 						<div class="bahubali-details">
 							<h4>Release Date:</h4>
-							<p>Jul 10, 2015</p>
+							<p>@Model.Movie.PublishTime</p>
 							<h4>Duration:</h4>
-							<p>2 hrs 30 mins</p>
+							<p>@Model.Movie.Length</p>
 							<h4>Director:</h4>
-							<p>S.S. Rajamouli.</p>
-							<h4>Language:</h4>
-							<p>Telugu</p>
+							<p>@Model.Movie.DirectorName</p>
+							<h4>Country:</h4>
+							<p>@Model.Movie.Country</p>
 							<h4>Genre:</h4>
-							<p>Action, Romance</p>
-							<h4>Cast & Crew:</h4>
-							<p>Prabhas as Amarendra Baahubali and Shivudu, Rana Daggubati as Bhallala Deva in Telugu and Palvaalthevan in Tamil, Anushka Shetty as Devasena, Tamannaah as Avantika, Sathyaraj as Kattappa, Nassar as Bijjala Deva in Telugu and Pingala Devan in Tamil, Ramya Krishnan as Sivagami</p>
+							<p>@Model.Movie.Categories</p>
+							<h4>Actors:</h4>
+							<p>@Model.Movie.Actors</p>
 						</div>
 					</div>
 				</div>
@@ -100,7 +97,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
 							</li>
 							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
+								<a href="/Customer/CinemaSelection/SeatSelection">6dotnet:20 PM</a>
 							</li>
 							<li class="time">
 								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>

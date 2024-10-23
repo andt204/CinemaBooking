@@ -1,42 +1,46 @@
 using CinemaBooking.Data;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Role;
+using CinemaBooking.Services; // Add this line for service namespace
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking {
-    public class Program {
-        public static void Main(string[] args) {
-            var builder = WebApplication.CreateBuilder(args);
-            
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-          
-            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-            
-            builder.Services.AddDbContext<CinemaBookingContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
-            
-            // Add services to the container.
-            builder.Services.AddRazorPages();
+	public class Program {
+		public static void Main(string[] args) {
+			var builder = WebApplication.CreateBuilder(args);
 
-            var app = builder.Build();
+			// Register your repositories
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+			builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment()) {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+			// Register your service
+			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+			// Configure DbContext with SQL Server
+			builder.Services.AddDbContext<CinemaBookingContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
 
-            app.UseRouting();
+			// Add services to the container
+			builder.Services.AddRazorPages();
 
-            app.UseAuthorization();
+			var app = builder.Build();
 
-            app.MapRazorPages();
+			// Configure the HTTP request pipeline
+			if (!app.Environment.IsDevelopment()) {
+				app.UseExceptionHandler("/Error");
+				app.UseHsts();
+			}
 
-            app.Run();
-        }
-    }
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+
+			app.UseRouting();
+
+			app.UseAuthorization();
+
+			app.MapRazorPages();
+
+			app.Run();
+		}
+	}
 }
