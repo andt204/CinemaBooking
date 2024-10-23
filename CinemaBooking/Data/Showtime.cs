@@ -11,9 +11,11 @@ namespace CinemaBooking.Data
         }
 
         public int ShowtimeId { get; set; }
+        public int TheaterId { get; set; }
         public TimeSpan StartHour { get; set; }
         public DateTime Date { get; set; }
 
+        public virtual Theater Theater { get; set; } = null!;
         public virtual ICollection<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; }
     }
 }

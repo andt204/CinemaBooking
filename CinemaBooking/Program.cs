@@ -2,6 +2,7 @@
 using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Role;
+using CinemaBooking.Services; // Add this line for service namespace
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -56,34 +57,46 @@ namespace CinemaBooking {
                     };
                 });
 
-            var app = builder.Build();
+			// Register your repositories
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+			builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-            }
+			// Register your service
+			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
 
-            app.UseRouting();
+			// Configure DbContext with SQL Server
+			builder.Services.AddDbContext<CinemaBookingContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
 
-            // Thêm middleware tùy chỉnh để thêm JWT token từ cookie vào header
-            app.UseMiddleware<JwtTokenMiddleware>();
-            app.Use(async (context, next) =>
-            {
-                var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-                logger.LogInformation("Request Headers:");
-                foreach (var header in context.Request.Headers)
-                {
-                    logger.LogInformation($"{header.Key}: {header.Value}");
-                }
-                await next();
-            });
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseSession();
-            app.UseStaticFiles();
+			// Add services to the container
+			builder.Services.AddRazorPages();
 
-            app.MapRazorPages();
-            app.Run();
-        }
-    }
+			var app = builder.Build();
+
+			// Configure the HTTP request pipeline
+			if (!app.Environment.IsDevelopment()) {
+				app.UseExceptionHandler("/Error");
+			}
+
+			app.UseRouting();
+
+			// Thêm middleware tùy chỉnh để thêm JWT token từ cookie vào header
+			app.UseMiddleware<JwtTokenMiddleware>();
+			app.Use(async (context, next) => {
+				var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+				logger.LogInformation("Request Headers:");
+				foreach (var header in context.Request.Headers) {
+					logger.LogInformation($"{header.Key}: {header.Value}");
+				}
+				await next();
+			});
+			app.UseAuthentication();
+			app.UseAuthorization();
+			app.UseSession();
+			app.UseStaticFiles();
+
+			app.MapRazorPages();
+			app.Run();
+		}
+	}
 }

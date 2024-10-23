@@ -32,6 +32,7 @@ namespace CinemaBooking.Data
         public virtual DbSet<SeatType> SeatTypes { get; set; } = null!;
         public virtual DbSet<Showtime> Showtimes { get; set; } = null!;
         public virtual DbSet<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; } = null!;
+        public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
@@ -256,6 +257,12 @@ namespace CinemaBooking.Data
                 entity.ToTable("Showtime");
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasOne(d => d.Theater)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.TheaterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Showtime_Theater");
             });
 
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
@@ -274,6 +281,13 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.ShowtimeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__event_fil__event__34C8D9D1");
+            });
+
+            modelBuilder.Entity<Theater>(entity =>
+            {
+                entity.ToTable("Theater");
+
+                entity.Property(e => e.TheaterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ticket>(entity =>
