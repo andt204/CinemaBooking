@@ -35,8 +35,8 @@ namespace CinemaBooking.Pages.Customer.Ticket
         MovieTitle = t.TicketMovieAssignments.FirstOrDefault().Movie.Title,
         Seat = t.Seat.Row.ToString() + t.Seat.Column.ToString(),
         RoomName = t.Seat.Room.RoomName,
-        Showtime = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.StartHour.ToString(),
-        Date = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.Date.ToString(),
+        //Showtime = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.StartHour.ToString(),
+        //Date = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.Date.ToString(),
         TicketPrice = t.Price.TicketPrice1, 
         Status = t.Status.ToString()
     })

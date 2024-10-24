@@ -1,42 +1,60 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CinemaBooking.Data; // Đảm bảo namespace đúng cho DbContext và các mô hình
+using AutoMapper;
+using CinemaBooking.Data; 
 using CinemaBooking.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaBooking.Services {
-    public class CinemaSelectionService {
-        private readonly CinemaBookingContext _context;
+namespace CinemaBooking.Services
+{
+	public class CinemaSelectionService
+	{
+		private readonly CinemaBookingContext _context;
+		private readonly IMapper _mapper;
 
-        public CinemaSelectionService(CinemaBookingContext context) {
-            _context = context;
-        }
+		public CinemaSelectionService(CinemaBookingContext context, IMapper mapper)
+		{
+			_context = context;
+			_mapper = mapper;
+		}
 
-		public async Task<MovieDto> GetMovieByIdAsync(int movieId) {
-			// Truy vấn thông tin phim theo movieId từ cơ sở dữ liệu
-			return await _context.Movies
-				.Where(m => m.MovieId == movieId) // Lọc phim theo movieId
-				.Include(m => m.Director) // Bao gồm thông tin đạo diễn
+		public async Task<MovieDto> GetMovieByIdAsync(int movieId)
+		{
+			var movie = await _context.Movies
+				.Include(m => m.Director)
 				.Include(m => m.MovieCategoryAssignments)
-					.ThenInclude(mca => mca.Category) // Bao gồm thông tin thể loại
+					.ThenInclude(mca => mca.Category)
 				.Include(m => m.ActorMovieAssignments)
-					.ThenInclude(ama => ama.Actor) // Bao gồm thông tin diễn viên
-				.Select(movie => new MovieDto {
-					Title = movie.Title,
-					PublishTime = movie.PublishTime,
-					Length = movie.Length, // Lưu độ dài phim tính bằng phút
-					DirectorName = movie.Director != null ? movie.Director.DirectorName : "Unknown", // Kiểm tra đạo diễn
-					Country = movie.Country,
-					Categories = movie.MovieCategoryAssignments != null
+					.ThenInclude(ama => ama.Actor)
+				.FirstOrDefaultAsync(m => m.MovieId == movieId);
+
+			var movieDto = _mapper.Map<MovieDto>(movie);
+
+			movieDto.Categories = movie.MovieCategoryAssignments != null
 						? movie.MovieCategoryAssignments.Select(mca => mca.Category != null ? mca.Category.CategoryName : "Unknown").ToList()
-						: new List<string>(), // Kiểm tra thể loại
-					Actors = movie.ActorMovieAssignments != null
+						: new List<string>();
+			movieDto.Actors = movie.ActorMovieAssignments != null
 						? movie.ActorMovieAssignments.Select(ama => ama.Actor != null ? ama.Actor.ActorName : "Unknown").ToList()
-						: new List<string>(), // Kiểm tra diễn viên
-					Image = movie.Image // Giả sử bạn có thuộc tính này trong bảng phim
-				})
-				.FirstOrDefaultAsync(); // Lấy phim đầu tiên hoặc null nếu không tìm thấy
+						: new List<string>();
+			movieDto.DirectorName = movie.Director != null ? movie.Director.DirectorName : "Unknown";
+
+			return movieDto;
+		}
+
+		public async Task<List<TheaterDto>> GetListTheaterAsync(int movieId)
+		{
+			var theaters = await _context.Theaters
+				.Include(t => t.Showtimes) // Include showtimes for each theater
+					.ThenInclude(s => s.ShowtimeMovieAssignments) // Include movie assignments for each showtime
+				.ToListAsync();
+
+			var theaterDtos = _mapper.Map<List<TheaterDto>>(theaters);
+
+			// Filter theaters that have showtimes with the specified movieId
+			return theaterDtos
+				.Where(t => t.Showtimes.Any(s => s.ShowtimeMovieAssignments.Any(sma => sma.MovieId == movieId))
+				).ToList();
 		}
 
 	}
