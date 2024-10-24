@@ -15,7 +15,7 @@ namespace CinemaBooking.Data
             Votes = new HashSet<Vote>();
         }
 
-        public int AccountId { get; set; } 
+        public int AccountId { get; set; }
         [Required(ErrorMessage = "Customer Name is required")]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "The length of name is from 3 to 20 characters")]
         [Display(Name = "Customer Name")]

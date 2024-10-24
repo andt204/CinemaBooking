@@ -64,6 +64,7 @@ namespace CinemaBooking {
 
 			// Register your service
 			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
+			builder.Services.AddScoped<SeatSelectionService>();
 
 			// Configure DbContext with SQL Server
 			builder.Services.AddDbContext<CinemaBookingContext>(options =>
@@ -75,8 +76,11 @@ namespace CinemaBooking {
 			builder.Services.AddAutoMapper(typeof(MovieProfile));
 			builder.Services.AddAutoMapper(typeof(TheaterProfile));
 			builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
+			builder.Services.AddAutoMapper(typeof(RoomProfile));
+			builder.Services.AddAutoMapper(typeof(ShowtimeMovieAssignmentProfile));
+            builder.Services.AddAutoMapper(typeof(SeatProfile));
 
-			var app = builder.Build();
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline
 			if (!app.Environment.IsDevelopment()) {
