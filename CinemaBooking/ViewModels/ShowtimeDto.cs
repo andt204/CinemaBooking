@@ -10,6 +10,7 @@ namespace CinemaBooking.ViewModels
 		public int? RoomId { get; set; }
 		public TimeSpan StartHour { get; set; }
 		public DateTime Date { get; set; }
+		public RoomDto Room { get; set; }
 
 		// Add this property if you want to include movie assignments
 		public List<ShowtimeMovieAssignmentDto> ShowtimeMovieAssignments { get; set; } = new List<ShowtimeMovieAssignmentDto>();

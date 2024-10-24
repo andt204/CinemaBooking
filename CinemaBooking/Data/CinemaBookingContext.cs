@@ -38,17 +38,16 @@ namespace CinemaBooking.Data
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-			string connectStr = config.GetConnectionString("CinemaBooking");
-			if (!optionsBuilder.IsConfigured)
-			{
-				optionsBuilder.UseSqlServer(connectStr);
-			}
-		}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =localhost; database =CinemaBooking;uid=sa;pwd=123;TrustServerCertificate=true;");
+            }
+        }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
             {
@@ -234,6 +233,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Seat");
 
+                entity.Property(e => e.Row).HasMaxLength(50);
+
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Seats)
                     .HasForeignKey(d => d.RoomId)
@@ -263,7 +264,6 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Showtime_Room");
 
                 entity.HasOne(d => d.Theater)
