@@ -79,7 +79,8 @@ namespace CinemaBooking.Pages.Customer.Account
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
-                {
+                {   new Claim("AccountId", account.AccountId.ToString()),
+                 
                     new Claim("Email", account.Email),
                     new Claim(ClaimTypes.Role, account.RoleId == 1 ? "Admin" : "Customer")
                 }),
