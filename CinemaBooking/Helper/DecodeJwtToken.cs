@@ -14,7 +14,7 @@ namespace CinemaBooking.Helper
                 var jwtToken = tokenHandler.ReadJwtToken(token);
 
                 // Tìm claim với tên "email" và lấy giá trị của nó
-                var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "Email");
+                var emailClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "AccountId");
 
                 if (emailClaim != null)
                 {
