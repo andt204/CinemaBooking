@@ -1,9 +1,11 @@
 using CinemaBooking.Data;
+using CinemaBooking.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Customer.Ticket
@@ -11,7 +13,7 @@ namespace CinemaBooking.Pages.Customer.Ticket
     public class HistoryTicketModel : PageModel
     {
         private readonly CinemaBookingContext _context;
-
+        public Data.Account account { get; set; }
         public HistoryTicketModel(CinemaBookingContext context)
         {
             _context = context;
@@ -21,6 +23,16 @@ namespace CinemaBooking.Pages.Customer.Ticket
 
         public async Task<IActionResult> OnGetAsync(int idAccount)
         {
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Pass account data to ViewData
+                }
+            }
             TicketHistories = await _context.Tickets
     .Where(t => t.AccountId == idAccount)
     .Include(t => t.Seat)

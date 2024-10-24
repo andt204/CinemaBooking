@@ -14,6 +14,8 @@ namespace CinemaBooking.Pages.Customer.Account
 
         public Data.Account account { get; set; }
         private readonly CinemaBookingContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
 
         public ChangepasswordModel(CinemaBookingContext context)
         {
