@@ -23,6 +23,7 @@ namespace CinemaBooking.Pages.Customer.Movie
 
         public async Task OnGetAsync()
         {
+
             var currentTime = DateTime.Now;
             var token = Request.Cookies["jwtToken"];
             if (token != null)

@@ -19,6 +19,7 @@ namespace CinemaBooking {
 
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddRazorPages();
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession();
 
 

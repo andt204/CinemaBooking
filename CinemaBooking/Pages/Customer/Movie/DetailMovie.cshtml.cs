@@ -1,9 +1,11 @@
 using CinemaBooking.Data;
+using CinemaBooking.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Customer.Movie
@@ -11,8 +13,8 @@ namespace CinemaBooking.Pages.Customer.Movie
 	public class DetailMovieModel : PageModel
 	{
 		private readonly CinemaBookingContext _context;
-
-		public DetailMovieModel(CinemaBookingContext context)
+        public Data.Account account { get; set; }
+        public DetailMovieModel(CinemaBookingContext context)
 		{
 			_context = context;
 		}
@@ -25,8 +27,18 @@ namespace CinemaBooking.Pages.Customer.Movie
 
         public async Task<IActionResult> OnGetAsync(int movieId) // Using movieId as the parameter
 		{
-			// Fetch the movie details
-			Movie = await _context.Movies.FindAsync(movieId);
+            // Fetch the movie details
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Pass account data to ViewData
+                }
+            }
+            Movie = await _context.Movies.FindAsync(movieId);
 
 			if (Movie == null)
 			{
