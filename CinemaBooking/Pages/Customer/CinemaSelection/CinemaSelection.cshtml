@@ -68,6 +68,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<div class="clearfix"></div>
 						<img src="@Model.Movie.Image" alt="" />
 						<div class="bahubali-details">
+							<h4>Name:</h4>
+							<p>@Model.Movie.Title</p>
 							<h4>Release Date:</h4>
 							<p>@Model.Movie.PublishTime</p>
 							<h4>Duration:</h4>
@@ -84,82 +86,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					</div>
 				</div>
 				<div class="col-md-8 movies-dates">
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6dotnet:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
+					@foreach (var theater in Model.Theaters)
+					{
+						<div class="movie-date-selection">
+							<ul>
+								<li class="location">
+									<a href="pic-a-movie.html">
+										<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
+									</a>
+								</li>
+								@foreach (var showtime in theater.Showtimes)
+								{
+									<li class="time">
+										<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@showtime.StartHour</a>
+									</li>
+								}
+							</ul>
+						</div>
+					}
 				</div>
 				<div class="clearfix"></div>
 			</div>

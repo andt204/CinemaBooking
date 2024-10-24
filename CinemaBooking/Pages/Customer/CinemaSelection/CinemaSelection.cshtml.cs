@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
 using System.Threading.Tasks;
+using System.Net.WebSockets;
 
 namespace CinemaBooking.Pages.Customer.Booking {
 	public class CinemaSelectionModel : PageModel {
@@ -10,17 +11,43 @@ namespace CinemaBooking.Pages.Customer.Booking {
 
 		// Property to hold the movie data
 		public MovieDto Movie { get; set; }
+		public List<TheaterDto> Theaters { get; set; } = new List<TheaterDto>();
 
 		// Constructor injection for the service
 		public CinemaSelectionModel(CinemaSelectionService cinemaSelectionService) {
 			_cinemaSelectionService = cinemaSelectionService;
-			Movie = new MovieDto(); // Initialize the MovieDto to prevent null references
+			Movie = new MovieDto(); 
 		}
 
-		public async Task OnGet(int movieId) {
+		public async Task OnGet(int movieId)
+		{
+			// Check if movieId is valid
+			if (movieId <= 0)
+			{
+				// Handle invalid movieId case
+				Movie = new MovieDto
+				{
+					Title = "Unknown",
+					PublishTime = DateTime.MinValue,
+					Length = 0,
+					DirectorName = "Unknown",
+					Country = "Unknown",
+					Categories = new List<string>(), // Ensure it's initialized
+					Actors = new List<string>(),     // Ensure it's initialized
+					Image = null
+				};
+
+				// Set string representations for default values
+				Movie.CategoriesAsString = string.Join(", ", Movie.Categories);
+				Movie.ActorsAsString = string.Join(", ", Movie.Actors);
+				return; // Exit the method early
+			}
+
 			// Call the service to get the movie details
 			var movie = await _cinemaSelectionService.GetMovieByIdAsync(movieId);
-			if (movie != null) {
+			
+			if (movie != null)
+			{
 				// Map properties from the retrieved movie to the MovieDto
 				Movie.PublishTime = movie.PublishTime;
 				Movie.Length = movie.Length;
@@ -37,9 +64,12 @@ namespace CinemaBooking.Pages.Customer.Booking {
 				// Set the string representations for categories and actors
 				Movie.CategoriesAsString = string.Join(", ", Movie.Categories);
 				Movie.ActorsAsString = string.Join(", ", Movie.Actors);
-			} else {
+			}
+			else
+			{
 				// Handle the case where the movie is null
-				Movie = new MovieDto {
+				Movie = new MovieDto
+				{
 					Title = "Unknown",
 					PublishTime = DateTime.MinValue,
 					Length = 0,
@@ -54,6 +84,7 @@ namespace CinemaBooking.Pages.Customer.Booking {
 				Movie.CategoriesAsString = string.Join(", ", Movie.Categories);
 				Movie.ActorsAsString = string.Join(", ", Movie.Actors);
 			}
+			Theaters = await _cinemaSelectionService.GetListTheaterAsync(movieId);
 		}
 	}
 }

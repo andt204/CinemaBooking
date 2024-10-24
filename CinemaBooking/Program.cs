@@ -1,4 +1,5 @@
-﻿using CinemaBooking.Data;
+﻿using CinemaBooking.AutoMapper;
+using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Role;
@@ -70,6 +71,10 @@ namespace CinemaBooking {
 
 			// Add services to the container
 			builder.Services.AddRazorPages();
+            // Add auto mapper
+			builder.Services.AddAutoMapper(typeof(MovieProfile));
+			builder.Services.AddAutoMapper(typeof(TheaterProfile));
+			builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
 
 			var app = builder.Build();
 
