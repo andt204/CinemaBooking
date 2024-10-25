@@ -38,17 +38,17 @@ namespace CinemaBooking.Data
         public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-			string connectStr = config.GetConnectionString("CinemaBooking");
-			if (!optionsBuilder.IsConfigured)
-			{
-				optionsBuilder.UseSqlServer(connectStr);
-			}
-		}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            string connectStr = config.GetConnectionString("CinemaBooking");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(connectStr);
+            }
+        }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
             {
@@ -234,6 +234,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Seat");
 
+                entity.Property(e => e.Row).HasMaxLength(50);
+
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Seats)
                     .HasForeignKey(d => d.RoomId)
@@ -263,7 +265,6 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Showtime_Room");
 
                 entity.HasOne(d => d.Theater)

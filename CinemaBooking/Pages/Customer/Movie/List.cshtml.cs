@@ -23,8 +23,18 @@ namespace CinemaBooking.Pages.Customer.Movie
 
         public async Task OnGetAsync()
         {
-            var currentTime = DateTime.Now;
 
+            var currentTime = DateTime.Now;
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
             var movies = await _context.Movies
                 .Select(m => new Data.Movie
                 {
@@ -57,14 +67,7 @@ namespace CinemaBooking.Pages.Customer.Movie
             // Lấy danh sách phim để hiển thị hình ảnh nền
             BannerMovies = recentMovies.Concat(upcomingMovies).ToList();
 			
-			var token = Request.Cookies["jwtToken"];
-			if (token != null) {
-				var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-				if (email != null) {
-					account = _context.Accounts.FirstOrDefault(x => x.Email == email);
-					ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
-				}
-			}
+			
 		}
     }
 }

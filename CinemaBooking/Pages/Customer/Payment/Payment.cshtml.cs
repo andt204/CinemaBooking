@@ -7,6 +7,7 @@ namespace CinemaBooking.Pages.Customer.Payment
     {
         public void OnGet()
         {
+
         }
     }
 }
