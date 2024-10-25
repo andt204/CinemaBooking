@@ -289,7 +289,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
 								<div class="clearfix"></div>
 								<div class="m-r-date">
-									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>
+									<p>
+										<i class="far fa-calendar"></i>@movie.PublishTime.ToShortDateString()
+										&nbsp;&nbsp;&nbsp;&nbsp;Duration:@movie.Length minute
+									</p>
 									<a href="/Customer/Movie/BookNow?id=@movie.MovieId">Book Now</a>
 								</div>
 							</div>

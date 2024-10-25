@@ -1359,14 +1359,14 @@ img.zoom-img:hover {
 }
 a.m-movie-link{
 	font-weight: 500;
-  font-size: 1.1em;
+  font-size: 1.5em;
   color: #007DD3;
   line-height: 1.7em;
   overflow: hidden;
   white-space: nowrap;
   -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
-  padding: 0 0px 10px;
+/*  padding: 0 0px 10px;*/
   display: block;
 }
 .event-info span {
@@ -1375,8 +1375,8 @@ a.m-movie-link{
 	color:#000;
 }
 .m-movie-title {
-	padding:10px;
-	  border:1px solid #D6D8DB;
+/*	padding:10px;
+	  border:1px solid #D6D8DB;*/
 }
 .movie-preview {
 	margin:1.5em 0;  
@@ -1612,7 +1612,7 @@ p.info h3 {
 }
 .rtm a:hover, .wt a:hover {
 	color: #000;
-	background-color: #fff200;;
+	background-color: #fff200;
 }
 p.info {
 	font-size: 1em;
@@ -3928,7 +3928,7 @@ p.fourth {
 		  margin: 1em 0;
 	}
 	a.m-movie-link {
-		padding: 0 0px 5px;
+/*		padding: 0 0px 5px;*/
 	}
 	a.post-title {
 		font-size: 1.1em;
