@@ -2,7 +2,9 @@
 using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
+using CinemaBooking.Repositories.Comment;
 using CinemaBooking.Repositories.Role;
+using CinemaBooking.Repositories.Vote;
 using CinemaBooking.Services; // Add this line for service namespace
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,8 @@ namespace CinemaBooking {
 
 
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddRazorPages();
@@ -62,6 +66,8 @@ namespace CinemaBooking {
 			// Register your repositories
 			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 			builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<IVoteRepository, VoteRepository>();
 
 			// Register your service
 			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
