@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page
 @model CinemaBooking.Pages.Customer.Ticket.DetailTicketModel
 @{
     Layout = "~/Pages/Shared/_UserLayout1.cshtml";
@@ -110,28 +110,28 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a href="/Customer/Movie/List" class="navbar-brand"><i class="fa fa-home"></i></a>
+                        <a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
                     </div>
                     <div id="defaultmenu" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
-                            <li><a href="/Customer/Movie/List">Home</a></li>
-                            <li><a href="#">Tickets</a></li>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="tickets.html">Tickets</a></li>
                         </ul>
                     </div>
                 </nav>
             </div>
             <div class="m-single-article">
                 <div class="article-left">
-                    <h3>Ticket Details for Movie: @Model.Movie.Title</h3>
-                    <p><strong>Seat ID:</strong> @Model.Seat.SeatId</p>
-                    <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p>
-                    <p><strong>Status:</strong>@Model.Status</p>
-                    <p><strong>Price:</strong> $@Model.TicketPrice.TicketPrice1</p>
+                    <h3>Ticket Details for Movie: ABCD 2 (3D)</h3>
+                    <p><strong>Seat ID:</strong> B5</p>
+                    <p><strong>Booking Time:</strong> October 9, 2024, 07:00 PM</p>
+                    <p><strong>Status:</strong> Confirmed</p>
+                    <p><strong>Price:</strong> $15.00</p>
                     <div class="clearfix"></div>
                     <h4>Movie Information</h4>
-                    <p><strong>Title:</strong> @Model.Movie.Title</p>
-                    <p><strong>Duration:</strong> @Model.Movie.Length minutes</p>
-                    <p><strong>Booking Time:</strong> @Model.formattedPublishTime</p>
+                    <p><strong>Title:</strong> ABCD 2 (3D)</p>
+                    <p><strong>Duration:</strong> 2 hours 10 minutes</p>
+                    <p><strong>Release Date:</strong> October 07, 2024</p>
                     <div class="article-img">
                         <img src="~/customer/assets1/images/m4.jpg" alt="Movie Poster" class="img-responsive" />
                     </div>
@@ -140,18 +140,19 @@
                     <div class="grid_3 grid_5">
                         <h4>Showtimes</h4>
                         <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#showtime-tue" role="tab" data-toggle="tab">Tue-30</a></li>
                             <li role="presentation"><a href="#showtime-wed" role="tab" data-toggle="tab">Wed-1</a></li>
                         </ul>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="showtime-tue">
                                 <p>INOX: Lorem Mall, Chicago</p>
-                                <a class="show-time" style="color: white" href="movie-select-show.html">06:30 PM</a>
+                                <a class="show-time" href="movie-select-show.html">06:30 PM</a>
                                 <div class="clearfix"></div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="showtime-wed">
                                 <p>INOX: Lorem Mall, Chicago</p>
-                                <a class="show-time" style="color: white" href="movie-select-show.html">12:45 PM</a>
-                                <a class="show-time" style="color: white" href="movie-select-show.html">06:30 PM</a>
+                                <a class="show-time" href="movie-select-show.html">12:45 PM</a>
+                                <a class="show-time" href="movie-select-show.html">06:30 PM</a>
                                 <div class="clearfix"></div>
                             </div>
                         </div>
