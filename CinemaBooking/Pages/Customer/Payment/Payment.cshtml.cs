@@ -1,31 +1,47 @@
-using CinemaBooking.Repositories;
-using CinemaBooking.Repositories.Movie;
+﻿using CinemaBooking.Model;
+using CinemaBooking.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CinemaBooking.Pages.Customer.Payment
-{
-    public class PaymentModel : PageModel
-    {
-        private readonly IAccountRepository _accountRepository;
-        private readonly IMovieRepository _movieRepository;
+namespace CinemaBooking.Pages.Customer.Payment;
 
-        public PaymentModel(
-            IAccountRepository accountRepository,
-            IMovieRepository movieRepository
-        )
+public class PaymentModel : PageModel
+    {
+        private readonly IVnPayService _vnPayService;
+
+        public PaymentModel(IVnPayService vnPayService)
         {
-            _accountRepository = accountRepository;
-            _movieRepository = movieRepository;
+            _vnPayService = vnPayService;
         }
 
-        public Data.Account Account { get; set; }
+        [BindProperty]
+        public VnPaymentRequestModel PaymentRequest { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+
+        public void OnGet()
         {
-            Account = await _accountRepository.GetByIdAsync(id);
+            
+        }
 
-            return Page();
+        public IActionResult OnPost() 
+        {
+            // if (!ModelState.IsValid)
+            // {
+            //     // Lấy lỗi từ ModelState
+            //     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            //     foreach (var error in errors)
+            //     {
+            //         // Có thể ghi log vào console hoặc một file
+            //         Console.WriteLine(error);
+            //     }
+            //     // Xem lỗi để biết lý do
+            //     return Page();
+            // }
+            //
+            // // Nếu hợp lệ
+            // PaymentRequest.OrderId = "1";
+            // PaymentRequest.CreatedDate = DateTime.Now;
+
+            return RedirectToPage("/Admin/Account/List");
         }
     }
-}
