@@ -1,7 +1,7 @@
 ﻿@page
 @model CinemaBooking.Pages.Customer.Booking.CinemaSelectionModel
 @{
-	Layout = "/Pages/Shared/_UserLayout1.cshtml";
+	Layout = "/Pages/Shared/_UserLayout.cshtml";
 	ViewData["Title"] = "Selection Seat";
 }
 <!DOCTYPE html>
@@ -64,106 +64,46 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<!-- AddThis Smart Layers END -->
 			<div class="now-showing-list">
 				<div class="col-md-4 movies-by-category movie-booking">
-					<h5>Looking for a specific cinema?</h5>
-					<input type="text" class="text" value="Type a cinema Name to filter" onfocus="this.value = '';" onblur="if (this.value == 'Type a cinema Name to filter') {this.value = 'Search for a movie name';}">
 					<div class="movie-ticket-book">
-						<input type="checkbox" id="c1" name="cc">
-						<label class="lang">Hide Unavailable Shows</label>
 						<div class="clearfix"></div>
-						<img src="~/customer/assets1/images/movie-show.jpg" alt="" />
+						<img src="@Model.Movie.Image" alt="" />
 						<div class="bahubali-details">
+							<h4>Name:</h4>
+							<p>@Model.Movie.Title</p>
 							<h4>Release Date:</h4>
-							<p>Jul 10, 2015</p>
+							<p>@Model.Movie.PublishTime</p>
 							<h4>Duration:</h4>
-							<p>2 hrs 30 mins</p>
+							<p>@Model.Movie.Length</p>
 							<h4>Director:</h4>
-							<p>S.S. Rajamouli.</p>
-							<h4>Language:</h4>
-							<p>Telugu</p>
+							<p>@Model.Movie.DirectorName</p>
+							<h4>Country:</h4>
+							<p>@Model.Movie.Country</p>
 							<h4>Genre:</h4>
-							<p>Action, Romance</p>
-							<h4>Cast & Crew:</h4>
-							<p>Prabhas as Amarendra Baahubali and Shivudu, Rana Daggubati as Bhallala Deva in Telugu and Palvaalthevan in Tamil, Anushka Shetty as Devasena, Tamannaah as Avantika, Sathyaraj as Kattappa, Nassar as Bijjala Deva in Telugu and Pingala Devan in Tamil, Ramya Krishnan as Sivagami</p>
+							<p>@Model.Movie.CategoriesAsString</p>
+							<h4>Actors:</h4>
+							<p>@Model.Movie.ActorsAsString</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-8 movies-dates">
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
-					<div class="movie-date-selection">
-						<ul>
-							<li class="location">
-								<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>Theater Name: Location</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">11:00 AM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">3:00 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">6:20 PM</a>
-							</li>
-							<li class="time">
-								<a href="/Customer/CinemaSelection/SeatSelection">9:00 PM</a>
-							</li>
-						</ul>
-					</div>
+					@foreach (var theater in Model.Theaters)
+					{
+						<div class="movie-date-selection">
+							<ul>
+								<li class="location">
+									<a href="pic-a-movie.html">
+										<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
+									</a>
+								</li>
+								@foreach (var showtime in theater.Showtimes)
+								{
+									<li class="time">
+										<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@showtime.StartHour</a>
+									</li>
+								}
+							</ul>
+						</div>
+					}
 				</div>
 				<div class="clearfix"></div>
 			</div>
