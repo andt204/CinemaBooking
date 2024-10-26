@@ -60,28 +60,39 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<style>
 		.date-buttons {
 			display: flex;
-			gap: 15px;
-			margin-bottom: 20px;
-			border-bottom: 1px solid #ddd;
-			padding-bottom: 10px;
+			justify-content: space-around; /* Distribute space evenly */
+			border-bottom: 2px solid #e0e0e0;
+			padding: 10px 0;
 		}
 
 		.date-button {
-			padding: 10px 15px;
+			padding: 8px 12px;
 			font-weight: bold;
 			color: #007bff;
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
 			transition: color 0.3s;
+			flex: 1; /* Each button takes up equal space */
+			text-align: center;
 		}
 
-			.date-button:hover {
+			.date-button[disabled] {
+				color: #ccc;
+				cursor: default;
+			}
+
+			.date-button:hover:not([disabled]), .date-button:focus:not([disabled]) {
 				color: #0056b3;
+				text-decoration: underline;
 			}
 
 		.movie-date-selection {
 			margin-top: 20px;
+		}
+
+		.location, .time {
+			margin: 5px 0;
 		}
 	</style>
 </head>
@@ -113,66 +124,75 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					</div>
 				</div>
 				@{
-					// Declare showDates as a List<DateTime>
-					List<DateTime> showDates = Model.Theaters
+					// Get the current date
+					DateTime today = DateTime.Today;
+
+					// Generate a list of the next 7 days starting from today
+					List<DateTime> nextSevenDays = Enumerable.Range(0, 7)
+					.Select(offset => today.AddDays(offset))
+					.ToList();
+
+					// Declare showDates as a HashSet for quick lookups
+					HashSet<DateTime> showDates = Model.Theaters
 					.SelectMany(t => t.Showtimes)
 					.Select(s => s.Date)
-					.Distinct()
-					.ToList();
+					.ToHashSet();
 				}
 
 				<!-- Date Selection Buttons -->
 				<div class="date-buttons">
-					@foreach (var showDate in showDates)
+					@foreach (var date in nextSevenDays)
 					{
-						<button class="date-button" onclick="showTheater('@showDate.ToString("yyyy-MM-dd")')">
-							@showDate.ToString("ddd-dd") <!-- Format as 'Tue-30', 'Wed-1', etc. -->
+						// Check if this date has any showtimes
+						bool hasShowtime = showDates.Contains(date);
+						<button class="date-button" onclick="showTheater('@date.ToString("yyyy-MM-dd")')" @(hasShowtime ? "" : "disabled")>
+							@date.ToString("ddd-dd") <!-- Format as 'Tue-30', 'Wed-01', etc. -->
 						</button>
 					}
 				</div>
 
 				<!-- Theater and Showtime Information -->
 				<div class="col-md-8 movies-dates">
-					@foreach (var showDate in showDates)
+					@foreach (var date in nextSevenDays)
 					{
-						<div class="movie-date-selection" id="theater-@showDate.ToString("yyyy-MM-dd")" style="display: none;">
-							@foreach (var theater in Model.Theaters)
+						<div class="movie-date-selection" id="theater-@date.ToString("yyyy-MM-dd")" style="display: none;">
+							@if (showDates.Contains(date))
 							{
-								// Get showtimes for the current theater on the current show date
-								var showtimesForDate = theater.Showtimes.Where(s => s.Date == showDate).ToList();
-
-								if (showtimesForDate.Any()) // Only display if there are showtimes
+								@foreach (var theater in Model.Theaters)
 								{
-									<ul>
-										<li class="location">
-											<a href="pic-a-movie.html">
-												<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
-											</a>
-										</li>
+									// Get showtimes for the current theater on the current show date
+									var showtimesForDate = theater.Showtimes.Where(s => s.Date == date).ToList();
 
-										@foreach (var showtime in showtimesForDate)
-										{
-											<li class="time">
-												@{
-													// Formatting the StartHour assuming it's a TimeSpan
-													string formattedTime = showtime.StartHour.ToString(@"hh\:mm");
-												}
-												<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@formattedTime</a>
+									if (showtimesForDate.Any()) // Only display if there are showtimes
+									{
+										<ul>
+											<li class="location">
+												<a href="pic-a-movie.html">
+													<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
+												</a>
 											</li>
-										}
-									</ul>
+
+											@foreach (var showtime in showtimesForDate)
+											{
+												<li class="time">
+													@{
+														// Formatting the StartHour assuming it's a TimeSpan
+														string formattedTime = showtime.StartHour.ToString(@"hh\:mm");
+													}
+													<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@formattedTime</a>
+												</li>
+											}
+										</ul>
+									}
 								}
+							}
+							else
+							{
+								<p>No showtimes available for this day.</p>
 							}
 						</div>
 					}
 				</div>
-
-
-
-
-
-
-
 				<div class="clearfix"></div>
 			</div>
 		</div>
@@ -184,16 +204,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		});
 	</script>
 	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-</body>
-<script>
-	function showTheater(dateId) {
-		// Hide all theater sections
-		document.querySelectorAll('.movie-date-selection').forEach(function (section) {
-			section.style.display = 'none';
-		});
+	<script>
+		function showTheater(dateId) {
+			document.querySelectorAll('.movie-date-selection').forEach(function (section) {
+				section.style.display = 'none';
+			});
 
-		// Show the selected date's theater section
-		document.getElementById('theater-' + dateId).style.display = 'block';
-	}
-</script>
+			document.getElementById('theater-' + dateId).style.display = 'block';
+		}
+	</script>
+</body>
 </html>

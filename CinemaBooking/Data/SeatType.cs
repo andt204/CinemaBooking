@@ -12,6 +12,7 @@ namespace CinemaBooking.Data
 
         public int SeatTypeId { get; set; }
         public string SeatTypeName { get; set; } = null!;
+        public decimal? SeatPrice { get; set; }
 
         public virtual ICollection<Seat> Seats { get; set; }
     }

@@ -40,7 +40,6 @@ namespace CinemaBooking.Pages.Customer.Ticket
     .ThenInclude(r => r.RoomType)
     .Include(t => t.TicketMovieAssignments)
     .ThenInclude(tma => tma.Movie)
-    .Include(t => t.Price)
     .Select(t => new TicketHistoryViewModel
     {
         TicketId = t.TicketId,
@@ -49,7 +48,7 @@ namespace CinemaBooking.Pages.Customer.Ticket
         RoomName = t.Seat.Room.RoomName,
         //Showtime = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.StartHour.ToString(),
         //Date = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.Date.ToString(),
-        TicketPrice = t.Price.TicketPrice1, 
+        TicketPrice = t.TicketPrice ?? 0,
         Status = t.Status.ToString()
     })
     .ToListAsync();

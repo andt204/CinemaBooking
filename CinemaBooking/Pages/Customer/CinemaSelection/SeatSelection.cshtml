@@ -57,11 +57,6 @@
             color: #333; /* Change label color */
         }
 
-        .agileits-left {
-            display: flex;
-            flex-direction: column;
-        }
-
         .label-text {
             margin-bottom: 5px; /* Khoảng cách giữa label và input */
             font-weight: bold; /* Đậm hơn để nổi bật */
@@ -73,38 +68,6 @@
             align-items: center;
             text-align: center;
         }
-
-        .inputForm, .seat_w3ls, .seatStructure, .displayerBoxes {
-            width: 100%;
-            max-width: 800px; /* Tùy chỉnh theo độ rộng mong muốn */
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-            .inputForm h2, .screen h2 {
-                font-size: 1.5em;
-                font-weight: bold;
-                margin-bottom: 20px;
-            }
-
-        .mr_agilemain {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px; /* Khoảng cách giữa các khối */
-        }
-
-        .agileits-left, .agileits-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-            .agileits-left label, .agileits-right label {
-                text-align: left; /* Giữ label ở sát bên trái */
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
 
         input[type="text"], input[type="number"] {
             padding: 10px;
@@ -130,7 +93,6 @@
             }
 
         .seat_w3ls, .Displaytable {
-            display: flex;
             justify-content: space-between;
             width: 100%;
             text-align: center;
@@ -208,23 +170,17 @@
             }
 
             .Displaytable th {
-                color: black; /* Header text color */
+                color: white; /* Header text color */
+                padding-bottom: 15px; /* Add space below the header */
             }
 
-        textarea {
-            width: 100%; /* Full width for textareas */
-            height: 50px; /* Fixed height for textareas */
-            border: 1px solid #ccc; /* Border color */
-            border-radius: 4px; /* Rounded corners */
-            resize: none; /* Disable resizing */
-            padding: 8px; /* Padding inside textarea */
-            font-size: 14px; /* Font size */
-        }
-
-            textarea:focus {
-                outline: none; /* Remove outline on focus */
-                border-color: #4CAF50; /* Border color on focus */
+            .Displaytable tbody tr {
+                transition: background-color 0.3s; /* Smooth transition for row hover effect */
             }
+
+                .Displaytable tbody tr:hover {
+                    background-color: rgba(0, 128, 0, 0.2); /* Highlight row on hover */
+                }
 
         #submitButton {
             display: inline-block; /* Ensure the button is treated as a block */
@@ -242,28 +198,17 @@
             #submitButton:hover {
                 background-color: #45a049; /* Darker green on hover */
             }
-
-
     </style>
 </head>
 
 <body>
     <h1>Movie Seat Selection</h1>
-    <div class="container" style="display: flex; justify-content: space-between;">
+    <h1>@Model.Showtime.Room.RoomType.RoomTypeName ROOM</h1>
+    <div class="container" style="justify-content: space-between;">
         <!-- Left Block: User Input Form -->
-        <div class="w3ls-reg" style="flex: 1; margin-right: 20px;">
+        <div class="w3ls-reg">
             <div class="inputForm">
-                <h2>Fill the required details below and select your seats</h2>
-                <div class="mr_agilemain">
-                    <div class="agileits-right">
-                        <label>
-                            Number of Seats
-                            <span>*</span>
-                        </label>
-                        <input type="number" id="Numseats" required min="1">
-                    </div>
-                </div>
-                <button id="startSelectingBtn">Start Selecting</button>
+                <h2>Please select your seat, up to 5 seats</h2>
             </div>
             <ul class="seat_w3ls">
                 <li class="smallBox greenBox">Selected Seat</li>
@@ -298,6 +243,8 @@
 
                                 if (seat != null)
                                 {
+                                    var seatPrice = seat.SeatType.SeatPrice;
+                                    var seatType = seat.SeatType.SeatTypeName;
                                     var checkboxColor = seat.Status switch
                                     {
                                         SeatStatus.Available => "white",
@@ -310,8 +257,12 @@
 
                                     <td style="text-align: center;">
                                         <input type="checkbox" class="cinema-seats" value="@seat.SeatId" @checkboxDisabled
-                                               title="Seat Status: @(seat.Status)" style="display: none;" data-row="@row" data-column="@column">
-                                        <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer;" data-seat-id="@seat.SeatId"></span>
+                                               title="Seat Status: @(seat.Status)" style="display: none;"
+                                               data-row="@row" data-column="@column"
+                                               data-seat-price="@seatPrice" data-seat-type="@seatType">
+                                        <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer;"
+                                              data-seat-id="@seat.SeatId"
+                                              data-seat-price="@seatPrice" data-seat-type="@seatType"></span>
                                     </td>
                                 }
                                 else // Nếu ghế là null, tạo một ô trống
@@ -319,6 +270,7 @@
                                     <td style="text-align: center;"></td>
                                 }
                             }
+
                         </tr>
                     }
                 </table>
@@ -326,65 +278,123 @@
                 <div class="screen">
                     <h2 class="wthree">Screen this way</h2>
                 </div>
-                <button id="confirmSelectionBtn">Confirm Selection</button>
             </div>
         </div>
 
         <!-- Right Block: Selected Seats Display -->
-        <div class="displayerBoxes txt-center" style="flex: 1; overflow-x:auto;">
+        <div class="displayerBoxes txt-center" style="flex: 1; overflow-x: auto;">
+            <div class="inputForm">
+                <h2>Selection Seats Information</h2>
+            </div>
             <table class="Displaytable w3ls-table" width="100%">
-                <tr>
-                    <th>Seat Type</th>
-                    <th>Number of Seats</th>
-                    <th>Price</th>
-                </tr>
-                <tr>
-                    <td>
-                        <textarea id="typeDisplay" readonly></textarea>
-                    </td>
-                    <td>
-                        <textarea id="numberDisplay" readonly></textarea>
-                    </td>
-                    <td>
-                        <textarea id="priceDisplay" readonly></textarea>
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th style="width: 33%;">Seat Type</th>
+                        <th style="width: 33%;">Number of Seats</th>
+                        <th style="width: 33%;">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="seatsInfoBody">
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
+                <tfoot>
+                    <tr class="total-price">
+                        <td colspan="2">Total Price:</td>
+                        <td id="totalPrice">0.00 VND</td>
+                    </tr>
+                </tfoot>
             </table>
-            <button id="submitButton" onclick="location.href='/Customer/Payment/Payment'">Continue</button>
+
+            <button id="confirmSelectionBtn" onclick="location.href='/Customer/Payment/Payment'">Confirm Selection</button>
         </div>
     </div>
 
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Bắt sự kiện click vào các span có class 'checkmark'
+            const selectedSeats = [];
+
+            // Function to update the selection information
+            function updateSelectionInfo() {
+                const seatCounts = {};
+                let totalPrice = 0; // Initialize total price
+
+                selectedSeats.forEach(seat => {
+                    const seatType = seat.type;
+                    const seatPrice = seat.price;
+
+                    if (!seatCounts[seatType]) {
+                        seatCounts[seatType] = { count: 0, totalPrice: 0 };
+                    }
+                    seatCounts[seatType].count++;
+                    seatCounts[seatType].totalPrice += seatPrice;
+                    totalPrice += seatPrice; // Add to total price
+                });
+
+                const seatsInfoBody = document.getElementById("seatsInfoBody");
+                seatsInfoBody.innerHTML = ""; // Clear previous rows
+
+                // Add rows for each seat type
+                for (const [type, info] of Object.entries(seatCounts)) {
+                    const row = document.createElement("tr");
+
+                    const typeCell = document.createElement("td");
+                    typeCell.textContent = type;
+
+                    const countCell = document.createElement("td");
+                    countCell.textContent = info.count;
+
+                    const priceCell = document.createElement("td");
+                    priceCell.textContent = `${info.totalPrice.toFixed(2)} VND`; // Format price
+
+                    row.appendChild(typeCell);
+                    row.appendChild(countCell);
+                    row.appendChild(priceCell);
+
+                    seatsInfoBody.appendChild(row);
+                }
+
+                // Update the total price display
+                document.getElementById("totalPrice").textContent = `${totalPrice.toFixed(2)} VND`;
+            }
+
+            // Event listener for each seat checkbox
             document.querySelectorAll("#seatsBlock .checkmark").forEach(span => {
                 span.addEventListener("click", function () {
-                    // Tìm checkbox đi kèm dựa vào data-row và data-column
-                    const row = span.parentNode.querySelector("input").getAttribute("data-row");
-                    const column = span.parentNode.querySelector("input").getAttribute("data-column");
-                    const checkbox = span.parentNode.querySelector("input.cinema-seats");
+                    const checkbox = span.previousElementSibling; // Get the corresponding checkbox
+                    const seatId = checkbox.value;
+                    const seatType = checkbox.getAttribute("data-seat-type");
+                    const seatPrice = parseFloat(checkbox.getAttribute("data-seat-price"));
 
                     if (checkbox && !checkbox.disabled) {
-                        checkbox.checked = !checkbox.checked; // Đổi trạng thái chọn/bỏ chọn
+                        checkbox.checked = !checkbox.checked; // Toggle checkbox state
 
-                        // Đổi màu nền của span để thể hiện trạng thái đã chọn
                         if (checkbox.checked) {
-                            span.style.backgroundColor = "#28a745"; // Màu xanh lá khi chọn
+                            if (selectedSeats.length < 5) { // Limit selection to 5 seats
+                                span.style.backgroundColor = "#28a745"; // Selected color
+                                selectedSeats.push({ id: seatId, type: seatType, price: seatPrice });
+                            } else {
+                                alert("You can select a maximum of 5 seats.");
+                                checkbox.checked = false; // Uncheck if limit exceeded
+                            }
                         } else {
-                            span.style.backgroundColor = "white"; // Trở lại màu ban đầu khi bỏ chọn
+                            const index = selectedSeats.findIndex(seat => seat.id === seatId);
+                            if (index > -1) {
+                                selectedSeats.splice(index, 1);
+                            }
+                            span.style.backgroundColor = ""; // Reset color
                         }
 
-                        // Log ra console để kiểm tra
-                        console.log(`Selected Seat at Row: ${row}, Column: ${column}, Checked: ${checkbox.checked}`);
-                    } else {
-                        // Log ra console nếu ghế không khả dụng
-                        console.log(`Seat at Row: ${row}, Column: ${column} is not available.`);
+                        updateSelectionInfo(); // Update the displayed selection info
                     }
                 });
             });
         });
     </script>
+
+
+
+
 </body>
 
 </html>
