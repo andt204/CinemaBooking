@@ -35,7 +35,7 @@ namespace CinemaBooking.Data
         public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
-        public virtual DbSet<TicketPrice> TicketPrices { get; set; } = null!;
+        public virtual DbSet<TicketSeatAssignment> TicketSeatAssignments { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -118,20 +118,18 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Status).HasMaxLength(50);
-
                 entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__comment__account__48CFD27E");
+                    .HasConstraintName("FK_Comment_Account");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.MovieId)
-                    .HasConstraintName("FK__comment__movie_i__47DBAE45");
+                    .HasConstraintName("FK_Comment_Movie");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comments)
@@ -253,6 +251,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("SeatType");
 
+                entity.Property(e => e.SeatPrice).HasColumnType("decimal(10, 2)");
+
                 entity.Property(e => e.SeatTypeName).HasMaxLength(100);
             });
 
@@ -305,23 +305,13 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.BookingTime).HasColumnType("datetime");
 
+                entity.Property(e => e.TicketPrice).HasColumnType("decimal(10, 2)");
+
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ticket_Account");
-
-                entity.HasOne(d => d.Price)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.PriceId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ticket__price_id__3F466844");
-
-                entity.HasOne(d => d.Seat)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.SeatId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ticket__seat_id__3E52440B");
 
                 entity.HasOne(d => d.Showtime)
                     .WithMany(p => p.Tickets)
@@ -354,13 +344,19 @@ namespace CinemaBooking.Data
                     .HasConstraintName("FK__ticket_fi__ticke__4222D4EF");
             });
 
-            modelBuilder.Entity<TicketPrice>(entity =>
+            modelBuilder.Entity<TicketSeatAssignment>(entity =>
             {
-                entity.ToTable("TicketPrice");
+                entity.HasKey(e => e.TicketSeatId);
 
-                entity.Property(e => e.TicketPrice1)
-                    .HasColumnType("decimal(10, 2)")
-                    .HasColumnName("TicketPrice");
+                entity.HasOne(d => d.Seat)
+                    .WithMany(p => p.TicketSeatAssignments)
+                    .HasForeignKey(d => d.SeatId)
+                    .HasConstraintName("FK_TicketSeatAssignments_Seat");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.TicketSeatAssignments)
+                    .HasForeignKey(d => d.TicketId)
+                    .HasConstraintName("FK_TicketSeatAssignments_Ticket");
             });
 
             modelBuilder.Entity<Vote>(entity =>

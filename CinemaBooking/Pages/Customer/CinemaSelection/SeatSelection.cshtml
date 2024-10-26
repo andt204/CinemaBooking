@@ -2,9 +2,11 @@
 @using CinemaBooking.Enum
 @model CinemaBooking.Pages.Customer.CinemaSelection.SeatSelectionModel
 @{
-    Layout = "/Pages/Shared/_UserLayout1.cshtml";
+    Layout = "/Pages/Shared/_UserLayout.cshtml";
     ViewData["Title"] = "Cinema Selection";
 }
+@Html.AntiForgeryToken()
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -56,32 +58,159 @@
             font-weight: bold; /* Make the text bold */
             color: #333; /* Change label color */
         }
+
+        .label-text {
+            margin-bottom: 5px; /* Khoảng cách giữa label và input */
+            font-weight: bold; /* Đậm hơn để nổi bật */
+        }
+
+        .w3ls-reg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        .seat_w3ls, .Displaytable {
+            justify-content: space-between;
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+            .Displaytable th, .Displaytable td {
+                padding: 10px;
+                border: 1px solid #ddd;
+            }
+
+        .Displaytable {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .screen {
+            margin: 20px 0;
+        }
+
+        #seatsBlock {
+            width: 100%;
+            border-spacing: 10px; /* Tạo khoảng cách giữa các ghế */
+        }
+
+            #seatsBlock td {
+                text-align: center;
+            }
+
+        .checkmark {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .screen h2 {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .txt-center {
+            text-align: center;
+        }
+
+        .displayerBoxes {
+            border: 1px solid #ddd; /* Light border around the box */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Padding inside the box */
+            background-color: rgba(128, 128, 128, 0); /* Fully transparent background for the box */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-top: 20px; /* Margin above the box */
+        }
+
+        .Displaytable {
+            width: 100%; /* Full width */
+            border-collapse: collapse; /* Collapse borders */
+            background-color: rgba(128, 128, 128, 0.34); /* Light gray background with transparency for the entire table */
+        }
+
+            .Displaytable th,
+            .Displaytable td {
+                border: 1px solid #ddd; /* Light border for cells */
+                padding: 12px; /* Padding for table cells */
+                text-align: left; /* Left-aligned text */
+                background-color: rgba(128, 128, 128, 0.34); /* Light gray background with transparency for cells */
+            }
+
+            .Displaytable th {
+                color: white; /* Header text color */
+                padding-bottom: 15px; /* Add space below the header */
+            }
+
+            .Displaytable tbody tr {
+                transition: background-color 0.3s; /* Smooth transition for row hover effect */
+            }
+
+                .Displaytable tbody tr:hover {
+                    background-color: rgba(0, 128, 0, 0.2); /* Highlight row on hover */
+                }
+
+        #submitButton {
+            display: inline-block; /* Ensure the button is treated as a block */
+            background-color: #4CAF50; /* Button background color */
+            color: white; /* Button text color */
+            padding: 10px 15px; /* Button padding */
+            border-radius: 5px; /* Rounded button corners */
+            margin-top: 15px; /* Margin above button */
+            text-align: center; /* Center text */
+            border: none; /* Remove default border */
+            cursor: pointer; /* Change cursor to pointer */
+            transition: background-color 0.3s; /* Smooth background color change */
+        }
+
+            #submitButton:hover {
+                background-color: #45a049; /* Darker green on hover */
+            }
     </style>
 </head>
 
 <body>
     <h1>Movie Seat Selection</h1>
-    <div class="container">
+    <h1>@Model.Showtime.Room.RoomType.RoomTypeName ROOM</h1>
+    <div class="container" style="justify-content: space-between;">
+        <!-- Left Block: User Input Form -->
         <div class="w3ls-reg">
             <div class="inputForm">
-                <h2>Fill the required details below and select your seats</h2>
-                <div class="mr_agilemain">
-                    <div class="agileits-left">
-                        <label>
-                            Name
-                            <span>*</span>
-                        </label>
-                        <input type="text" id="Username" required>
-                    </div>
-                    <div class="agileits-right">
-                        <label>
-                            Number of Seats
-                            <span>*</span>
-                        </label>
-                        <input type="number" id="Numseats" required min="1">
-                    </div>
-                </div>
-                <button id="startSelectingBtn">Start Selecting</button>
+                <h2>Please select your seat, up to 5 seats</h2>
             </div>
             <ul class="seat_w3ls">
                 <li class="smallBox greenBox">Selected Seat</li>
@@ -109,124 +238,184 @@
                     {
                         <tr>
                             <td>@row</td>
+
                             @for (int column = 1; column <= Model.Showtime.Room.RoomType.NumberOfColumn; column++)
                             {
                                 var seat = Model.Showtime.Room.Seats.FirstOrDefault(s => s.Row == row && s.Column == column);
 
-                                var checkboxColor = seat?.Status switch
+                                if (seat != null)
                                 {
-                                    SeatStatus.Available => "white",
-                                    SeatStatus.Unavailable => "yellow",
-                                    SeatStatus.Reserved => "red",
-                                    _ => "white"
-                                };
+                                    var seatPrice = seat.SeatType.SeatPrice;
+                                    var seatType = seat.SeatType.SeatTypeName;
+                                    var checkboxColor = seat.Status switch
+                                    {
+                                        SeatStatus.Available => "white",
+                                        SeatStatus.Unavailable => "yellow",
+                                        SeatStatus.Reserved => "red",
+                                        _ => "white"
+                                    };
 
-                                var checkboxDisabled = seat?.Status != SeatStatus.Available ? "disabled" : "";
-                                var pointerEvents = seat?.Status != SeatStatus.Available ? "pointer-events: none;" : "";
+                                    var checkboxDisabled = seat.Status != SeatStatus.Available ? "disabled" : "";
 
-                                <td style="text-align: center;">
-                                    <!-- Centering the checkbox and text -->
-                                    <input type="checkbox" class="cinema-seats" value="@seat?.SeatId" @checkboxDisabled
-                                           title="Seat Status: @(seat?.Status)" style="display: none;" data-row="@row" data-column="@column">
-                                    <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer;"></span>
-
-                                </td>
+                                    <td style="text-align: center;">
+                                        <input type="checkbox" class="cinema-seats" value="@seat.SeatId" @checkboxDisabled
+                                               title="Seat Status: @(seat.Status)" style="display: none;"
+                                               data-row="@row" data-column="@column"
+                                               data-seat-price="@seatPrice" data-seat-type="@seatType">
+                                        <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer;"
+                                              data-seat-id="@seat.SeatId"
+                                              data-seat-price="@seatPrice" data-seat-type="@seatType"></span>
+                                    </td>
+                                }
+                                else // Nếu ghế là null, tạo một ô trống
+                                {
+                                    <td style="text-align: center;"></td>
+                                }
                             }
+
                         </tr>
                     }
-
                 </table>
 
                 <div class="screen">
                     <h2 class="wthree">Screen this way</h2>
                 </div>
-                <button id="confirmSelectionBtn">Confirm Selection</button>
             </div>
-            <div class="displayerBoxes txt-center" style="overflow-x:auto;">
+        </div>
+
+        <!-- Right Block: Selected Seats Display -->
+        <div class="displayerBoxes txt-center" style="flex: 1; overflow-x: auto;">
+            <div class="inputForm">
+                <h2>Selection Seats Information</h2>
+            </div>
+    
+            <form method="post" asp-page-handler="ConfirmSelection">
                 <table class="Displaytable w3ls-table" width="100%">
-                    <tr>
-                        <th>Name</th>
-                        <th>Number of Seats</th>
-                        <th>Seats</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <textarea id="nameDisplay" readonly></textarea>
-                        </td>
-                        <td>
-                            <textarea id="NumberDisplay" readonly></textarea>
-                        </td>
-                        <td>
-                            <textarea id="seatsDisplay" readonly></textarea>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th style="width: 33%;">Seat Type</th>
+                            <th style="width: 33%;">Number of Seats</th>
+                            <th style="width: 33%;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seatsInfoBody">
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-price">
+                            <td colspan="2">Total Price:</td>
+                            <td id="totalPrice">0.00 VND</td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <a href="/Customer/Payment/Payment">Submit</a>
-            </div>
+
+                <!-- Hidden fields for account ID, showtime ID, ticket price, and selected seat IDs -->
+                <input type="hidden" name="AccountId" value="@Model.AccountId" />
+                <input type="hidden" name="ShowtimeId" value="@Model.Showtime.ShowtimeId" />
+                <input type="hidden" name="TicketPrice" id="ticketPriceInput" value="0.00" />
+                <input type="hidden" name="SeatIds" id="seatIdsInput" value="" />
+
+                <button type="submit" id="confirmSelectionBtn">Confirm Selection</button>
+            </form>
         </div>
     </div>
 
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const startSelectingBtn = document.getElementById("startSelectingBtn");
-    const seatsBlock = document.getElementById("seatsBlock");
-    const selectedSeats = new Set(); // Use a Set to store unique selected seat IDs
 
-    startSelectingBtn.addEventListener("click", function () {
-        const username = document.getElementById("Username").value;
-        const numSeats = parseInt(document.getElementById("Numseats").value);
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedSeats = [];
+        let selectedSeatIds = []; // Declare this globally
 
-        if (!username || isNaN(numSeats) || numSeats < 1) {
-            alert("Please enter a valid name and number of seats.");
-            return;
+        // Function to update the selection information
+        function updateSelectionInfo() {
+            const seatCounts = {};
+            let totalPrice = 0; // Initialize total price
+
+            selectedSeats.forEach(seat => {
+                const seatType = seat.type;
+                const seatPrice = seat.price;
+
+                // Count seats by type and calculate total price
+                if (!seatCounts[seatType]) {
+                    seatCounts[seatType] = { count: 0, totalPrice: 0 };
+                }
+                seatCounts[seatType].count++;
+                seatCounts[seatType].totalPrice += seatPrice;
+                totalPrice += seatPrice; // Add to total price
+            });
+
+            // Update the seats info table
+            const seatsInfoBody = document.getElementById("seatsInfoBody");
+            seatsInfoBody.innerHTML = ""; // Clear previous rows
+
+            // Add rows for each seat type
+            for (const [type, info] of Object.entries(seatCounts)) {
+                const row = document.createElement("tr");
+
+                const typeCell = document.createElement("td");
+                typeCell.textContent = type;
+
+                const countCell = document.createElement("td");
+                countCell.textContent = info.count;
+
+                const priceCell = document.createElement("td");
+                priceCell.textContent = `${info.totalPrice.toFixed(2)} VND`; // Format price
+
+                row.appendChild(typeCell);
+                row.appendChild(countCell);
+                row.appendChild(priceCell);
+                seatsInfoBody.appendChild(row);
+            }
+
+            // Update the total price display
+            document.getElementById("totalPrice").textContent = `${totalPrice.toFixed(2)} VND`;
+
+            // Update hidden fields before submission
+            document.getElementById("ticketPriceInput").value = totalPrice.toFixed(2);
+
+            // Convert selectedSeatIds to an array of integers
+            const selectedSeatIdsAsInts = selectedSeatIds.map(id => parseInt(id, 10));
+
+            // Set the input field value to a comma-separated string of integers
+            document.getElementById("seatIdsInput").value = selectedSeatIdsAsInts.join(',');
         }
 
-        // Show checkboxes and enable selection
-        const checkboxes = document.querySelectorAll(".cinema-seats");
-        checkboxes.forEach(checkbox => {
-            checkbox.style.display = "inline-block"; // Show checkbox
-            checkbox.disabled = false; // Enable checkbox
-        });
+        // Event listener for each seat checkbox
+        document.querySelectorAll("#seatsBlock .checkmark").forEach(span => {
+            span.addEventListener("click", function () {
+                const checkbox = span.previousElementSibling; // Get the corresponding checkbox
+                const seatId = checkbox.value;
+                const seatType = checkbox.getAttribute("data-seat-type");
+                const seatPrice = parseFloat(checkbox.getAttribute("data-seat-price"));
 
-        // Add event listener to seatsBlock for event delegation
-        seatsBlock.addEventListener("change", function (event) {
-            if (event.target.classList.contains("cinema-seats")) {
-                const seatId = event.target.value;
-                if (event.target.checked) {
-                    selectedSeats.add(seatId); // Add selected seat
-                } else {
-                    selectedSeats.delete(seatId); // Remove unselected seat
+                if (checkbox && !checkbox.disabled) {
+                    checkbox.checked = !checkbox.checked; // Toggle checkbox state
+
+                    if (checkbox.checked) {
+                        // Limit selection to 5 seats
+                        if (selectedSeats.length < 5) {
+                            span.style.backgroundColor = "#28a745"; // Selected color
+                            selectedSeats.push({ id: seatId, type: seatType, price: seatPrice });
+                            selectedSeatIds.push(seatId); // Add to selectedSeatIds
+                        } else {
+                            alert("You can select a maximum of 5 seats.");
+                            checkbox.checked = false; // Uncheck if limit exceeded
+                        }
+                    } else {
+                        const index = selectedSeats.findIndex(seat => seat.id === seatId);
+                        if (index > -1) {
+                            selectedSeats.splice(index, 1); // Remove from selectedSeats
+                            selectedSeatIds = selectedSeatIds.filter(id => id !== seatId); // Remove from selectedSeatIds
+                        }
+                        span.style.backgroundColor = ""; // Reset color
+                    }
+
+                    updateSelectionInfo(); // Update the displayed selection info after changes
                 }
-                updateSeatDisplay();
-            }
+            });
         });
     });
-
-    function updateSeatDisplay() {
-        const checkboxes = document.querySelectorAll(".cinema-seats");
-        checkboxes.forEach(checkbox => {
-            const checkmark = checkbox.nextElementSibling; // Get corresponding checkmark
-            if (checkbox.checked) {
-                checkmark.style.backgroundColor = "#28a745"; // Green for selected seats
-            } else {
-                const seatStatus = checkbox.title.split(": ")[1].trim(); // Get seat status
-                checkmark.style.backgroundColor = seatStatus === "Available" ? "white" :
-                    seatStatus === "Reserved" ? "red" :
-                    seatStatus === "Unavailable" ? "yellow" :
-                    "white"; // Set color based on status
-            }
-        });
-
-        // Update seat display
-        document.getElementById("nameDisplay").value = document.getElementById("Username").value;
-        document.getElementById("NumberDisplay").value = selectedSeats.size; // Use size of Set
-        document.getElementById("seatsDisplay").value = Array.from(selectedSeats).join(", "); // Convert Set to array for display
-    }
-});
 </script>
 
-
-
 </body>
-
 </html>

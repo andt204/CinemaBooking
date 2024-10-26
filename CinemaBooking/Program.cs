@@ -94,10 +94,15 @@ namespace CinemaBooking {
 				app.UseExceptionHandler("/Error");
 			}
 
-			app.UseRouting();
+            app.UseRouting();
 
-			// Thêm middleware tùy chỉnh để thêm JWT token từ cookie vào header
-			app.UseMiddleware<JwtTokenMiddleware>();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+
+            // Thêm middleware tùy chỉnh để thêm JWT token từ cookie vào header
+            app.UseMiddleware<JwtTokenMiddleware>();
 			app.Use(async (context, next) => {
 				var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
 				logger.LogInformation("Request Headers:");

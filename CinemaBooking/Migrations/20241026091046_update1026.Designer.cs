@@ -4,6 +4,7 @@ using CinemaBooking.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    partial class CinemaBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20241026091046_update1026")]
+    partial class update1026
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -519,6 +521,9 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("BookingTime")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ShowtimeId")
                         .HasColumnType("int");
 
@@ -531,6 +536,8 @@ namespace CinemaBooking.Migrations
                     b.HasKey("TicketId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("ShowtimeId");
 
@@ -564,29 +571,6 @@ namespace CinemaBooking.Migrations
                     b.HasIndex("TicketId");
 
                     b.ToTable("TicketMovieAssignments");
-                });
-
-            modelBuilder.Entity("CinemaBooking.Data.TicketSeatAssignment", b =>
-                {
-                    b.Property<int>("TicketSeatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketSeatId"), 1L, 1);
-
-                    b.Property<int?>("SeatId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TicketId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TicketSeatId");
-
-                    b.HasIndex("SeatId");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("TicketSeatAssignments");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.Vote", b =>
@@ -791,6 +775,12 @@ namespace CinemaBooking.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Ticket_Account");
 
+                    b.HasOne("CinemaBooking.Data.Seat", "Seat")
+                        .WithMany("Tickets")
+                        .HasForeignKey("SeatId")
+                        .IsRequired()
+                        .HasConstraintName("FK__ticket__seat_id__3E52440B");
+
                     b.HasOne("CinemaBooking.Data.Showtime", "Showtime")
                         .WithMany("Tickets")
                         .HasForeignKey("ShowtimeId")
@@ -798,6 +788,8 @@ namespace CinemaBooking.Migrations
                         .HasConstraintName("FK_Ticket_Showtime");
 
                     b.Navigation("Account");
+
+                    b.Navigation("Seat");
 
                     b.Navigation("Showtime");
                 });
@@ -825,23 +817,6 @@ namespace CinemaBooking.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("Room");
-
-                    b.Navigation("Ticket");
-                });
-
-            modelBuilder.Entity("CinemaBooking.Data.TicketSeatAssignment", b =>
-                {
-                    b.HasOne("CinemaBooking.Data.Seat", "Seat")
-                        .WithMany("TicketSeatAssignments")
-                        .HasForeignKey("SeatId")
-                        .HasConstraintName("FK_TicketSeatAssignments_Seat");
-
-                    b.HasOne("CinemaBooking.Data.Ticket", "Ticket")
-                        .WithMany("TicketSeatAssignments")
-                        .HasForeignKey("TicketId")
-                        .HasConstraintName("FK_TicketSeatAssignments_Ticket");
-
-                    b.Navigation("Seat");
 
                     b.Navigation("Ticket");
                 });
@@ -932,7 +907,7 @@ namespace CinemaBooking.Migrations
 
             modelBuilder.Entity("CinemaBooking.Data.Seat", b =>
                 {
-                    b.Navigation("TicketSeatAssignments");
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.SeatType", b =>
@@ -955,8 +930,6 @@ namespace CinemaBooking.Migrations
             modelBuilder.Entity("CinemaBooking.Data.Ticket", b =>
                 {
                     b.Navigation("TicketMovieAssignments");
-
-                    b.Navigation("TicketSeatAssignments");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
 using System.Threading.Tasks;
+using CinemaBooking.Data;
+using Microsoft.EntityFrameworkCore;
+using CinemaBooking.ViewModels.Request;
 
 namespace CinemaBooking.Pages.Customer.CinemaSelection
 {
-    public class SeatSelectionModel : PageModel
+    public class SeatSelectionModel : BasePageCustomerModel
     {
         private readonly SeatSelectionService _seatSelectionService;
 
@@ -19,8 +22,9 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
             _seatSelectionService = seatSelectionService;
         }
 
-        public async Task<IActionResult> OnGetAsync(int showtimeId)
+        public async Task<IActionResult> OnGet(int showtimeId)
         {
+            LoadUserClaims();
             // Fetch the showtime details including the seats
             Showtime = await _seatSelectionService.GetShowtimeById(showtimeId);
 
@@ -31,6 +35,15 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostConfirmSelection(CreateUserTicketRequest request)
+        {
+            // Call the service to create the ticket
+            var ticket = await _seatSelectionService.CreateCustomerTicket(request);
+
+            // Redirect to the payment page or show success message
+            return RedirectToPage("/Customer/Payment/Payment", new { ticketId = ticket.TicketId });
         }
     }
 }
