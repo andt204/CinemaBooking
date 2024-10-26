@@ -57,6 +57,33 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		});
 	</script>
 	<!---- start-smoth-scrolling---->
+	<style>
+		.date-buttons {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 20px;
+			border-bottom: 1px solid #ddd;
+			padding-bottom: 10px;
+		}
+
+		.date-button {
+			padding: 10px 15px;
+			font-weight: bold;
+			color: #007bff;
+			background-color: transparent;
+			border: none;
+			cursor: pointer;
+			transition: color 0.3s;
+		}
+
+			.date-button:hover {
+				color: #0056b3;
+			}
+
+		.movie-date-selection {
+			margin-top: 20px;
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
@@ -85,26 +112,67 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8 movies-dates">
-					@foreach (var theater in Model.Theaters)
+				@{
+					// Declare showDates as a List<DateTime>
+					List<DateTime> showDates = Model.Theaters
+					.SelectMany(t => t.Showtimes)
+					.Select(s => s.Date)
+					.Distinct()
+					.ToList();
+				}
+
+				<!-- Date Selection Buttons -->
+				<div class="date-buttons">
+					@foreach (var showDate in showDates)
 					{
-						<div class="movie-date-selection">
-							<ul>
-								<li class="location">
-									<a href="pic-a-movie.html">
-										<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
-									</a>
-								</li>
-								@foreach (var showtime in theater.Showtimes)
+						<button class="date-button" onclick="showTheater('@showDate.ToString("yyyy-MM-dd")')">
+							@showDate.ToString("ddd-dd") <!-- Format as 'Tue-30', 'Wed-1', etc. -->
+						</button>
+					}
+				</div>
+
+				<!-- Theater and Showtime Information -->
+				<div class="col-md-8 movies-dates">
+					@foreach (var showDate in showDates)
+					{
+						<div class="movie-date-selection" id="theater-@showDate.ToString("yyyy-MM-dd")" style="display: none;">
+							@foreach (var theater in Model.Theaters)
+							{
+								// Get showtimes for the current theater on the current show date
+								var showtimesForDate = theater.Showtimes.Where(s => s.Date == showDate).ToList();
+
+								if (showtimesForDate.Any()) // Only display if there are showtimes
 								{
-									<li class="time">
-										<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@showtime.StartHour</a>
-									</li>
+									<ul>
+										<li class="location">
+											<a href="pic-a-movie.html">
+												<i class="fa fa-map-marker"></i> Theater Name: @theater.TheaterName
+											</a>
+										</li>
+
+										@foreach (var showtime in showtimesForDate)
+										{
+											<li class="time">
+												@{
+													// Formatting the StartHour assuming it's a TimeSpan
+													string formattedTime = showtime.StartHour.ToString(@"hh\:mm");
+												}
+												<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@formattedTime</a>
+											</li>
+										}
+									</ul>
 								}
-							</ul>
+							}
 						</div>
 					}
 				</div>
+
+
+
+
+
+
+
 				<div class="clearfix"></div>
 			</div>
 		</div>
@@ -112,19 +180,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function () {
-			/*
-			var defaults = {
-					containerID: 'toTop', // fading element id
-				containerHoverID: 'toTopHover', // fading element hover id
-				scrollSpeed: 1200,
-				easingType: 'linear'
-				};
-			*/
-
 			$().UItoTop({ easingType: 'easeOutQuart' });
-
 		});
 	</script>
 	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 </body>
+<script>
+	function showTheater(dateId) {
+		// Hide all theater sections
+		document.querySelectorAll('.movie-date-selection').forEach(function (section) {
+			section.style.display = 'none';
+		});
+
+		// Show the selected date's theater section
+		document.getElementById('theater-' + dateId).style.display = 'block';
+	}
+</script>
 </html>

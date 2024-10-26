@@ -3710,7 +3710,7 @@ label {
 }
 .movies-dates {
 	width: 60%;
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 }
 .movie-date-selection ul li {
 	display: inline-block;
