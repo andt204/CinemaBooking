@@ -9,7 +9,7 @@ namespace CinemaBooking.Data
         public int? MovieId { get; set; }
         public int? PostId { get; set; }
         public int AccountId { get; set; }
-        public string Status { get; set; } = null!;
+        public byte? Status { get; set; }
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

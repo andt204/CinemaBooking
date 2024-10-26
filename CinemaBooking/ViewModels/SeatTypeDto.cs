@@ -4,5 +4,6 @@
     {
         public int SeatTypeId { get; set; }
         public string SeatTypeName { get; set; } = null!;
+        public decimal SeatPrice { get; set; }
     }
 }

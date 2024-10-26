@@ -428,7 +428,7 @@ table {
     text-align: center;
 }
 
-.Displaytable {
+/*.Displaytable {
     text-align: center;
 }
 
@@ -436,14 +436,14 @@ table {
 .Displaytable th {
     width: 100%;
     padding: 7px 10px;
-    color: #000;
+    color: white;
     font-weight: 600;
 }
 
-table.Displaytable tr {
+table.Displaytable tr {*/
    /* background: #fff;*/
-    color: #fff;
-}
+    /*color: #fff;
+}*/
 
 textarea {
     border: none;
