@@ -1,6 +1,6 @@
 ﻿@page
 @using System.Web
-@model CinemaBooking.Pages.Customer.Movie.ListModel
+@model CinemaBooking.Pages.Customer.Movie.NowShowingModel
 @{
 	Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
@@ -116,14 +116,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			margin-top: 10px;
 		}
 
-			.m-r-date a {
+		.m-r-date a {
 				display: inline-block; /* Đảm bảo nút nằm trên một dòng */
 				padding: 5px 15px; /* Thêm padding cho nút */
 				background-color: #ff5733; /* Màu nền nổi bật cho nút */
 				color: white;
 				text-decoration: none;
 				border-radius: 5px; /* Bo tròn nút */
-			}
+		}
 
 				.m-r-date a:hover {
 					background-color: #e74c3c; /* Thay đổi màu khi hover */
@@ -141,80 +141,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<input type="text" name="searchTitle" placeholder="Tìm kiếm tên phim..." value="@Model.SearchTitle" class="search-input" />
 					<button type="submit" class="search-button">Tìm kiếm</button>
 				</div>
-				<div class="main-banner">
-				<div class="banner col-md-8">
-					<section class="slider">
-						<div class="flexslider">
-							<ul class="slides">
-								@foreach (var movie in Model.BannerMovies)
-								{
-									<li>
-										<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">
-											<img src="@movie.ImageBackground"
-												class="img-responsive" alt="@movie.Title" />
-										</a>
-									</li>
-								}
-							</ul>
-						</div>
-					</section>
-					<!-- FlexSlider -->
-					<script defer src="~/customer/assets1/js/jquery.flexslider.js"></script>
-					<link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css"
-						media="screen" />
-					<script type="text/javascript">
-						$(function () {
-							SyntaxHighlighter.all();
-						});
-						$(window).load(function () {
-							$('.flexslider').flexslider({
-								animation: "slide",
-								start: function (slider) {
-									$('body').removeClass('loading');
-								}
-							});
-						});
-					</script>
-				</div>
-				@{
-					// Hàm chuyển đổi URL YouTube sang định dạng nhúng
-					string GetEmbedUrl(string url)
-					{
-						var uri = new Uri(url);
-						var query = HttpUtility.ParseQueryString(uri.Query);
-						var videoId = query["v"];
-						return $"https://www.youtube.com/embed/{videoId}";
-					}
-				}
-
-				<div class="col-md-4 banner-right">
-						<div class="slider1">
-							<div class="callbacks_container">
-								<ul class="rslides" id="slider">
-									@foreach (var trailerUrl in Model.TrailerVideoUrls)
-									{
-										<li>
-											<iframe src="@GetEmbedUrl(trailerUrl)" frameborder="0" allowfullscreen></iframe>
-										</li>
-									}
-								</ul>
-							</div>
-						</div>
-						<script>
-							$(function () {
-								$("#slider").responsiveSlides({
-									auto: false,  // Không tự động chuyển slide
-									nav: true,    // Hiện nút điều hướng
-									speed: 500,   // Tốc độ chuyển slide
-									namespace: "callbacks",
-									pager: false, // Không hiển thị pager
-								});
-							});
-						</script>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			<div class="now-showing-movies">
+				<div class="now-showing-movies">
 				<h3 class="m-head">Now Showing</h3>
 				@foreach (var movie in Model.NowShowingMovies)
 				{
@@ -231,29 +158,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 										<i class="far fa-calendar"></i>@movie.PublishTime.ToShortDateString()
 										&nbsp;&nbsp;&nbsp;&nbsp;Duration:@movie.Length minute
 									</p>
-										<a href="/Customer/CinemaSelection/CinemaSelection?movieId=@movie.MovieId">Book Now</a>
-								</div>
-							</div>
-						</a>
-					</div>
-				}
-				<div class="clearfix"></div>
-			</div>
-
-			<div class="now-showing-movies">
-				<h3 class="m-head">Coming Soon</h3>
-				@foreach (var movie in Model.ComingSoonMovies)
-				{
-					<div class="col-md-3 movie-preview">
-						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
-							<img src="@movie.Image" class="img-responsive zoom-img"
-								alt="@movie.Title" />
-							<div class="m-movie-title">
-								<a class="m-movie-link"
-								   href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
-								<div class="clearfix"></div>
-								<div class="m-r-date">
-									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>
+									<a href="/Customer/Movie/BookNow?id=@movie.MovieId">Book Now</a>
 								</div>
 							</div>
 						</a>
@@ -271,15 +176,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </body>
 <script type="text/javascript">
 	$(document).ready(function () {
-		/*
-		var defaults = {
-				containerID: 'toTop', // fading element id
-			containerHoverID: 'toTopHover', // fading element hover id
-			scrollSpeed: 1200,
-			easingType: 'linear'
-			};
-		*/
-
 		$().UItoTop({ easingType: 'easeOutQuart' });
 
 	});
