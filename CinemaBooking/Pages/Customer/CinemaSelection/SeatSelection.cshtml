@@ -5,6 +5,8 @@
     Layout = "/Pages/Shared/_UserLayout.cshtml";
     ViewData["Title"] = "Cinema Selection";
 }
+@Html.AntiForgeryToken()
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -286,115 +288,134 @@
             <div class="inputForm">
                 <h2>Selection Seats Information</h2>
             </div>
-            <table class="Displaytable w3ls-table" width="100%">
-                <thead>
-                    <tr>
-                        <th style="width: 33%;">Seat Type</th>
-                        <th style="width: 33%;">Number of Seats</th>
-                        <th style="width: 33%;">Price</th>
-                    </tr>
-                </thead>
-                <tbody id="seatsInfoBody">
-                    <!-- Rows will be dynamically added here -->
-                </tbody>
-                <tfoot>
-                    <tr class="total-price">
-                        <td colspan="2">Total Price:</td>
-                        <td id="totalPrice">0.00 VND</td>
-                    </tr>
-                </tfoot>
-            </table>
+    
+            <form method="post" asp-page-handler="ConfirmSelection">
+                <table class="Displaytable w3ls-table" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 33%;">Seat Type</th>
+                            <th style="width: 33%;">Number of Seats</th>
+                            <th style="width: 33%;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seatsInfoBody">
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-price">
+                            <td colspan="2">Total Price:</td>
+                            <td id="totalPrice">0.00 VND</td>
+                        </tr>
+                    </tfoot>
+                </table>
 
-            <button id="confirmSelectionBtn" onclick="location.href='/Customer/Payment/Payment'">Confirm Selection</button>
+                <!-- Hidden fields for account ID, showtime ID, ticket price, and selected seat IDs -->
+                <input type="hidden" name="AccountId" value="@Model.AccountId" />
+                <input type="hidden" name="ShowtimeId" value="@Model.Showtime.ShowtimeId" />
+                <input type="hidden" name="TicketPrice" id="ticketPriceInput" value="0.00" />
+                <input type="hidden" name="SeatIds" id="seatIdsInput" value="" />
+
+                <button type="submit" id="confirmSelectionBtn">Confirm Selection</button>
+            </form>
         </div>
     </div>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const selectedSeats = [];
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedSeats = [];
+        let selectedSeatIds = []; // Declare this globally
 
-            // Function to update the selection information
-            function updateSelectionInfo() {
-                const seatCounts = {};
-                let totalPrice = 0; // Initialize total price
+        // Function to update the selection information
+        function updateSelectionInfo() {
+            const seatCounts = {};
+            let totalPrice = 0; // Initialize total price
 
-                selectedSeats.forEach(seat => {
-                    const seatType = seat.type;
-                    const seatPrice = seat.price;
+            selectedSeats.forEach(seat => {
+                const seatType = seat.type;
+                const seatPrice = seat.price;
 
-                    if (!seatCounts[seatType]) {
-                        seatCounts[seatType] = { count: 0, totalPrice: 0 };
-                    }
-                    seatCounts[seatType].count++;
-                    seatCounts[seatType].totalPrice += seatPrice;
-                    totalPrice += seatPrice; // Add to total price
-                });
-
-                const seatsInfoBody = document.getElementById("seatsInfoBody");
-                seatsInfoBody.innerHTML = ""; // Clear previous rows
-
-                // Add rows for each seat type
-                for (const [type, info] of Object.entries(seatCounts)) {
-                    const row = document.createElement("tr");
-
-                    const typeCell = document.createElement("td");
-                    typeCell.textContent = type;
-
-                    const countCell = document.createElement("td");
-                    countCell.textContent = info.count;
-
-                    const priceCell = document.createElement("td");
-                    priceCell.textContent = `${info.totalPrice.toFixed(2)} VND`; // Format price
-
-                    row.appendChild(typeCell);
-                    row.appendChild(countCell);
-                    row.appendChild(priceCell);
-
-                    seatsInfoBody.appendChild(row);
+                // Count seats by type and calculate total price
+                if (!seatCounts[seatType]) {
+                    seatCounts[seatType] = { count: 0, totalPrice: 0 };
                 }
+                seatCounts[seatType].count++;
+                seatCounts[seatType].totalPrice += seatPrice;
+                totalPrice += seatPrice; // Add to total price
+            });
 
-                // Update the total price display
-                document.getElementById("totalPrice").textContent = `${totalPrice.toFixed(2)} VND`;
+            // Update the seats info table
+            const seatsInfoBody = document.getElementById("seatsInfoBody");
+            seatsInfoBody.innerHTML = ""; // Clear previous rows
+
+            // Add rows for each seat type
+            for (const [type, info] of Object.entries(seatCounts)) {
+                const row = document.createElement("tr");
+
+                const typeCell = document.createElement("td");
+                typeCell.textContent = type;
+
+                const countCell = document.createElement("td");
+                countCell.textContent = info.count;
+
+                const priceCell = document.createElement("td");
+                priceCell.textContent = `${info.totalPrice.toFixed(2)} VND`; // Format price
+
+                row.appendChild(typeCell);
+                row.appendChild(countCell);
+                row.appendChild(priceCell);
+                seatsInfoBody.appendChild(row);
             }
 
-            // Event listener for each seat checkbox
-            document.querySelectorAll("#seatsBlock .checkmark").forEach(span => {
-                span.addEventListener("click", function () {
-                    const checkbox = span.previousElementSibling; // Get the corresponding checkbox
-                    const seatId = checkbox.value;
-                    const seatType = checkbox.getAttribute("data-seat-type");
-                    const seatPrice = parseFloat(checkbox.getAttribute("data-seat-price"));
+            // Update the total price display
+            document.getElementById("totalPrice").textContent = `${totalPrice.toFixed(2)} VND`;
 
-                    if (checkbox && !checkbox.disabled) {
-                        checkbox.checked = !checkbox.checked; // Toggle checkbox state
+            // Update hidden fields before submission
+            document.getElementById("ticketPriceInput").value = totalPrice.toFixed(2);
 
-                        if (checkbox.checked) {
-                            if (selectedSeats.length < 5) { // Limit selection to 5 seats
-                                span.style.backgroundColor = "#28a745"; // Selected color
-                                selectedSeats.push({ id: seatId, type: seatType, price: seatPrice });
-                            } else {
-                                alert("You can select a maximum of 5 seats.");
-                                checkbox.checked = false; // Uncheck if limit exceeded
-                            }
+            // Convert selectedSeatIds to an array of integers
+            const selectedSeatIdsAsInts = selectedSeatIds.map(id => parseInt(id, 10));
+
+            // Set the input field value to a comma-separated string of integers
+            document.getElementById("seatIdsInput").value = selectedSeatIdsAsInts.join(',');
+        }
+
+        // Event listener for each seat checkbox
+        document.querySelectorAll("#seatsBlock .checkmark").forEach(span => {
+            span.addEventListener("click", function () {
+                const checkbox = span.previousElementSibling; // Get the corresponding checkbox
+                const seatId = checkbox.value;
+                const seatType = checkbox.getAttribute("data-seat-type");
+                const seatPrice = parseFloat(checkbox.getAttribute("data-seat-price"));
+
+                if (checkbox && !checkbox.disabled) {
+                    checkbox.checked = !checkbox.checked; // Toggle checkbox state
+
+                    if (checkbox.checked) {
+                        // Limit selection to 5 seats
+                        if (selectedSeats.length < 5) {
+                            span.style.backgroundColor = "#28a745"; // Selected color
+                            selectedSeats.push({ id: seatId, type: seatType, price: seatPrice });
+                            selectedSeatIds.push(seatId); // Add to selectedSeatIds
                         } else {
-                            const index = selectedSeats.findIndex(seat => seat.id === seatId);
-                            if (index > -1) {
-                                selectedSeats.splice(index, 1);
-                            }
-                            span.style.backgroundColor = ""; // Reset color
+                            alert("You can select a maximum of 5 seats.");
+                            checkbox.checked = false; // Uncheck if limit exceeded
                         }
-
-                        updateSelectionInfo(); // Update the displayed selection info
+                    } else {
+                        const index = selectedSeats.findIndex(seat => seat.id === seatId);
+                        if (index > -1) {
+                            selectedSeats.splice(index, 1); // Remove from selectedSeats
+                            selectedSeatIds = selectedSeatIds.filter(id => id !== seatId); // Remove from selectedSeatIds
+                        }
+                        span.style.backgroundColor = ""; // Reset color
                     }
-                });
+
+                    updateSelectionInfo(); // Update the displayed selection info after changes
+                }
             });
         });
-    </script>
-
-
-
+    });
+</script>
 
 </body>
-
 </html>
