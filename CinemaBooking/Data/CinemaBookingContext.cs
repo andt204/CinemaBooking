@@ -35,6 +35,7 @@ namespace CinemaBooking.Data
         public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
+        public virtual DbSet<TicketSeatAssignment> TicketSeatAssignments { get; set; } = null!;
         public virtual DbSet<Vote> Votes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -312,12 +313,6 @@ namespace CinemaBooking.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ticket_Account");
 
-                entity.HasOne(d => d.Seat)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.SeatId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ticket__seat_id__3E52440B");
-
                 entity.HasOne(d => d.Showtime)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.ShowtimeId)
@@ -347,6 +342,21 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.TicketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ticket_fi__ticke__4222D4EF");
+            });
+
+            modelBuilder.Entity<TicketSeatAssignment>(entity =>
+            {
+                entity.HasKey(e => e.TicketSeatId);
+
+                entity.HasOne(d => d.Seat)
+                    .WithMany(p => p.TicketSeatAssignments)
+                    .HasForeignKey(d => d.SeatId)
+                    .HasConstraintName("FK_TicketSeatAssignments_Seat");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.TicketSeatAssignments)
+                    .HasForeignKey(d => d.TicketId)
+                    .HasConstraintName("FK_TicketSeatAssignments_Ticket");
             });
 
             modelBuilder.Entity<Vote>(entity =>

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CinemaBooking.Data;
+using CinemaBooking.Enum;
 using CinemaBooking.ViewModels;
+using CinemaBooking.ViewModels.Request;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
@@ -48,6 +50,46 @@ namespace CinemaBooking.Services
             return showtimeDto;
         }
 
+        public async Task<Ticket> CreateCustomerTicket(CreateUserTicketRequest request)
+        {
+            var ticketDto = new TicketDto
+            {
+                AccountId = request.AccountId,
+                ShowtimeId = request.ShowtimeId,
+                BookingTime = DateTime.Now,
+                TicketPrice = request.TicketPrice,
+                Status = TicketStatus.Pending, 
+            };
+
+            var ticket = _mapper.Map<Ticket>(ticketDto);
+            await _context.Tickets.AddAsync(ticket);
+            await _context.SaveChangesAsync();
+
+            var seatIdsList = request.SeatIds
+                              .Split(',')
+                              .Select(int.Parse) 
+                              .ToList();
+
+            foreach (var seatId in seatIdsList)
+            {
+                var ticketSeatAssignment = new TicketSeatAssignment
+                {
+                    TicketId = ticket.TicketId,
+                    SeatId = seatId
+                };
+                await _context.TicketSeatAssignments.AddAsync(ticketSeatAssignment);
+
+                var seat = await _context.Seats.FindAsync(seatId);
+                if (seat != null)
+                {
+                    seat.Status = (byte)SeatStatus.Reserved; 
+                    _context.Seats.Update(seat); 
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return ticket;
+        }
 
     }
 }

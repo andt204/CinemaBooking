@@ -35,7 +35,8 @@ namespace CinemaBooking.Pages.Customer.Ticket
             }
             TicketHistories = await _context.Tickets
     .Where(t => t.AccountId == idAccount)
-    .Include(t => t.Seat)
+    .Include(t => t.TicketSeatAssignments)
+    .ThenInclude(t => t.Seat)
     .ThenInclude(s => s.Room)
     .ThenInclude(r => r.RoomType)
     .Include(t => t.TicketMovieAssignments)
@@ -44,8 +45,8 @@ namespace CinemaBooking.Pages.Customer.Ticket
     {
         TicketId = t.TicketId,
         MovieTitle = t.TicketMovieAssignments.FirstOrDefault().Movie.Title,
-        Seat = t.Seat.Row.ToString() + t.Seat.Column.ToString(),
-        RoomName = t.Seat.Room.RoomName,
+        //Seat = t.Seat.Row.ToString() + t.Seat.Column.ToString(),
+        //RoomName = t.Seat.Room.RoomName,
         //Showtime = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.StartHour.ToString(),
         //Date = t.TicketMovieAssignments.FirstOrDefault().ShowtimeMovie.Showtime.Date.ToString(),
         TicketPrice = t.TicketPrice ?? 0,
