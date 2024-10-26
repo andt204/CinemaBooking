@@ -53,33 +53,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         });
     </script>
-    <!---- start-smoth-scrolling---->
-</head>
+    </head>
 <body>
     <div class="container">
         <div class="main-content">
-            <div class="bootstrap_container">
-                <nav class="navbar navbar-default w3_megamenu" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
-                    </div><!-- end navbar-header -->
-
-                    <div id="defaultmenu" class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            <li><a href="index.html">Home</a></li>
-                            <!-- Mega Menu -->
-                            <li class="dropdown w3_megamenu-fw active">
-                                <a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b class="caret"></b></a>
-                            </li>
-                        </ul>
-                    </div><!-- end #navbar-collapse-1 -->
-
-                </nav><!-- end navbar navbar-default w3_megamenu -->
-            </div><!-- end container -->
-            <!-- AddThis Smart Layers END -->
             <div class="m-single-article">
+                <div class="background-poster" style="background-image: url('@Model.Movie.ImageBackground'); position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.5; background-size: cover; z-index: -1;"></div>
+
                 <div class="article-left">
-                    <h3>@Model.Movie.Title <span>@* <i class="fa fa-heart"></i> *@ @Model.Movie.AgeLimit +</span></h3>
+                    <h3>@Model.Movie.Title <span>@* <i class="fa fa-heart"></i> *@ @Model.Movie.AgeLimit+</span></h3>
                     @* <p><a class="m-green" href="#">@Model.Categories</a></p> *@
                     <p>
                         @foreach (var category in Model.Categories)
@@ -97,7 +79,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                     @Model.Movie.Country
                                 </span> &nbsp;&nbsp; Release Date: <span><i class="fa fa-calendar"></i>@Model.Movie.PublishTime.ToShortDateString()</span>
                             </p>
-                            @* <p>Duration <span><i class="fa fa-clock-o"></i>2 hrs 30 mins </span>  &nbsp;&nbsp; Release Date <span><i class="fa fa-calendar"></i>Jun 10, 2024</span></p> *@
+                            
                         </div>
                         <div class="clearfix"></div>
                         @{
@@ -111,7 +93,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             }
                         }
                         <div class="article-img">
-                            @* <iframe src="https://www.youtube.com/embed/@Model.Movie.VideoTrailer" frameborder="0" allowfullscreen></iframe> *@
                             <iframe src="@GetEmbedUrl(@Model.Movie.VideoTrailer)" frameborder="0" allowfullscreen></iframe>
                         </div>
 
@@ -141,24 +122,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 </select>
                                 <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 10px 20px; color: white; background-color: #007bff; border: none; border-radius: 4px; cursor: pointer;">Submit Rating</button>
                             </form>
-
-
-                            @*
-                             <div class="yrw" style="margin-top: 20px;">
-                                 <div class="rtm text-center">
-                                     <a href="#" id="submit-review" style="cursor:pointer;">REVIEW THIS MOVIE</a>
-                                 </div>
-                                 <div class="clearfix"></div>
-                             </div>
-                            *@
-                            <p class="info">
-                                <strong>CAST</strong>: &nbsp; @string.Join(", ", Model.Actors.Select(actor => actor.ActorName))
-                            </p>
-                            <p class="info"><strong>DIRECTION</strong>: &nbsp; @Model.Director.DirectorName</p>
-                            <p class="info"><strong>STORY</strong>: &nbsp; @Model.Movie.Description</p>
-                            <p class="info"><strong>DURATION</strong>: &nbsp; @Model.Movie.Length minute</p>
-
-                            <h3>Comments</h3>
+                            <h3 style="padding-top: 20pxs">Comments</h3>
                             <ul style="list-style-type: none; padding: 0;">
                                 @foreach (var comment in Model.Comments)
                                 {
@@ -182,62 +146,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <div class="article-right">
                     <div class="grid_3 grid_5">
                         <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
-                            <ul id="myTab" class="nav nav-tabs" role="tablist">
-                                @if (Model.Showtimes.Any())
-                                {
-                                    // Group showtimes by date
-                                    var groupedShowtimes = Model.Showtimes.GroupBy(st => st.Date).ToList();
-                                    var firstTab = true;
-
-                                    foreach (var group in groupedShowtimes)
-                                    {
-                                        var date = group.Key; // The date for the showtimes
-
-                                        <li role="presentation" class="@(firstTab ? "active" : "")">
-                                            <a href="#@date.ToString("yyyy-MM-dd")" id="tab-@date.ToString("yyyy-MM-dd")" role="tab" data-toggle="tab" aria-controls="@date.ToString("yyyy-MM-dd")">
-                                                @date.ToString("ddd-dd") <!-- Display date as "Tue-30" -->
-                                            </a>
-                                        </li>
-                                        firstTab = false;
-                                    }
-                                }
-                                else
-                                {
-                                    <li role="presentation" class="active">
-                                        <a href="#" id="no-showtimes-tab" role="tab" data-toggle="tab" aria-controls="no-showtimes">No Showtimes</a>
-                                    </li>
-                                }
-                            </ul>
-
-                            <div id="myTabContent" class="tab-content">
-                                @if (Model.Showtimes.Any())
-                                {
-                                    var firstContent = true;
-
-                                    foreach (var group in Model.Showtimes.GroupBy(st => st.Date).ToList())
-                                    {
-                                        var date = group.Key;
-                                        var showtimesForDate = group.ToList(); // Get all showtimes for this date
-
-                                        <div role="tabpanel" class="tab-pane fade @(firstContent ? "in active" : "")" id="@date.ToString("yyyy-MM-dd")" aria-labelledby="tab-@date.ToString("yyyy-MM-dd")">
-                                            @* <p class="m-s-t">Showtimes for @date.ToString("dd/MM/yyyy")</p> *@
-                                            @foreach (var showtime in showtimesForDate)
-                                            {
-                                                @* <p>@showtime.StartHour.ToString(@"hh\:mm")</p> <!-- Displaying each showtime --> *@
-                                                <a class="show-time" href="/Customer/CinemaSelection/CinemaSelection?time=@showtime.StartHour">@showtime.StartHour.ToString(@"hh\:mm")</a>
-                                            }
-                                            <div class="clearfix"></div>
-                                            <a class="more-show-time" href="/Customer/CinemaSelection/CinemaSelection?date=@date.ToString("yyyy-MM-dd")">More Show Times</a>
-                                        </div>
-                                        firstContent = false;
-                                    }
-                                }
-                                else
-                                {
-                                    <div role="tabpanel" class="tab-pane fade in active" id="no-showtimes" aria-labelledby="no-showtimes-tab">
-                                        <p>No showtimes available for this movie.</p>
-                                    </div>
-                                }
+                            <p class="info"><strong>CAST</strong>: &nbsp; @string.Join(", ", Model.Actors.Select(actor => actor.ActorName))</p>
+                            <p class="info"><strong>DIRECTION</strong>: &nbsp; @Model.Director.DirectorName</p>
+                            <p class="info"><strong>STORY</strong>: &nbsp; @Model.Movie.Description</p>
+                            <p class="info"><strong>DURATION</strong>: &nbsp; @Model.Movie.Length minute</p>
+                            <div style="margin-top: 20px;">
+                                <a href="/Customer/CinemaSelection/CinemaSelection" class="btn btn-primary" style="padding: 10px 20px; color: white; background-color: #007bff; border: none; border-radius: 4px; cursor: pointer;">Buy Ticket</a>
                             </div>
                         </div>
                     </div>
@@ -245,16 +159,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
                 <div class="clearfix"></div>
             </div>
-
-
-
-            @* </div> *@
-            @* <div class="footer-top-strip">
-            <p><span>Showing in cities : </span><a href="movies.html">Bengaluru</a>, <a href="movies.html">Hyderabad</a>, <a href="movies.html">Khammam</a>, <a href="movies.html">Kurnool</a>, <a href="movies.html">Nizamabad</a>, <a href="movies.html">Vijayawada</a>, <a href="#">Vizag</a>, <a href="movies.html">Vizianagaram</a>, <a href="movies.html">Warangal</a></p>
-            <p><span>Cinemas Nearby : </span><a href="movie-single.html"> INOX: Jyoti Mall, Kurnool </a>|
-            <p><span>Next Change <i>(Friday, 19 Jun) </i>: </span><a href="movie-single.html">Disney's ABCD 2 (3D) (U)</a>, <a href="movie-single.html"> 2 Premi Premache</a> , <a href="movie-single.html">Dekh Ke (Bhojpuri)</a> , <a href="movie-single.html">Disney's ABCD 2 (2D) (U)</a>, <a href="movie-single.html">Dekh Ke (Bhojpuri)</a></p>
-            <p><span>Coming Soon :</span><a href="movie-single.html"> 2 Premi Premache</a>, <a href="movie-single.html">Acharam, Dekh Ke (Bhojpuri)</a>, <a href="movie-single.html">Entourage</a>, <a href="movie-single.html">Kuttram Kadithal</a></p>
-            </div> *@
         </div>
     </div>
     <script src="~/customer/assets1/js/responsive-tabs.js"></script>

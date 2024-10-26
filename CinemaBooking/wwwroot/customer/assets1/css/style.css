@@ -1,4 +1,4 @@
-/*--
+﻿/*--
 Author: W3layouts
 Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
@@ -1619,13 +1619,18 @@ p.info {
 	font-weight: 400;
 	color: #000;
 	margin: 15px 0px;
-	height: 22px;
-	overflow: hidden;
+	word-wrap: break-word; /* Tự động xuống dòng khi từ quá dài */
+	overflow-wrap: break-word; /* Đảm bảo nội dung được bẻ dòng khi cần */
+	white-space: normal; /* Cho phép xuống dòng */
+	line-height: 1.5em; /* Tăng khoảng cách giữa các dòng */
 }
-p.info strong {
-    color: #007DD4;
-    font-size: 0.9em;
-}
+
+	p.info strong {
+		color: #007DD4;
+		font-size: 0.9em;
+		display: inline-block; /* Đảm bảo thẻ strong xuống dòng khi cần */
+	}
+
 .yrw {
 	margin: 2em 0;
 }
