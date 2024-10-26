@@ -1,6 +1,6 @@
 ﻿@page
+@model CinemaBooking.Pages.Customer.Movie.ComingSoonModel
 @using System.Web
-@model CinemaBooking.Pages.Customer.Movie.ListModel
 @{
 	Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
@@ -26,8 +26,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-	<script
-		type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 	<!--webfont-->
 	<link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -80,8 +79,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		.search-form {
 			margin: 20px 10px; /* Thêm khoảng cách trên và dưới */
 		}
-
-
 /* Tạo kiểu cho ô nhập liệu */
 .search-input {
 	width: 80%;
@@ -141,106 +138,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<input type="text" name="searchTitle" placeholder="Tìm kiếm tên phim..." value="@Model.SearchTitle" class="search-input" />
 					<button type="submit" class="search-button">Tìm kiếm</button>
 				</div>
-				<div class="main-banner">
-				<div class="banner col-md-8">
-					<section class="slider">
-						<div class="flexslider">
-							<ul class="slides">
-								@foreach (var movie in Model.BannerMovies)
-								{
-									<li>
-										<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">
-											<img src="@movie.ImageBackground"
-												class="img-responsive" alt="@movie.Title" />
-										</a>
-									</li>
-								}
-							</ul>
-						</div>
-					</section>
-					<!-- FlexSlider -->
-					<script defer src="~/customer/assets1/js/jquery.flexslider.js"></script>
-					<link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css"
-						media="screen" />
-					<script type="text/javascript">
-						$(function () {
-							SyntaxHighlighter.all();
-						});
-						$(window).load(function () {
-							$('.flexslider').flexslider({
-								animation: "slide",
-								start: function (slider) {
-									$('body').removeClass('loading');
-								}
-							});
-						});
-					</script>
-				</div>
-				@{
-					// Hàm chuyển đổi URL YouTube sang định dạng nhúng
-					string GetEmbedUrl(string url)
-					{
-						var uri = new Uri(url);
-						var query = HttpUtility.ParseQueryString(uri.Query);
-						var videoId = query["v"];
-						return $"https://www.youtube.com/embed/{videoId}";
-					}
-				}
-
-				<div class="col-md-4 banner-right">
-						<div class="slider1">
-							<div class="callbacks_container">
-								<ul class="rslides" id="slider">
-									@foreach (var trailerUrl in Model.TrailerVideoUrls)
-									{
-										<li>
-											<iframe src="@GetEmbedUrl(trailerUrl)" frameborder="0" allowfullscreen></iframe>
-										</li>
-									}
-								</ul>
-							</div>
-						</div>
-						<script>
-							$(function () {
-								$("#slider").responsiveSlides({
-									auto: false,  // Không tự động chuyển slide
-									nav: true,    // Hiện nút điều hướng
-									speed: 500,   // Tốc độ chuyển slide
-									namespace: "callbacks",
-									pager: false, // Không hiển thị pager
-								});
-							});
-						</script>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			<div class="now-showing-movies">
-				<h3 class="m-head">Now Showing</h3>
-				@foreach (var movie in Model.NowShowingMovies)
-				{
-					<div class="col-md-3 movie-preview">
-						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
-							<img src="@movie.Image" class="img-responsive zoom-img"
-								alt="@movie.Title" />
-							<div class="m-movie-title">
-								<a class="m-movie-link"
-									href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
-								<div class="clearfix"></div>
-								<div class="m-r-date">
-									<p>
-										<i class="far fa-calendar"></i>@movie.PublishTime.ToShortDateString()
-										&nbsp;&nbsp;&nbsp;&nbsp;Duration:@movie.Length minute
-									</p>
-									<a href="/Customer/Movie/BookNow?id=@movie.MovieId">Book Now</a>
-								</div>
-							</div>
-						</a>
-					</div>
-				}
-				<div class="clearfix"></div>
-			</div>
-
-			<div class="now-showing-movies">
+				<div class="now-showing-movies">
 				<h3 class="m-head">Coming Soon</h3>
 				@foreach (var movie in Model.ComingSoonMovies)
 				{
@@ -271,14 +169,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </body>
 <script type="text/javascript">
 	$(document).ready(function () {
-		/*
-		var defaults = {
-				containerID: 'toTop', // fading element id
-			containerHoverID: 'toTopHover', // fading element hover id
-			scrollSpeed: 1200,
-			easingType: 'linear'
-			};
-		*/
 
 		$().UItoTop({ easingType: 'easeOutQuart' });
 

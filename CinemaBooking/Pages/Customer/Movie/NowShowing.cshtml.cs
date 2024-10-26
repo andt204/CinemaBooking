@@ -6,23 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Customer.Movie
 {
-    public class ListModel : PageModel
+    public class NowShowingModel : PageModel
     {
-        private readonly CinemaBookingContext _context;
+		private readonly CinemaBookingContext _context;
 		[BindProperty]
 		public Data.Account account { get; set; }
 		public List<Data.Movie> NowShowingMovies { get; set; }
-        public List<Data.Movie> ComingSoonMovies { get; set; }
-        public List<Data.Movie> BannerMovies { get; set; }
-        public List<string> TrailerVideoUrls { get; set; } = new List<string>();
-        [BindProperty(SupportsGet = true)]
+		[BindProperty(SupportsGet = true)]
 		public string? SearchTitle { get; set; }
 
 
-		public ListModel(CinemaBookingContext context)
-        {
-            _context = context;
-        }
+		public NowShowingModel(CinemaBookingContext context)
+		{
+			_context = context;
+		}
 
 		public async Task<IActionResult> OnGetAsync(string? searchTitle)
 		{
@@ -36,7 +33,7 @@ namespace CinemaBooking.Pages.Customer.Movie
 				if (email != null)
 				{
 					account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-					ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+					ViewData["Account"] = account; 
 				}
 			}
 			// Tìm kiếm phim theo tiêu đề
@@ -62,16 +59,9 @@ namespace CinemaBooking.Pages.Customer.Movie
 					ImageBackground = m.ImageBackground
 				}).ToListAsync();
 
-			// Phân loại phim đang chiếu và sắp chiếu
-			NowShowingMovies = movieList.Where(m => m.PublishTime <= currentTime).ToList();
-			ComingSoonMovies = movieList.Where(m => m.PublishTime > currentTime).ToList();
-
-			// Lấy BannerMovies và TrailerVideoUrls
-			BannerMovies = NowShowingMovies.OrderByDescending(m => m.PublishTime).Take(5).ToList();
-			BannerMovies.AddRange(ComingSoonMovies.OrderBy(m => m.PublishTime).Take(5));
-			TrailerVideoUrls = BannerMovies.Select(m => m.VideoTrailer).ToList();
-
+			NowShowingMovies = movieList.Where(m => m.PublishTime <= currentTime & m.Status == 1).ToList();
+			
 			return Page();
 		}
-    }
+	}
 }
