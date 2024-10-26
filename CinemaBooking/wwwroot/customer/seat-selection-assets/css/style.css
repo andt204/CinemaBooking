@@ -348,7 +348,7 @@ label {
 input[type="text"],
 input[type="number"] {
     padding: 1em;
-    width: 80%;
+  /*  width: 80%;*/
     background: transparent;
     border: 1px solid #888686;
     font-family: 'Source Sans Pro', sans-serif;
@@ -441,7 +441,7 @@ table {
 }
 
 table.Displaytable tr {
-    background: #fff;
+   /* background: #fff;*/
     color: #fff;
 }
 
