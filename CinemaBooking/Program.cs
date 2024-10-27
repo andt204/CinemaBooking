@@ -72,7 +72,8 @@ namespace CinemaBooking {
 			// Register your service
 			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
 			builder.Services.AddScoped<SeatSelectionService>();
-			builder.Services.AddSingleton< VnPayService>();
+			builder.Services.AddSingleton<IVnPayService, VnPayService>();
+
 			// Configure DbContext with SQL Server
 			builder.Services.AddDbContext<CinemaBookingContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
@@ -112,7 +113,6 @@ namespace CinemaBooking {
 				await next();
 			});
 			app.UseAuthentication();
-			app.UseAuthorization();
 			app.UseSession();
 			app.UseStaticFiles();
 

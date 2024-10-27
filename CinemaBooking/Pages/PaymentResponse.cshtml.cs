@@ -7,19 +7,23 @@ namespace CinemaBooking.Pages;
 
 public class PaymentResponse : PageModel
 {
-    private readonly VnPayService _vnPayService;
+    private readonly IVnPayService _vnPayService;
 
-    public PaymentResponse(VnPayService vnPayService)
+    public PaymentResponse(IVnPayService vnPayService)
     {
         _vnPayService = vnPayService;
     }
 
-    [BindProperty]
-    public string PaymentStatus { get; set; }
+    public VnPaymentResponseModel PaymentResponseModel { get; set; }
 
-    // public void OnGet()
-    // {
-    //     var vnp_ResponseCode = Request.Query["vnp_ResponseCode"];
-    //     PaymentStatus = _vnPayService.GetPaymentStatus(vnp_ResponseCode);
-    // }
+    public void OnGet()
+    {
+        var response = _vnPayService.MakePayment(Request.Query);
+
+        if (response != null)
+        {
+            PaymentResponseModel = response;
+        }
+
+    }
 }

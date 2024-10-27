@@ -5,10 +5,9 @@
 <h2>Thanh toán VNPAY</h2>
 
 <form method="post">
-    <div>
-        <label>Số tiền:</label>
-        <input asp-for="Amount" type="number" required />
-    </div>
-    vc
-    <button type="submit">Thanh toán</button>
+    FullName <input type="text" asp-for="PaymentRequest.FullName" />
+    Description <input type="text" asp-for="PaymentRequest.Description" />
+    Amount <input type="number" asp-for="PaymentRequest.Amount" />
+
+    <button type="submit">Go bruhhh</button>
 </form>

@@ -7,20 +7,33 @@ namespace CinemaBooking.Pages;
 
 public class Payment : PageModel
 {
-    private readonly VnPayService _vnPayService;
+    private readonly IVnPayService _vnPayService;
 
-    public Payment(VnPayService vnPayService)
+    public Payment(IVnPayService vnPayService)
     {
         _vnPayService = vnPayService;
     }
-    
-    
 
-    [BindProperty] public int Amount { get; set; }
+    [BindProperty]
+    public VnPaymentRequestModel PaymentRequest { get; set; }
 
-    public IActionResult OnPost()
+    public VnPaymentResponseModel PaymentResponse { get; set; }
+
+    public void OnGet()
     {
-       
-      
+            
+    }
+
+    public IActionResult OnPost() 
+    {
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+
+        PaymentRequest.OrderId = "1";
+        PaymentRequest.CreatedDate = DateTime.Now;
+
+        return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, PaymentRequest));
     }
 }
