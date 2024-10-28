@@ -10,6 +10,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CinemaBooking.Repositories.Movie;
+using CinemaBooking.Repositories.Room;
+using CinemaBooking.Repositories.Seat;
+using CinemaBooking.Repositories.Showtime;
+using CinemaBooking.Repositories.Theater;
+using CinemaBooking.Repositories.Ticket;
+using CinemaBooking.Repositories.TicketMovie;
+using CinemaBooking.Repositories.TicketSeat;
 
 namespace CinemaBooking {
     public class Program {
@@ -68,7 +76,14 @@ namespace CinemaBooking {
 			builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<IVoteRepository, VoteRepository>();
-
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddScoped<IShowtimeRepository, ShowtimeRepository>();
+            builder.Services.AddScoped<ITicketMovieRepository, TicketMovieRepository>();
+            builder.Services.AddScoped<ITheaterRepository, TheaterRepository>();
+            builder.Services.AddScoped<ITicketSeatRepository, TicketSeatRepository>();
 			// Register your service
 			builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
 			builder.Services.AddScoped<SeatSelectionService>();

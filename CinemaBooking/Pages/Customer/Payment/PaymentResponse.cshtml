@@ -1,0 +1,120 @@
+﻿@page
+@model CinemaBooking.Pages.PaymentResponse
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "/Pages/Shared/_UserLayout.cshtml";
+    ViewData["Title"] = "Payment Response";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Response | Movie Booking</title>
+    <link href="~/customer/assets1/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/customer/assets1/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="~/customer/assets1/js/jquery.min.js"></script>
+    <script src="~/customer/assets1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .detail-row {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+        }
+        .btn-back {
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="main-content">
+        <h2>Payment Response</h2>
+
+        @if (Model.PaymentResponseModel != null)
+        {
+            <div class="detail-row">
+                <span class="detail-label">Success:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.Success</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.PaymentMethod</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order Description:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.OrderDescription</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order ID:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.OrderId</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Payment ID:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.PaymentId</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.TransactionId</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Token:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.Token</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">VnPay Response Code:</span>
+                <span class="detail-value">@Model.PaymentResponseModel.VnPayResponseCode</span>
+            </div>
+        }
+        else
+        {
+            <p>No payment response available.</p>
+        }
+
+        <div class="text-center">
+            <a asp-page="/Customer/Ticket/DetailTicket" class="btn btn-secondary btn-back">Back to Detail Ticket</a>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Toast -->
+<div id="paymentToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+    <div class="toast-header">
+        <strong class="mr-auto">Notification</strong>
+        <small>Just now</small>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Payment was successful!
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Show the toast when the page is loaded
+        $('#paymentToast').toast({ delay: 5000 });
+        $('#paymentToast').toast('show');
+    });
+</script>
+</body>
+</html>
