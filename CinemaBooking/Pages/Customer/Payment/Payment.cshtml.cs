@@ -73,7 +73,6 @@ namespace CinemaBooking.Pages.Customer.Payment
             Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
             Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
             TicketSeatAssignment = await _ticketSeatRepository.GetByIdAsync(Ticket.TicketId);
-            Console.WriteLine(TicketSeatAssignment.SeatId);
             Seat = await _seatRepository.GetByIdAsync(TicketSeatAssignment.TicketSeatId);
             Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
             Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
@@ -90,12 +89,15 @@ namespace CinemaBooking.Pages.Customer.Payment
             }
             PaymentRequest = new VnPaymentRequestModel
             {
-                Amount = Math.Floor(Ticket.TicketPrice ?? 0)
+                Amount = Math.Floor(Ticket.TicketPrice ?? 0),
+                TicketId = Ticket.TicketId
+                
             };
+             Console.Write($"TICKET ID: payment{PaymentRequest.TicketId}");
             // Console.WriteLine($"OnGetAsync - PaymentRequest.Amount: {PaymentRequest.Amount}");
 
-            // PublishTime = Movie.PublishTime;
-            // formattedPublishTime = PublishTime.ToString("HH:mm dd-MM-yyyy");
+            PublishTime = Movie.PublishTime;
+            formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
             // Showtime = await _showtimeRepository.GetByIdAsync(Showtime.ShowtimeId);
 
             return Page();
@@ -107,6 +109,7 @@ namespace CinemaBooking.Pages.Customer.Payment
             PaymentRequest.OrderId = "1";
             PaymentRequest.Description = "Vé xem phim";
             PaymentRequest.CreatedDate = DateTime.Now;
+            Console.Write($"TICKET ID: payment{PaymentRequest.TicketId}");
             return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, PaymentRequest));
         }
     }

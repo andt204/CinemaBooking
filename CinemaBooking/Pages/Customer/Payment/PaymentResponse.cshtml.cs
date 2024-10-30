@@ -24,6 +24,6 @@ public class PaymentResponse : PageModel
         {
             PaymentResponseModel = response;
         }
-
+        Console.Write($"ticketid: {PaymentResponseModel.TicketId}");
     }
 }
