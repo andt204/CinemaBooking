@@ -93,7 +93,6 @@ namespace CinemaBooking.Pages.Customer.Payment
                 TicketId = Ticket.TicketId
                 
             };
-             Console.Write($"TICKET ID: payment{PaymentRequest.TicketId}");
             // Console.WriteLine($"OnGetAsync - PaymentRequest.Amount: {PaymentRequest.Amount}");
 
             PublishTime = Movie.PublishTime;
@@ -109,7 +108,6 @@ namespace CinemaBooking.Pages.Customer.Payment
             PaymentRequest.OrderId = "1";
             PaymentRequest.Description = "Vé xem phim";
             PaymentRequest.CreatedDate = DateTime.Now;
-            Console.Write($"TICKET ID: payment{PaymentRequest.TicketId}");
             return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, PaymentRequest));
         }
     }

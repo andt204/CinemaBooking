@@ -122,10 +122,11 @@ Layout = "~/Pages/Shared/_UserLayout.cshtml";
         <div class="m-single-article">
             <div class="article-left">
                 <h3>Ticket Details for Movie: @Model.Movie.Title</h3>
-                @* <p><strong>Seat ID:</strong> @Model.Seat.SeatId</p> *@
-                <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p>
+                <p><strong>Theatre:</strong> @Model.Theater.TheaterName</p>
+                <p><strong>Location:</strong> @Model.Theater.Location</p>
+                <p><strong>Seat Info:</strong> @Model.Seat.Column, @Model.Seat.Row</p>
                 <p><strong>Status:</strong>@Model.Status</p>
-                @* <p><strong>Price:</strong> $@Model.TicketPrice.TicketPrice1</p> *@
+                <p><strong>Price:</strong> $@Model.Ticket.TicketPrice₫</p>
                 <div class="clearfix"></div>
                 <h4>Movie Information</h4>
                 <p><strong>Title:</strong> @Model.Movie.Title</p>
