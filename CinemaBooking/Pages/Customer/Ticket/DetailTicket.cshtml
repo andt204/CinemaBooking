@@ -1,7 +1,7 @@
-﻿@page
+﻿@page "{id:int}"
 @model CinemaBooking.Pages.Customer.Ticket.DetailTicketModel
 @{
-    Layout = "~/Pages/Shared/_UserLayout1.cshtml";
+Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -66,31 +66,31 @@
             transition: background 0.3s;
         }
 
-            .show-time:hover {
-                background: #0056b3;
-            }
+        .show-time:hover {
+            background: #0056b3;
+        }
 
         .nav-tabs {
             border-bottom: 2px solid #ddd;
         }
 
-            .nav-tabs > li > a {
-                border: 1px solid transparent;
-                border-radius: 4px 4px 0 0;
-                margin-right: 5px;
-                padding: 10px 15px;
-                color: #007bff;
-            }
+        .nav-tabs > li > a {
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+            padding: 10px 15px;
+            color: #007bff;
+        }
 
-                .nav-tabs > li > a:hover {
-                    border-color: #ddd;
-                }
+        .nav-tabs > li > a:hover {
+            border-color: #ddd;
+        }
 
-            .nav-tabs > .active > a {
-                background: white;
-                border-color: #ddd;
-                color: #333;
-            }
+        .nav-tabs > .active > a {
+            background: white;
+            border-color: #ddd;
+            color: #333;
+        }
 
         .tab-content {
             padding: 15px;
@@ -100,67 +100,65 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <div class="bootstrap_container">
-                <nav class="navbar navbar-default w3_megamenu" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
-                    </div>
-                    <div id="defaultmenu" class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="tickets.html">Tickets</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-            <div class="m-single-article">
-                <div class="article-left">
-                    <h3>Ticket Details for Movie: ABCD 2 (3D)</h3>
-                    <p><strong>Seat ID:</strong> B5</p>
-                    <p><strong>Booking Time:</strong> October 9, 2024, 07:00 PM</p>
-                    <p><strong>Status:</strong> Confirmed</p>
-                    <p><strong>Price:</strong> $15.00</p>
-                    <div class="clearfix"></div>
-                    <h4>Movie Information</h4>
-                    <p><strong>Title:</strong> ABCD 2 (3D)</p>
-                    <p><strong>Duration:</strong> 2 hours 10 minutes</p>
-                    <p><strong>Release Date:</strong> October 07, 2024</p>
-                    <div class="article-img">
-                        <img src="~/customer/assets1/images/m4.jpg" alt="Movie Poster" class="img-responsive" />
-                    </div>
+<div class="container">
+    <div class="main-content">
+        <div class="bootstrap_container">
+            <nav class="navbar navbar-default w3_megamenu" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/Customer/Movie/List" class="navbar-brand"><i class="fa fa-home"></i></a>
                 </div>
-                <div class="article-right">
-                    <div class="grid_3 grid_5">
-                        <h4>Showtimes</h4>
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#showtime-tue" role="tab" data-toggle="tab">Tue-30</a></li>
-                            <li role="presentation"><a href="#showtime-wed" role="tab" data-toggle="tab">Wed-1</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade in active" id="showtime-tue">
-                                <p>INOX: Lorem Mall, Chicago</p>
-                                <a class="show-time" href="movie-select-show.html">06:30 PM</a>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane fade" id="showtime-wed">
-                                <p>INOX: Lorem Mall, Chicago</p>
-                                <a class="show-time" href="movie-select-show.html">12:45 PM</a>
-                                <a class="show-time" href="movie-select-show.html">06:30 PM</a>
-                                <div class="clearfix"></div>
-                            </div>
+                <div id="defaultmenu" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/Customer/Movie/List">Home</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="m-single-article">
+            <div class="article-left">
+                <h3>Ticket Details for Movie: @Model.Movie.Title</h3>
+                @* <p><strong>Seat ID:</strong> @Model.Seat.SeatId</p> *@
+                <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p>
+                <p><strong>Status:</strong>@Model.Status</p>
+                @* <p><strong>Price:</strong> $@Model.TicketPrice.TicketPrice1</p> *@
+                <div class="clearfix"></div>
+                <h4>Movie Information</h4>
+                <p><strong>Title:</strong> @Model.Movie.Title</p>
+                <p><strong>Duration:</strong> @Model.Movie.Length minutes</p>
+                <p><strong>Booking Time:</strong> @Model.formattedPublishTime</p>
+                <div class="article-img">
+                    <img src="~/customer/assets1/images/m4.jpg" alt="Movie Poster" class="img-responsive" />
+                </div>
+            </div>
+            <div class="article-right">
+                <div class="grid_3 grid_5">
+                    <h4>Showtimes</h4>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation"><a href="#showtime-wed" role="tab" data-toggle="tab">Wed-1</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="showtime-tue">
+                            <p>INOX: Lorem Mall, Chicago</p>
+                            <a class="show-time" style="color: white" href="movie-select-show.html">06:30 PM</a>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="showtime-wed">
+                            <p>INOX: Lorem Mall, Chicago</p>
+                            <a class="show-time" style="color: white" href="movie-select-show.html">12:45 PM</a>
+                            <a class="show-time" style="color: white" href="movie-select-show.html">06:30 PM</a>
+                            <div class="clearfix"></div>
                         </div>
                     </div>
                 </div>
-                <div class="clearfix"></div>
             </div>
+            <div class="clearfix"></div>
         </div>
     </div>
+</div>
 </body>
 </html>
