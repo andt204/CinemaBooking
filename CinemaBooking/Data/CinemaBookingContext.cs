@@ -40,11 +40,10 @@ namespace CinemaBooking.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            string connectStr = config.GetConnectionString("CinemaBooking");
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(connectStr);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =localhost; database =CinemaBooking;uid=sa;pwd=123;TrustServerCertificate=true;");
             }
         }
 
@@ -169,8 +168,6 @@ namespace CinemaBooking.Data
             {
                 entity.HasKey(e => e.MovieCategoryId);
 
-                entity.Property(e => e.MovieCategoryId).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.MovieCategoryAssignments)
                     .HasForeignKey(d => d.CategoryId)
@@ -277,7 +274,7 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.ShowtimeMovieId)
-                    .HasName("PK__event_fi__173260FA7EF6F97D");
+                    .HasName("PK__Showtime__F66869A03E122DE4");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowtimeMovieAssignments)
@@ -323,7 +320,7 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<TicketMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.TicketMovieId)
-                    .HasName("PK__ticket_f__0ABAC5AB0860D343");
+                    .HasName("PK__TicketMo__B0219649CD2155D3");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)
