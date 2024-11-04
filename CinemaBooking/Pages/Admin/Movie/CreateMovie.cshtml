@@ -1,137 +1,273 @@
 ﻿@page
 @model CinemaBooking.Pages.Admin.Movie.CreateMovieModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Movie List";
 }
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
     <title>Create New Movie</title>
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tagmanager/3.0.2/tagmanager.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tagmanager/3.0.2/tagmanager.min.js"></script>
+
+    <style>
+        /* .tag {
+            display: inline-block;
+            background-color: #007bff;
+            padding: 5px 10px;
+            margin: 5px 5px 0 0;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+
+            .tag .remove-tag {
+                margin-left: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                color: #ffcccc;
+            }
+
+                .tag .remove-tag:hover {
+                    color: #ff6666;
+                } */
+    </style>
 </head>
-
 <body>
-        <div class="page-wrapper">
-            <div class="content">
-                <div class="row">
-                    <div class="col-sm-4 col-3">
-                        <h4 class="page-title">Create New Movie</h4>
-                    </div>
+    <div class="page-wrapper">
+        <div class="content">
+            <h4 class="page-title">Create New Movie</h4>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            <form method="post" enctype="multipart/form-data">
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="title">Movie Title</label>
+                    <input type="text" class="form-control" id="title" name="Title" placeholder="Enter movie title" required>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="title">Movie Title</label>
-                            <input type="text" class="form-control" id="title" name="title"
-                                   placeholder="Enter movie title" required>
-                        </div>
 
-                        <!-- Category -->
-                        <div class="form-group">
-                            <label for="category">Category</label>
-                            <input type="text" class="form-control" id="category" name="category"
-                                   placeholder="Enter category" required>
-                        </div>
+                <!-- Category -->
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addCategoryPopup">Thêm danh mục mới</button>
+                    <select id="categorySelect" class="form-control" name="CategoryIds[]" multiple onchange="addTag('categorySelect', 'categoryDisplay')">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.CategoryId">@category.CategoryName</option>
+                        }
+                    </select>
+                    <div id="categoryDisplay" class="mt-2"></div>
+                </div>
+                <!-- Length -->
+                <div class="form-group">
+                    <label for="length">Length (minutes)</label>
+                    <input type="number" class="form-control" id="length" name="Length" placeholder="Enter movie length" required>
+                </div>
 
-                        <!-- Length -->
-                        <div class="form-group">
-                            <label for="length">Length (minutes)</label>
-                            <input type="number" class="form-control" id="length" name="length"
-                                   placeholder="Enter movie length" required>
-                        </div>
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="Description" rows="4" placeholder="Enter movie description" required></textarea>
+                </div>
 
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="4"
-                                      placeholder="Enter movie description" required></textarea>
-                        </div>
+                <!-- Age Limit -->
+                <div class="form-group">
+                    <label for="ageLimit">Age Limit</label>
+                    <input type="number" class="form-control" id="ageLimit" name="AgeLimit" placeholder="Enter age limit" required>
+                </div>
 
-                        <!-- Age Limit -->
-                        <div class="form-group">
-                            <label for="ageLimit">Age Limit</label>
-                            <input type="number" class="form-control" id="ageLimit" name="ageLimit"
-                                   placeholder="Enter age limit" required>
-                        </div>
+                <!-- Warning Text -->
+                <div class="form-group">
+                    <label for="warningText">Warning Text</label>
+                    <input type="text" class="form-control" id="warningText" name="WarningText" placeholder="Enter any warning text">
+                </div>
 
-                        <!-- Warning Text -->
-                        <div class="form-group">
-                            <label for="warningText">Warning Text</label>
-                            <input type="text" class="form-control" id="warningText" name="warningText"
-                                   placeholder="Enter warning text (if any)">
-                        </div>
+                <!-- Publish Time -->
+                <div class="form-group">
+                    <label for="publishTime">Publish Time</label>
+                    <input type="datetime-local" class="form-control" id="publishTime" name="PublishTime" required>
+                </div>
 
-                        <!-- Publish Time -->
-                        <div class="form-group">
-                            <label for="publishTime">Publish Time</label>
-                            <input type="datetime-local" class="form-control" id="publishTime" name="publishTime"
-                                   required>
-                        </div>
+                 <!-- Country -->
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select class="form-control" id="country" name="Country" required>
+                        <option value="">Select Country</option>
+                        @foreach (var country in Model.Countries)
+                        {
+                            <option value="@country">@country</option>
+                        }
+                    </select>
+                </div> 
+                
+                <!-- Image -->
+                <div class="form-group">
+                    <label for="image">Movie Poster</label>
+                    <input type="file" class="form-control-file" id="image" name="Image" accept="image/*" required>
+                </div>
 
-                        <!-- Origin -->
-                        <div class="form-group">
-                            <label for="origin">Origin</label>
-                            <input type="text" class="form-control" id="origin" name="origin"
-                                   placeholder="Enter movie origin" required>
-                        </div>
+                <!-- Image Background -->
+                <div class="form-group">
+                    <label for="imageBackground">Background Image</label>
+                    <input type="file" class="form-control-file" id="imageBackground" name="ImageBackground" accept="image/*">
+                </div>
 
-                        <!-- Image -->
-                        <div class="form-group">
-                            <label for="image">Movie Poster</label>
-                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*"
-                                   required>
-                        </div>
+                <!-- Link Video URL -->
+                <div class="form-group">
+                    <label for="linkVideoUrl">Trailer Video</label>
+                    <input type="url" class="form-control" id="linkVideoUrl" name="VideoTrailer">
+                </div>
 
-                        <!-- Image Background -->
-                        <div class="form-group">
-                            <label for="imageBackground">Background Image</label>
-                            <input type="file" class="form-control-file" id="imageBackground" name="imageBackground"
-                                   accept="image/*">
-                        </div>
+                <!-- Status -->
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="Status" required>
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                    </select>
+                </div>
 
-                        <!-- Status -->
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="Released">Released</option>
-                                <option value="Unreleased">Unreleased</option>
-                            </select>
-                        </div>
+                <!-- Director -->
+               <div class="form-group">
+                    <label for="director">Director</label>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addDirectorModal">Add New</button>
+                    <select class="form-control" id="director" name="DirectorId" required>
+                        <option value="">Select Director</option>
+                        @foreach (var director in Model.Directors)
+                        {
+                            <option value="@director.Value">@director.Text</option>
+                        }
+                    </select>
+                </div>
+                <!-- Actors -->
+                <div class="form-group">
+                    <label for="actors">Actors</label>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addActorModal">Add New</button>
+                    <select id="actorSelect" class="form-control" name="ActorIds[]" multiple onchange="addTag('actorSelect', 'actorDisplay')">
+                        @foreach (var actor in Model.Actors)
+                        {
+                            <option value="@actor.Value">@actor.Text</option>
+                        }
+                    </select>
+                    <div id="actorDisplay" class="mt-2"></div>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Create Movie</button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function addTag(selectId, displayId) {
+            var selectedTagText = $("#" + selectId + " option:selected").text(); // Lấy text của option đang chọn
+            var selectedTagValue = $("#" + selectId).val(); // Lấy value của option đang chọn
 
-                        <!-- Director ID -->
-                        <div class="form-group">
-                            <label for="directorId">Director ID</label>
-                            <input type="number" class="form-control" id="directorId" name="directorId"
-                                   placeholder="Enter director ID" required>
-                        </div>
+            if (selectedTagValue) { // Kiểm tra nếu có giá trị được chọn
+                // Tạo một thẻ span để hiển thị tag
+                var tagElement = $('<span style="background-color: #007bff; padding: 5px; margin-right: 5px; border-radius: 5px; color: white;">'
+                    + selectedTagText
+                    + '<span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span></span>');
+                // Thêm thẻ tag vào div hiển thị
+                $("#" + displayId).append(tagElement);
+                // Không nên reset dropdown ở đây, vì điều này sẽ xóa giá trị đã chọn
+                // $("#" + selectId).val("");
 
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary">Create Movie</button>
-                    </div>
+                // Xóa tag khi nhấp vào dấu "x"
+                tagElement.find(".remove-tag").on("click", function () {
+                    $(this).parent().remove();
+                });
+            }
+        }
+    </script>
+    <!-- Popup cho thêm mới category -->
+    <div class="modal fade" id="addCategoryPopup" tabindex="-1" role="dialog" aria-labelledby="addCategoryPopupLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryPopupLabel">Add New Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="AddCategory">
+                        <div class="form-group">
+                            <label for="CategoryName">Category Name:</label>
+                            <input type="text" class="form-control" id="CategoryName" name="CategoryName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add New</button>
+                    </form>
                 </div>
             </div>
         </div>
-    <div class="sidebar-overlay" data-reff=""></div>
-    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
-    <script src="~/admin/assets/js/popper.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap.min.js"></script>
-    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
-    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
-    <script src="~/admin/assets/js/select2.min.js"></script>
-    <script src="~/admin/assets/js/moment.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/admin/assets/js/app.js"></script>
-</body>
+    </div>
+    <!-- Popup for adding new actor -->
+    <div class="modal fade" id="addActorModal" tabindex="-1" role="dialog" aria-labelledby="addActorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addActorModalLabel">Add New Actor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="AddActor">
+                        <div class="form-group">
+                            <label for="ActorName">Actor Name:</label>
+                            <input type="text" class="form-control" id="ActorName" name="ActorName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add New</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Popup for adding new director -->
+    <div class="modal fade" id="addDirectorModal" tabindex="-1" role="dialog" aria-labelledby="addDirectorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDirectorModalLabel">Add New Director</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="AddDirector">
+                        <div class="form-group">
+                            <label for="DirectorName">Director Name:</label>
+                            <input type="text" class="form-control" id="DirectorName" name="DirectorName" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add New</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closePopup() {
+            document.getElementById('addCategoryPopup').style.display = 'none';
+        }
+    </script>
+    
+
+</body>
 </html>
+
+
