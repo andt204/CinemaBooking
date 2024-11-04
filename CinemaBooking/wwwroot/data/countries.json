@@ -1,0 +1,91 @@
+﻿[
+  {
+    "CountryCode": "JP",
+    "CountryName": "Japan"
+  },
+  {
+    "CountryCode": "KR",
+    "CountryName": "South Korea"
+  },
+  {
+    "CountryCode": "CN",
+    "CountryName": "China"
+  },
+  {
+    "CountryCode": "HK",
+    "CountryName": "Hong Kong"
+  },
+  {
+    "CountryCode": "TW",
+    "CountryName": "Taiwan"
+  },
+  {
+    "CountryCode": "US",
+    "CountryName": "United States"
+  },
+  {
+    "CountryCode": "CA",
+    "CountryName": "Canada"
+  },
+  {
+    "CountryCode": "IN",
+    "CountryName": "India"
+  },
+  {
+    "CountryCode": "GB",
+    "CountryName": "United Kingdom"
+  },
+  {
+    "CountryCode": "FR",
+    "CountryName": "France"
+  },
+  {
+    "CountryCode": "DE",
+    "CountryName": "Germany"
+  },
+  {
+    "CountryCode": "IT",
+    "CountryName": "Italy"
+  },
+  {
+    "CountryCode": "ES",
+    "CountryName": "Spain"
+  },
+  {
+    "CountryCode": "VN",
+    "CountryName": "Vietnam"
+  },
+  {
+    "CountryCode": "TH",
+    "CountryName": "Thailand"
+  },
+  {
+    "CountryCode": "PH",
+    "CountryName": "Philippines"
+  },
+  {
+    "CountryCode": "AU",
+    "CountryName": "Australia"
+  },
+  {
+    "CountryCode": "RU",
+    "CountryName": "Russia"
+  },
+  {
+    "CountryCode": "MX",
+    "CountryName": "Mexico"
+  },
+  {
+    "CountryCode": "BR",
+    "CountryName": "Brazil"
+  },
+  {
+    "CountryCode": "NG",
+    "CountryName": "Nigeria"
+  },
+  {
+    "CountryCode": "EG",
+    "CountryName": "Egypt"
+  }
+]
+
