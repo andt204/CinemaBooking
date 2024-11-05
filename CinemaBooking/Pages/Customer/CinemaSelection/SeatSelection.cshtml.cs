@@ -27,9 +27,9 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
             LoadUserClaims();
             // Fetch the showtime details including the seats
             Showtime = await _seatSelectionService.GetShowtimeById(showtimeId);
-
-            // Check if the showtime is null (e.g., invalid showtimeId)
-            if (Showtime == null)
+			TempData["RoomId"] = Showtime.RoomId;
+			// Check if the showtime is null (e.g., invalid showtimeId)
+			if (Showtime == null)
             {
                 return NotFound(); // or handle it in another way
             }
@@ -39,11 +39,16 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
 
         public async Task<IActionResult> OnPostConfirmSelection(CreateUserTicketRequest request)
         {
-            // Call the service to create the ticket
-            var ticket = await _seatSelectionService.CreateCustomerTicket(request);
-
-            // Redirect to the payment page or show success message
-            return RedirectToPage("/Customer/Payment/Payment", new { ticketId = ticket.TicketId });
-        }
+            request.MovieId = TempData["MovieId"] as int?;
+			request.RoomId = TempData["RoomId"] as int?;
+			// Call the service to create the ticket
+			var ticket = await _seatSelectionService.CreateCustomerTicket(request);
+			TempData["TicketMovieAssignmentId"] = ticket.TicketMovieAssignments
+                .Where(x => x.TicketId == ticket.TicketId)
+                .Select(x => x.TicketMovieId)
+                .FirstOrDefault();
+			// Redirect to the payment page or show success message
+			return Redirect($"/Customer/Payment/Payment/{ticket.TicketId}");
+		}
     }
 }

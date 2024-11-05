@@ -1,3 +1,4 @@
+using AutoMapper;
 using CinemaBooking.Data;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Movie;
@@ -18,7 +19,9 @@ namespace CinemaBooking.Pages.Customer.Payment
 {
     public class PaymentModel : PageModel
     {
-        private readonly IMovieRepository _movieRepository;
+		private readonly CinemaBookingContext _context;
+		private readonly IMapper _mapper;
+		private readonly IMovieRepository _movieRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ISeatRepository _seatRepository;
         private readonly IRoomRepository _roomRepository;
@@ -32,8 +35,9 @@ namespace CinemaBooking.Pages.Customer.Payment
         public Data.Ticket Ticket { get; set; }
         public Data.Movie Movie { get; set; }
         public Data.Theater Theater { get; set; }
-        public Data.Seat Seat { get; set; }
-        public Data.Room Room { get; set; }
+		public List<Data.Seat> Seats { get; set; } = new List<Data.Seat>();
+
+		public Data.Room Room { get; set; }
         public Data.Showtime Showtime { get; set; }
         public Data.TicketMovieAssignment TicketMovieAssignment { get; set; }
         private DateTime BookingTime;
@@ -52,8 +56,8 @@ namespace CinemaBooking.Pages.Customer.Payment
             ITicketMovieRepository ticketMovieRepository,
             ITheaterRepository theaterRepository,
             ITicketSeatRepository ticketSeatRepository,
-            IVnPayService vnPayService
-        )
+            IVnPayService vnPayService, CinemaBookingContext context, IMapper mapper
+		)
         {
             _movieRepository = movieRepository;
             _ticketRepository = ticketRepository;
@@ -64,17 +68,28 @@ namespace CinemaBooking.Pages.Customer.Payment
             _theaterRepository = theaterRepository;
             _ticketSeatRepository = ticketSeatRepository;
             _vnPayService = vnPayService;
-        }
+			_context = context;
+			_mapper = mapper;
+		}
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
             Ticket = await _ticketRepository.GetByIdAsync(id);
-            TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(Ticket.TicketId);
-            Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
+            var ticketMovieAssignmentId = TempData["TicketMovieAssignmentId"] as int?;
+			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
+			Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
             Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
-            TicketSeatAssignment = await _ticketSeatRepository.GetByIdAsync(Ticket.TicketId);
-            Seat = await _seatRepository.GetByIdAsync(TicketSeatAssignment.TicketSeatId);
-            Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
+			// Retrieve the associated seats from the seat repository
+			var seatIds = _context.TicketSeatAssignments
+	            .Where(x => x.TicketId == id)
+	            .Select(tsa => tsa.SeatId)
+	            .ToList();
+
+			Seats = _context.Seats
+				.Where(s => seatIds.Contains(s.SeatId))
+				.ToList();
+
+			Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
             Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
             BookingTime = Ticket.BookingTime;
 
