@@ -50,46 +50,58 @@ namespace CinemaBooking.Services
             return showtimeDto;
         }
 
-        public async Task<Ticket> CreateCustomerTicket(CreateUserTicketRequest request)
-        {
-            var ticketDto = new TicketDto
-            {
-                AccountId = request.AccountId,
-                ShowtimeId = request.ShowtimeId,
-                BookingTime = DateTime.Now,
-                TicketPrice = request.TicketPrice,
-                Status = TicketStatus.Pending, 
-            };
+		public async Task<Ticket> CreateCustomerTicket(CreateUserTicketRequest request)
+		{
+			var ticketDto = new TicketDto
+			{
+				AccountId = request.AccountId,
+				ShowtimeId = request.ShowtimeId,
+				BookingTime = DateTime.Now,
+				TicketPrice = request.TicketPrice,
+				Status = TicketStatus.Pending,
+			};
 
-            var ticket = _mapper.Map<Ticket>(ticketDto);
-            await _context.Tickets.AddAsync(ticket);
-            await _context.SaveChangesAsync();
+			var ticket = _mapper.Map<Ticket>(ticketDto);
+			await _context.Tickets.AddAsync(ticket);
+			await _context.SaveChangesAsync();
 
-            var seatIdsList = request.SeatIds
-                              .Split(',')
-                              .Select(int.Parse) 
-                              .ToList();
+			var seatIdsList = request.SeatIds
+							  .Split(',')
+							  .Select(int.Parse)
+							  .ToList();
 
-            foreach (var seatId in seatIdsList)
-            {
-                var ticketSeatAssignment = new TicketSeatAssignment
-                {
-                    TicketId = ticket.TicketId,
-                    SeatId = seatId
-                };
-                await _context.TicketSeatAssignments.AddAsync(ticketSeatAssignment);
+			foreach (var seatId in seatIdsList)
+			{
+				var ticketSeatAssignment = new TicketSeatAssignment
+				{
+					TicketId = ticket.TicketId,
+					SeatId = seatId
+				};
+				await _context.TicketSeatAssignments.AddAsync(ticketSeatAssignment);
 
-                var seat = await _context.Seats.FindAsync(seatId);
-                if (seat != null)
-                {
-                    seat.Status = (byte)SeatStatus.Reserved; 
-                    _context.Seats.Update(seat); 
-                }
-            }
+				var seat = await _context.Seats.FindAsync(seatId);
+				if (seat != null)
+				{
+					seat.Status = (byte)SeatStatus.Unavailable;
+					_context.Seats.Update(seat);
+				}
+			}
 
-            await _context.SaveChangesAsync();
-            return ticket;
-        }
+			// Add data to ShowtimeMovieAssignment table
+			if (request.MovieId.HasValue && request.RoomId.HasValue)
+			{
+				var ticketMovieAssignment = new TicketMovieAssignment
+				{
+					TicketId = ticket.TicketId,
+					MovieId = request.MovieId.Value,
+					RoomId = request.RoomId.Value
+				};
 
-    }
+				await _context.TicketMovieAssignments.AddAsync(ticketMovieAssignment);
+			}
+
+			await _context.SaveChangesAsync();
+			return ticket;
+		}
+	}
 }

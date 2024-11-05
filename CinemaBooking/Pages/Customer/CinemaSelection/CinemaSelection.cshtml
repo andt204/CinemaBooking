@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{movieId:int}"
 @model CinemaBooking.Pages.Customer.Booking.CinemaSelectionModel
 @{
 	Layout = "/Pages/Shared/_UserLayout.cshtml";
@@ -179,7 +179,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 														// Formatting the StartHour assuming it's a TimeSpan
 														string formattedTime = showtime.StartHour.ToString(@"hh\:mm");
 													}
-													<a href="/Customer/CinemaSelection/SeatSelection?showtimeId=@showtime.ShowtimeId">@formattedTime</a>
+													<a href="/Customer/CinemaSelection/SeatSelection/@showtime.ShowtimeId">@formattedTime</a>
 												</li>
 											}
 										</ul>
@@ -213,5 +213,5 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			document.getElementById('theater-' + dateId).style.display = 'block';
 		}
 	</script>
-</body>
+</body>	
 </html>
