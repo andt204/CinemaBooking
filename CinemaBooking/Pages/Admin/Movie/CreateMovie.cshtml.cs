@@ -54,28 +54,22 @@ namespace CinemaBooking.Pages.Admin.Movie
 
         public async Task<IActionResult> OnPostAsync( int[] ActorIds, IFormFile image, IFormFile imageBackground)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    await OnGetAsync(); // Reload data for dropdowns if validation fails
-            //    return Page();
-            //}
+            if (!ModelState.IsValid)
+            {
+                await OnGetAsync(); // Reload data for dropdowns if validation fails
+                return Page();
+            }
 
-            var newMovie = Movie; // Đặt biến mới là `newMovie`
+            var newMovie = Movie; 
 
-            // Gán các thông tin của Movie từ đối tượng `Movie` đã được gán từ form
             newMovie.AgeLimit = Movie.AgeLimit;
             newMovie.WarningText = Movie.WarningText;
             newMovie.PublishTime = Movie.PublishTime;
             newMovie.Country = Movie.Country;
             newMovie.Status = Movie.Status;
             newMovie.DirectorId = Movie.DirectorId;
-            
             newMovie.VideoTrailer = Movie.VideoTrailer;
 
-
-           
-
-            // Lưu hình ảnh chính
             if (image != null && image.Length > 0)
             {
                 var imagePath = Path.Combine("wwwroot/images", image.FileName);
@@ -89,7 +83,6 @@ namespace CinemaBooking.Pages.Admin.Movie
                 Console.WriteLine($"Image Path: {newMovie.Image}");
             }
 
-            // Lưu hình ảnh nền
             if (imageBackground != null && imageBackground.Length > 0)
             {
                 var bgImagePath = Path.Combine("wwwroot/images", imageBackground.FileName);
@@ -103,7 +96,6 @@ namespace CinemaBooking.Pages.Admin.Movie
 
             }
             
-            // Lưu `newMovie` vào cơ sở dữ liệu
             _context.Movies.Add(newMovie);
             await _context.SaveChangesAsync(); 
             // Lưu movie để lấy `MovieId`
