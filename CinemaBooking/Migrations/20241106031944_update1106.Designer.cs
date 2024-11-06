@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    [Migration("20241104163201_update_moviecategory_04")]
-    partial class update_moviecategory_04
+    [Migration("20241106031944_update1106")]
+    partial class update1106
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

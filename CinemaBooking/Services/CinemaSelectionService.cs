@@ -52,6 +52,7 @@ namespace CinemaBooking.Services
 			var theaterDtos = _mapper.Map<List<TheaterDto>>(theaters);
 
 			// Filter theaters that have showtimes with the specified movieId
+
 			return theaterDtos
 				.Where(t => t.Showtimes.Any(s => s.ShowtimeMovieAssignments.Any(sma => sma.MovieId == movieId))
 				).ToList();

@@ -4,7 +4,7 @@
 
 namespace CinemaBooking.Migrations
 {
-    public partial class update_moviecategory_04 : Migration
+    public partial class update1106 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
