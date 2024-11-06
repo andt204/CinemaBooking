@@ -64,7 +64,7 @@ namespace CinemaBooking.Pages.Customer.Ticket
             Ticket = await _ticketRepository.GetByIdAsync(id);
             TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(Ticket.TicketId);
             Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
-            Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
+            //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
             TicketSeatAssignment = await _ticketSeatRepository.GetByIdAsync(Ticket.TicketId);
             Seat = await _seatRepository.GetByIdAsync(TicketSeatAssignment.TicketSeatId);
             Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
