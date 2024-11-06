@@ -79,8 +79,8 @@ namespace CinemaBooking.Pages.Customer.Payment
 			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
 			Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
             //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
-			// Retrieve the associated seats from the seat repository
-			var seatIds = _context.TicketSeatAssignments
+            // Retrieve the associated seats from the seat repository
+            var seatIds = _context.TicketSeatAssignments
 	            .Where(x => x.TicketId == id)
 	            .Select(tsa => tsa.SeatId)
 	            .ToList();
@@ -90,7 +90,7 @@ namespace CinemaBooking.Pages.Customer.Payment
 				.ToList();
 
 			Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
-            Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
+            //Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
             BookingTime = Ticket.BookingTime;
 
             formattedBookingTime = BookingTime.ToString("HH:mm dd-MM-yyyy");

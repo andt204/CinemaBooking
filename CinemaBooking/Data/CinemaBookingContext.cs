@@ -278,11 +278,10 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.HasOne(d => d.Theater)
+                entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
-                    .HasForeignKey(d => d.TheaterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Showtime_Theater");
+                    .HasForeignKey(d => d.RoomId)
+                    .HasConstraintName("FK_Showtime_Room");
             });
 
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
