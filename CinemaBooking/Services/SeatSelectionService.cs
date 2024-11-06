@@ -22,8 +22,8 @@ namespace CinemaBooking.Services
         {
             // Fetch the showtime and include related Room and RoomType data
             var showtime = await _context.Showtimes
-                .Include(st => st.Room)
-                    .ThenInclude(r => r.RoomType)
+                .Include(st => st.Theater)
+                    .ThenInclude(r => r.Rooms)
                 .FirstOrDefaultAsync(st => st.ShowtimeId == showtimeId);
 
             if (showtime == null)
@@ -36,7 +36,7 @@ namespace CinemaBooking.Services
             var showtimeDto = _mapper.Map<ShowtimeDto>(showtime);
 
             // Map the Room entity to RoomDto
-            showtimeDto.Room = _mapper.Map<RoomDto>(showtime.Room);
+            showtimeDto.Room = _mapper.Map<RoomDto>(showtime.Theater.Rooms.ToList());
 
             // Get the seats for the room and include SeatType
             var seats = await _context.Seats
@@ -93,8 +93,7 @@ namespace CinemaBooking.Services
 				var ticketMovieAssignment = new TicketMovieAssignment
 				{
 					TicketId = ticket.TicketId,
-					MovieId = request.MovieId.Value,
-					RoomId = request.RoomId.Value
+					MovieId = request.MovieId.Value
 				};
 
 				await _context.TicketMovieAssignments.AddAsync(ticketMovieAssignment);

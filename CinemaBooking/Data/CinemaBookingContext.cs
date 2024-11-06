@@ -278,11 +278,6 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.HasOne(d => d.Room)
-                    .WithMany(p => p.Showtimes)
-                    .HasForeignKey(d => d.RoomId)
-                    .HasConstraintName("FK_Showtime_Room");
-
                 entity.HasOne(d => d.Theater)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.TheaterId)
@@ -346,12 +341,6 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.MovieId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ticket_fi__movie__4316F928");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany(p => p.TicketMovieAssignments)
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ticket_fi__room___440B1D61");
 
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.TicketMovieAssignments)

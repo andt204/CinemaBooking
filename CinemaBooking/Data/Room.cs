@@ -8,8 +8,6 @@ namespace CinemaBooking.Data
         public Room()
         {
             Seats = new HashSet<Seat>();
-            Showtimes = new HashSet<Showtime>();
-            TicketMovieAssignments = new HashSet<TicketMovieAssignment>();
         }
 
         public int RoomId { get; set; }
@@ -21,7 +19,5 @@ namespace CinemaBooking.Data
         public virtual RoomType RoomType { get; set; } = null!;
         public virtual Theater? Theater { get; set; }
         public virtual ICollection<Seat> Seats { get; set; }
-        public virtual ICollection<Showtime> Showtimes { get; set; }
-        public virtual ICollection<TicketMovieAssignment> TicketMovieAssignments { get; set; }
     }
 }

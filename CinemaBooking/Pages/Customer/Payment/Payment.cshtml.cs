@@ -78,7 +78,7 @@ namespace CinemaBooking.Pages.Customer.Payment
             var ticketMovieAssignmentId = TempData["TicketMovieAssignmentId"] as int?;
 			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
 			Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
-            Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
+            //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
 			// Retrieve the associated seats from the seat repository
 			var seatIds = _context.TicketSeatAssignments
 	            .Where(x => x.TicketId == id)

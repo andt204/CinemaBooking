@@ -84,15 +84,15 @@ namespace CinemaBooking.Pages.Customer.Ticket
                 //         combined.TicketMovieAssignment, Movie = m
                 //     }
                 // )
-                .Join(
-                    _context.Showtimes,
-                    combined => combined.Room.RoomId,
-                    st => st.RoomId,
-                    (combined, st) => new
-                    {
-                        combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, combined.RoomType,
-                    }
-                )
+                //.Join(
+                //    _context.Showtimes,
+                //    combined => combined.Room.RoomId,
+                //    st => st.RoomId,
+                //    (combined, st) => new
+                //    {
+                //        combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, combined.RoomType,
+                //    }
+                //)
                 .Select(t => new TicketHistoryViewModel
                 {
                     TicketId = t.Ticket.TicketId,
