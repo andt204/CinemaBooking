@@ -305,8 +305,6 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Theater>(entity =>
             {
                 entity.ToTable("Theater");
-
-                entity.Property(e => e.TheaterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ticket>(entity =>

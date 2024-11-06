@@ -77,7 +77,7 @@ namespace CinemaBooking.Pages.Customer.Payment
             Ticket = await _ticketRepository.GetByIdAsync(id);
             var ticketMovieAssignmentId = TempData["TicketMovieAssignmentId"] as int?;
 			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
-			Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
+			//Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
             //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
             // Retrieve the associated seats from the seat repository
             var seatIds = _context.TicketSeatAssignments
@@ -110,8 +110,8 @@ namespace CinemaBooking.Pages.Customer.Payment
             };
             // Console.WriteLine($"OnGetAsync - PaymentRequest.Amount: {PaymentRequest.Amount}");
 
-            PublishTime = Movie.PublishTime;
-            formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
+            //PublishTime = Movie.PublishTime;
+            //formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
             // Showtime = await _showtimeRepository.GetByIdAsync(Showtime.ShowtimeId);
 
             return Page();

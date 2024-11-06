@@ -1,0 +1,171 @@
+﻿@page
+@using CinemaBooking.Enum
+@model CinemaBooking.Pages.Admin.Theater.ListModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Theater List";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Theater</h4>
+                </div>
+                <div class="col-sm-8 col-9 text-right m-b-20">
+                    <a href="/Admin/Theater/Create" class="btn btn-primary float-right btn-rounded">
+                        <i class="fa fa-plus"></i> Add Theater
+                    </a>
+                </div>
+            </div>
+            <div class="row filter-row">
+                <form method="get" class="row filter-row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">Theater ID</label>
+                            <input type="number" class="form-control floating" asp-for="TheaterId">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">Theater Name</label>
+                            <input type="text" class="form-control floating" asp-for="TheaterName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">Location</label>
+                            <input type="text" class="form-control floating" asp-for="Location">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <button type="submit" class="btn btn-success btn-block">Search</button>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus select-focus">
+                            <label class="focus-label">Status</label>
+                            <select class="select floating form-control" asp-for="Status">
+                                <option value="">Select Status</option>
+                                <option value="0">Active</option>
+                                <option value="1">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-border table-striped custom-table datatable mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Theater ID</th>
+                                    <th>Theater Name</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var theater in Model.Theaters)
+                                {
+                                    <tr>
+                                        <td>@theater.TheaterId</td>
+                                        <td>@theater.TheaterName</td>
+                                        <td>@theater.Location</td>
+                                        <td>@theater.Status</td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-v"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    @if (theater.Status == TheaterStatus.Active)
+                                                    {
+                                                        <a class="dropdown-item" href="/Admin/Theater/Edit/@theater.TheaterId">
+                                                            <i class="fa fa-pencil m-r-5"></i> Edit
+                                                        </a>
+                                                    }
+                                                    <a class="dropdown-item @(theater.Status == TheaterStatus.Inactive ? "disabled text-muted" : "")"
+                                                       href="#"
+                                                    @(theater.Status == TheaterStatus.Inactive ? "style='pointer-events: none; opacity: 0.5;'" : "")
+                                                       data-toggle="modal"
+                                                       data-target="#delete_theater_@theater.TheaterId">
+                                                        <i class="fa fa-trash-o m-r-5"></i> Deactivate
+                                                    </a>
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Delete confirmation modal for each theater -->
+                                            <div id="delete_theater_@theater.TheaterId" class="modal fade delete-modal" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body text-center">
+                                                            <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                            <h3>Are you sure you want to deactivate this theater?</h3>
+                                                            <div class="m-t-20">
+                                                                <a href="#" class="btn btn-white" data-dismiss="modal" style="font-size: 10px">Close</a>
+                                                                <form method="post" asp-page-handler="Delete" asp-route-id="@theater.TheaterId" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-danger" style="font-size: 10px">Deactivate</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="delete_Theater" class="modal fade delete-modal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <img src="assets/img/sent.png" alt="" width="50" height="46">
+                        <h3>Are you sure want to delete this Theater?</h3>
+                        <div class="m-t-20">
+                            <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                            <button type="submit" class="btn btn-danger">Deactivate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

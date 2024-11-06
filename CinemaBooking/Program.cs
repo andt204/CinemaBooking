@@ -87,7 +87,9 @@ namespace CinemaBooking {
 		// Register your service
 		builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
 		builder.Services.AddScoped<SeatSelectionService>();
-		builder.Services.AddSingleton<IVnPayService, VnPayService>();
+        builder.Services.AddScoped<TheaterAdminService>();
+
+            builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
 		// Configure DbContext with SQL Server
 		builder.Services.AddDbContext<CinemaBookingContext>(options =>

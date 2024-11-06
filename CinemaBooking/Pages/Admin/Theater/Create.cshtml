@@ -1,0 +1,46 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Theater.AddModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create New Theater";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Create New Theater</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <h4 class="page-title">Create New Theater</h4>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            <form method="post">
+                <!-- Theater Name -->
+                <div class="form-group">
+                    <label for="theaterName">Theater Name</label>
+                    <input type="text" class="form-control" id="theaterName" asp-for="Theater.TheaterName" placeholder="Enter theater name" required>
+                </div>
+
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" asp-for="Theater.Location" placeholder="Enter theater location" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Create Theater</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

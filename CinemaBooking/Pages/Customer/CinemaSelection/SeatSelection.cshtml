@@ -436,7 +436,42 @@
             </form>
         </div>
     </div>
+    @{
+        // Retrieve the movieId from TempData
+        var movieId = TempData["MovieId"] as int?;
+        var backUrl = $"/Customer/CinemaSelection/CinemaSelection/{movieId}";
+    }
 
+    <!-- External Back Button -->
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="@backUrl">
+            <button type="button" style="padding: 10px 20px; font-size: 16px; background-color: #555; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Back
+            </button>
+        </a>
+    </div>
+
+    <!-- Popup Modal HTML for Error Message -->
+    <div id="errorModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);">
+                <div class="modal-header" style="background-color: #f44336; color: white; padding: 15px;">
+                    <h5 class="modal-title" style="margin: 0; font-weight: bold;">Notification</h5>
+                    <button type="button" class="close" onclick="closeErrorModal()" aria-label="Close" style="background-color: #4CAF50; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; display: flex; align-items: center; justify-content: center;">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px; font-size: 16px; text-align: center;">
+                    <p>No seats available for this showtime.</p>
+                </div>
+                <div class="modal-footer" style="justify-content: center; padding: 15px; border-top: none;">
+                    <button type="button" class="btn btn-secondary" onclick="goBack()" style="padding: 10px 20px; font-size: 16px; background-color: #555; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
    <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -532,6 +567,21 @@
             });
         });
     });
+
+        // Function to go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+
+        // Show the error modal if TempData["ErrorMessage"] is not null
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        document.getElementById('errorModal').style.display = 'block';
+                        });
+            </text>
+        }
 </script>
 
 </body>
