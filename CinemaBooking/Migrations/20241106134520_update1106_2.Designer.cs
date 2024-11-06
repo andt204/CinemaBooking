@@ -4,6 +4,7 @@ using CinemaBooking.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    partial class CinemaBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20241106134520_update1106_2")]
+    partial class update1106_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +37,7 @@ namespace CinemaBooking.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("DateOfBirth")
+                        .IsRequired()
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -484,15 +487,15 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int?>("RoomId")
-                        .HasColumnType("int");
-
                     b.Property<TimeSpan>("StartHour")
                         .HasColumnType("time");
 
+                    b.Property<int>("TheaterId")
+                        .HasColumnType("int");
+
                     b.HasKey("ShowtimeId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("TheaterId");
 
                     b.ToTable("Showtime", (string)null);
                 });
@@ -793,12 +796,13 @@ namespace CinemaBooking.Migrations
 
             modelBuilder.Entity("CinemaBooking.Data.Showtime", b =>
                 {
-                    b.HasOne("CinemaBooking.Data.Room", "Room")
+                    b.HasOne("CinemaBooking.Data.Theater", "Theater")
                         .WithMany("Showtimes")
-                        .HasForeignKey("RoomId")
-                        .HasConstraintName("FK_Showtime_Room");
+                        .HasForeignKey("TheaterId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Showtime_Theater");
 
-                    b.Navigation("Room");
+                    b.Navigation("Theater");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.ShowtimeMovieAssignment", b =>
@@ -948,8 +952,6 @@ namespace CinemaBooking.Migrations
             modelBuilder.Entity("CinemaBooking.Data.Room", b =>
                 {
                     b.Navigation("Seats");
-
-                    b.Navigation("Showtimes");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.RoomType", b =>
@@ -977,6 +979,8 @@ namespace CinemaBooking.Migrations
             modelBuilder.Entity("CinemaBooking.Data.Theater", b =>
                 {
                     b.Navigation("Rooms");
+
+                    b.Navigation("Showtimes");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.Ticket", b =>

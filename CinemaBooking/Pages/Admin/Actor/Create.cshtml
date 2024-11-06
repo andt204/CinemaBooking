@@ -1,0 +1,15 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Actor.CreateModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Actor";
+}
+<h2>Create New Actor</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="ActorName">Actor Name</label>
+        <input type="text" id="ActorName" name="ActorName" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Save Actor</button>
+</form>
+

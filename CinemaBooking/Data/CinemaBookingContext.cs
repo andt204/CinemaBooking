@@ -24,6 +24,7 @@ namespace CinemaBooking.Data
         public virtual DbSet<Director> Directors { get; set; } = null!;
         public virtual DbSet<Movie> Movies { get; set; } = null!;
         public virtual DbSet<MovieCategoryAssignment> MovieCategoryAssignments { get; set; } = null!;
+        public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
@@ -88,8 +89,6 @@ namespace CinemaBooking.Data
             {
                 entity.HasKey(e => e.ActorMovieId)
                     .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
-
-                entity.Property(e => e.ActorMovieId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Actor)
                     .WithMany(p => p.ActorMovieAssignments)
@@ -181,6 +180,21 @@ namespace CinemaBooking.Data
                     .HasConstraintName("FK_MovieCategoryAssignments_Movie");
             });
 
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.ToTable("Payment");
+
+                entity.Property(e => e.PaymentDate).HasColumnType("date");
+
+                entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.TicketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Payment_Ticket");
+            });
+
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
@@ -216,6 +230,11 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.RoomTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__room__room_type___2C3393D0");
+
+                entity.HasOne(d => d.Theater)
+                    .WithMany(p => p.Rooms)
+                    .HasForeignKey(d => d.TheaterId)
+                    .HasConstraintName("FK_Room_Theater");
             });
 
             modelBuilder.Entity<RoomType>(entity =>
@@ -263,18 +282,12 @@ namespace CinemaBooking.Data
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
                     .HasConstraintName("FK_Showtime_Room");
-
-                entity.HasOne(d => d.Theater)
-                    .WithMany(p => p.Showtimes)
-                    .HasForeignKey(d => d.TheaterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Showtime_Theater");
             });
 
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.ShowtimeMovieId)
-                    .HasName("PK__Showtime__F66869A03E122DE4");
+                    .HasName("PK__event_fi__173260FA7EF6F97D");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowtimeMovieAssignments)
@@ -320,19 +333,13 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<TicketMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.TicketMovieId)
-                    .HasName("PK__TicketMo__B0219649CD2155D3");
+                    .HasName("PK__ticket_f__0ABAC5AB0860D343");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)
                     .HasForeignKey(d => d.MovieId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__ticket_fi__movie__4316F928");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany(p => p.TicketMovieAssignments)
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ticket_fi__room___440B1D61");
 
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.TicketMovieAssignments)

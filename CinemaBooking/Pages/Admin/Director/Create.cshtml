@@ -1,0 +1,14 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Director.CreateModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Director";
+}
+<h2>Create New Director</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="DirectorName">Director Name</label>
+        <input type="text" id="DirectorName" name="DirectorName" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Save Director</button>
+</form>
