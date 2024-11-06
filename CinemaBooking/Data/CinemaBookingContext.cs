@@ -89,8 +89,6 @@ namespace CinemaBooking.Data
                 entity.HasKey(e => e.ActorMovieId)
                     .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
 
-                entity.Property(e => e.ActorMovieId).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Actor)
                     .WithMany(p => p.ActorMovieAssignments)
                     .HasForeignKey(d => d.ActorId)
@@ -274,7 +272,7 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.ShowtimeMovieId)
-                    .HasName("PK__Showtime__F66869A03E122DE4");
+                    .HasName("PK__event_fi__173260FA7EF6F97D");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.ShowtimeMovieAssignments)
@@ -320,7 +318,7 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<TicketMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.TicketMovieId)
-                    .HasName("PK__TicketMo__B0219649CD2155D3");
+                    .HasName("PK__ticket_f__0ABAC5AB0860D343");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)
