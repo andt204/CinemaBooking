@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    [Migration("20241106031944_update1106")]
+    [Migration("20241106032724_update1106")]
     partial class update1106
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,7 +101,10 @@ namespace CinemaBooking.Migrations
             modelBuilder.Entity("CinemaBooking.Data.ActorMovieAssignment", b =>
                 {
                     b.Property<int>("ActorMovieId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActorMovieId"), 1L, 1);
 
                     b.Property<int>("ActorId")
                         .HasColumnType("int");
@@ -485,7 +488,7 @@ namespace CinemaBooking.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ShowtimeMovieId")
-                        .HasName("PK__Showtime__F66869A03E122DE4");
+                        .HasName("PK__event_fi__173260FA7EF6F97D");
 
                     b.HasIndex("MovieId");
 
@@ -560,7 +563,7 @@ namespace CinemaBooking.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TicketMovieId")
-                        .HasName("PK__TicketMo__B0219649CD2155D3");
+                        .HasName("PK__ticket_f__0ABAC5AB0860D343");
 
                     b.HasIndex("MovieId");
 
