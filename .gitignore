@@ -172,3 +172,7 @@ FodyWeavers.xsd
 *.log
 *.vspscc
 *.vssscc
+# Ignore appsettings files
+CinemaBooking/appsettings.json
+CinemaBooking/appsettings.*.json
+CinemaBooking/appsettings.Development.json
