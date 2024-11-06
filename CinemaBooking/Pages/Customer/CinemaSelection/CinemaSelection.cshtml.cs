@@ -45,7 +45,9 @@ namespace CinemaBooking.Pages.Customer.Booking {
 
 			// Call the service to get the movie details
 			var movie = await _cinemaSelectionService.GetMovieByIdAsync(movieId);
-			
+
+			TempData["MovieId"] = movieId;
+
 			if (movie != null)
 			{
 				// Map properties from the retrieved movie to the MovieDto

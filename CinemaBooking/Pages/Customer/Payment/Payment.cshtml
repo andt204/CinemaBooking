@@ -60,18 +60,25 @@ ViewData["Title"] = "Payment";
         <div class="payment-header">
             <h2>Payment Options</h2>
         </div>
-        <div class="ticket-summary">
-            <h3>Ticket Summary</h3>
-            <h6><strong>Movie Name:</strong> @Model.Movie.Title</h6>
-            <p><strong>Theatre:</strong> @Model.Theater.TheaterName</p>
-            <p><strong>Location:</strong> @Model.Theater.Location</p>
-            <p><strong>Date:</strong> @Model.Showtime.Date</p>
-            <p><strong>Time:</strong> @Model.Showtime.StartHour</p>
-            <p><strong>Seat Info:</strong> @Model.Seat.Column, @Model.Seat.Row</p>
-            @* <p><strong>Quantity:</strong> @Model.Ticket.TicketId</p> *@
-            <h4><strong>Total:</strong>@Model.Ticket.TicketPrice </h4>
-            @* <h5><strong>Grand Total:</strong> Rs. 192.00</h5> *@
-        </div>
+            <div class="ticket-summary">
+                <h3>Ticket Summary</h3>
+                <h6><strong>Movie Name:</strong> @Model.Movie.Title</h6>
+                <p><strong>Theatre:</strong> @Model.Theater.TheaterName</p>
+                <p><strong>Location:</strong> @Model.Theater.Location</p>
+                <p><strong>Date:</strong> @Model.formattedPublishTime</p>
+                <p><strong>Time:</strong> @Model.Showtime.StartHour</p>
+                <p>
+                    <strong>Seat Info:</strong>
+                    @foreach (var seat in Model.Seats)
+                    {
+                        <span>@seat.Column, @seat.Row</span>
+
+                        <br />
+                    }
+                </p>
+                <h4><strong>Total:</strong> @Model.Ticket.TicketPrice₫</h4>
+            </div>
+
         <div class="ticket-note">
             <h4>Note:</h4>
             <ol>
@@ -83,6 +90,7 @@ ViewData["Title"] = "Payment";
         <div class="text-center">
             <form method="post">
                 <input type="hidden" asp-for="PaymentRequest.Amount" />
+                <input type="hidden" asp-for="PaymentRequest.TicketId" />
                 <button class="btn btn-primary btn-payment" type="submit" onclick="alert('Proceeding to payment...')">Proceed to Payment</button>
             </form>
 

@@ -8,8 +8,8 @@
 <html>
 <head>
     <title>History of Booked Tickets</title>
-    <link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' />
-    <link href="~/customer/assets1/css/style.css" rel="stylesheet" type='text/css' media="all" />
+    <link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css'/>
+    <link href="~/customer/assets1/css/style.css" rel="stylesheet" type='text/css' media="all"/>
     <script src="~/customer/assets1/js/jquery.min.js"></script>
     <script src="~/customer/assets1/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,46 +58,46 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <h3>Your Ticket Booking History</h3>
-            @if (Model.TicketHistories != null && Model.TicketHistories.Any())
-{
+<div class="container">
+    <div class="main-content">
+        <h3>Your Ticket Booking History</h3>
+        @if (Model.TicketHistories != null && Model.TicketHistories.Any())
+        {
             <table>
-                    <thead>
-                        <tr>
-                            <th>Ticket ID</th>
-                            <th>Movie</th>
-                            <th>Seat</th>
-                            <th>Room</th>
-                            <th>Showtime</th>
-                            <th>Date</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ticket in Model.TicketHistories)
-                        {
-                            <tr>
-                                <td>@ticket.TicketId</td>
-                                <td>@ticket.MovieTitle</td>
-                                <td>@ticket.Seat</td>
-                                <td>@ticket.RoomName</td>
-                                <td>@ticket.Showtime</td>
-                                <td>@ticket.Date</td>
-                                <td>@ticket.TicketPrice.ToString("C")</td>
-                                <td>@ticket.Status</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No tickets found for this account.</p>
-            }
-        </div>
+                <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Movie</th>
+                    <th>Seat</th>
+                    <th>Room</th>
+                    <th>Showtime</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var ticket in Model.TicketHistories)
+                {
+                    <tr>
+                        <td>@ticket.TicketId</td>
+                        @* <td>@ticket.MovieTitle</td> *@
+                        @* <td>@ticket.Seat</td> *@
+                        @* <td>@ticket.RoomName</td> *@
+                        @* <td>@ticket.Hour</td> *@
+                        @* <td>@ticket.Date</td> *@
+                        <td>@ticket.TicketPrice</td>
+                        <td>@ticket.Status</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No tickets found for this account.</p>
+        }
     </div>
+</div>
 </body>
 </html>

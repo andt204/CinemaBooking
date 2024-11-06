@@ -46,10 +46,16 @@
         @if (Model.PaymentResponseModel != null)
         {
             <div class="detail-row">
-                <span class="detail-label">Success:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.Success</span>
+                <span class="detail-label">Payment:</span>
+                @if (Model.PaymentResponseModel.Success)
+                {  <span class="detail-value">Successful</span>
+                    
+                }
+                else
+                {
+                    <span class="detail-value">Fail</span>
+                }
             </div>
-
             <div class="detail-row">
                 <span class="detail-label">Payment Method:</span>
                 <span class="detail-value">@Model.PaymentResponseModel.PaymentMethod</span>
@@ -59,31 +65,7 @@
                 <span class="detail-label">Order Description:</span>
                 <span class="detail-value">@Model.PaymentResponseModel.OrderDescription</span>
             </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Order ID:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.OrderId</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Payment ID:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.PaymentId</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Transaction ID:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.TransactionId</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Token:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.Token</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">VnPay Response Code:</span>
-                <span class="detail-value">@Model.PaymentResponseModel.VnPayResponseCode</span>
-            </div>
+            
         }
         else
         {
@@ -91,7 +73,7 @@
         }
 
         <div class="text-center">
-            <a asp-page="/Customer/Ticket/DetailTicket" class="btn btn-secondary btn-back">Back to Detail Ticket</a>
+            <a href="/Customer/Ticket/DetailTicket/@Model.PaymentResponseModel.TicketId" class="btn btn-secondary btn-back">Back to Detail Ticket</a>
         </div>
     </div>
 </div>

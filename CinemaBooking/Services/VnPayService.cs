@@ -9,6 +9,7 @@ namespace CinemaBooking.Services;
 public class VnPayService : IVnPayService
 {
     private readonly IConfiguration _config;
+    private string ticketId;
 
         public VnPayService(IConfiguration config)
         {
@@ -31,16 +32,16 @@ public class VnPayService : IVnPayService
              * Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant 
              * cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
             */
-
+            // vnpay.AddRequestData("vnp_TicketId", model.TicketId.ToString());
             vnpay.AddRequestData("vnp_CreateDate", model.CreatedDate.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toán cho đơn hàng:" + model.OrderId);
-            vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toán cho đơn hàng: Vé xem phim" );
+            vnpay.AddRequestData("vnp_OrderType", model.TicketId.ToString()); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:RedirectUrl"]);
-
+            ticketId = model.TicketId.ToString();
             vnpay.AddRequestData("vnp_TxnRef", $"{model.OrderId}_{tick}");
             /* Mã tham chiếu của giao dịch tại hệ thống của merchant.
              * Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY.
@@ -93,6 +94,7 @@ public class VnPayService : IVnPayService
                 TransactionId = transactionId,
                 Token = secureHash,
                 VnPayResponseCode = responseCode,
+                TicketId = ticketId
             };
         }
 }

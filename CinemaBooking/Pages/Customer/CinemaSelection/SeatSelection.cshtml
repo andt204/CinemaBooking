@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{showtimeId:int}"
 @using CinemaBooking.Enum
 @model CinemaBooking.Pages.Customer.CinemaSelection.SeatSelectionModel
 @{
@@ -200,6 +200,82 @@
             #submitButton:hover {
                 background-color: #45a049; /* Darker green on hover */
             }
+
+        .seat_w3ls {
+            display: flex;
+            gap: 15px; /* Space between each legend item */
+            padding: 0;
+            list-style: none;
+            margin-bottom: 10px; /* Space between rows */
+        }
+
+        .seat-legend {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and label */
+        }
+
+        .smallBox {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: black; /* Set icon color to black for better visibility */
+            border-radius: 3px;
+            font-weight: bold;
+            background-color: white; /* Set background color to white */
+        }
+
+        /* Borders for each seat type */
+        .vipBox {
+            border: 2px solid gold; /* Gold border for VIP */
+        }
+
+        .regularBox {
+            border: 2px solid gray; /* Blue border for Standard */
+        }
+
+        .premiumBox {
+            border: 2px solid blue; /* Green border for Economy */
+        }
+
+        /* Styles for other seat statuses */
+        .greenBox {
+            background-color: #28a745; /* Selected Seat */
+            border: none;
+        }
+
+        .redBox {
+            background-color: red; /* Reserved Seat */
+            border: none;
+        }
+
+        .yellowBox {
+            background-color: yellow; /* Pending Payment */
+            border: none;
+        }
+
+        .emptyBox {
+            background-color: #eee; /* Empty Seat */
+            border: none;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .legend-heading {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffa500; /* Orange color for visibility */
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
     </style>
 </head>
 
@@ -212,10 +288,42 @@
             <div class="inputForm">
                 <h2>Please select your seat, up to 5 seats</h2>
             </div>
+            <!-- First Row: General Seat Status -->
+            <h3 class="legend-heading">Seat Status</h3>
             <ul class="seat_w3ls">
-                <li class="smallBox greenBox">Selected Seat</li>
-                <li class="smallBox redBox">Reserved Seat</li>
-                <li class="smallBox emptyBox">Empty Seat</li>
+                <li class="seat-legend">
+                    <span class="smallBox greenBox"></span>
+                    <span class="label">Selected Seat</span>
+                </li>
+                <li class="seat-legend">
+                    <span class="smallBox redBox"></span>
+                    <span class="label">Reserved Seat</span>
+                </li>
+                <li class="seat-legend">
+                    <span class="smallBox yellowBox"></span>
+                    <span class="label">Pending Payment</span>
+                </li>
+                <li class="seat-legend">
+                    <span class="smallBox emptyBox"></span>
+                    <span class="label">Empty Seat</span>
+                </li>
+            </ul>
+
+            <!-- Second Row: Seat Types -->
+            <h3 class="legend-heading">Seat Type</h3>
+            <ul class="seat_w3ls">
+                <li class="seat-legend">
+                    <span class="smallBox vipBox">★</span> 
+                    <span class="label">VIP Seat</span>
+                </li>
+                <li class="seat-legend">
+                    <span class="smallBox premiumBox">■</span> 
+                    <span class="label">Premium Seat</span>
+                </li>
+                <li class="seat-legend">
+                    <span class="smallBox regularBox">●</span> 
+                    <span class="label">Regular Seat</span>
+                </li>         
             </ul>
             <div class="seatStructure txt-center" style="overflow-x:auto;">
                 @{
@@ -255,6 +363,15 @@
                                         _ => "white"
                                     };
 
+                                    // Set border style and color based on seat type
+                                    var borderStyle = seatType switch
+                                    {
+                                        "VIP" => "3px solid gold",
+                                        "Standard" => "3px solid gray",
+                                        "Premium" => "3px solid blue",
+                                        _ => "3px solid gray"
+                                    };
+
                                     var checkboxDisabled = seat.Status != SeatStatus.Available ? "disabled" : "";
 
                                     <td style="text-align: center;">
@@ -262,7 +379,7 @@
                                                title="Seat Status: @(seat.Status)" style="display: none;"
                                                data-row="@row" data-column="@column"
                                                data-seat-price="@seatPrice" data-seat-type="@seatType">
-                                        <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer;"
+                                        <span class="checkmark" style="background-color: @(checkboxColor); cursor: pointer; border: @(borderStyle);"
                                               data-seat-id="@seat.SeatId"
                                               data-seat-price="@seatPrice" data-seat-type="@seatType"></span>
                                     </td>
