@@ -24,6 +24,7 @@ namespace CinemaBooking.Data
         public virtual DbSet<Director> Directors { get; set; } = null!;
         public virtual DbSet<Movie> Movies { get; set; } = null!;
         public virtual DbSet<MovieCategoryAssignment> MovieCategoryAssignments { get; set; } = null!;
+        public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
@@ -179,6 +180,21 @@ namespace CinemaBooking.Data
                     .HasConstraintName("FK_MovieCategoryAssignments_Movie");
             });
 
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.ToTable("Payment");
+
+                entity.Property(e => e.PaymentDate).HasColumnType("date");
+
+                entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.TicketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Payment_Ticket");
+            });
+
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
@@ -214,6 +230,11 @@ namespace CinemaBooking.Data
                     .HasForeignKey(d => d.RoomTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__room__room_type___2C3393D0");
+
+                entity.HasOne(d => d.Theater)
+                    .WithMany(p => p.Rooms)
+                    .HasForeignKey(d => d.TheaterId)
+                    .HasConstraintName("FK_Room_Theater");
             });
 
             modelBuilder.Entity<RoomType>(entity =>

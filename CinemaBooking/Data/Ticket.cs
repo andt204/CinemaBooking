@@ -7,6 +7,7 @@ namespace CinemaBooking.Data
     {
         public Ticket()
         {
+            Payments = new HashSet<Payment>();
             TicketMovieAssignments = new HashSet<TicketMovieAssignment>();
             TicketSeatAssignments = new HashSet<TicketSeatAssignment>();
         }
@@ -20,6 +21,7 @@ namespace CinemaBooking.Data
 
         public virtual Account Account { get; set; } = null!;
         public virtual Showtime Showtime { get; set; } = null!;
+        public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<TicketMovieAssignment> TicketMovieAssignments { get; set; }
         public virtual ICollection<TicketSeatAssignment> TicketSeatAssignments { get; set; }
     }
