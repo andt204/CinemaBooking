@@ -143,12 +143,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				@foreach (var movie in Model.ComingSoonMovies)
 				{
 					<div class="col-md-3 movie-preview">
-						<a href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId" class="mask">
+						<a href="/Customer/Movie/DetailMovie/@movie.MovieId" class="mask">
 							<img src="@movie.Image" class="img-responsive zoom-img"
 								alt="@movie.Title" />
 							<div class="m-movie-title">
 								<a class="m-movie-link"
-								   href="/Customer/Movie/DetailMovie?MovieId=@movie.MovieId">@movie.Title</a>
+								   href="/Customer/Movie/DetailMovie/@movie.MovieId">@movie.Title</a>
 								<div class="clearfix"></div>
 								<div class="m-r-date">
 									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>

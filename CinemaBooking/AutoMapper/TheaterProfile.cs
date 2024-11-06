@@ -2,6 +2,7 @@
 using CinemaBooking.Data;
 using CinemaBooking.ViewModels;
 using System.Linq;
+using CinemaBooking.Enum;
 
 namespace CinemaBooking.AutoMapper
 {
@@ -13,7 +14,11 @@ namespace CinemaBooking.AutoMapper
                 .ForMember(dest => dest.Showtimes,
                            opt => opt.MapFrom(src =>
                                src.Rooms.SelectMany(r => r.Showtimes).ToList()))
-                .ReverseMap();
+                .ForMember(dest => dest.Status,
+                           opt => opt.MapFrom(src => (TheaterStatus)(src.Status ?? 0))) 
+                .ReverseMap()
+                .ForMember(dest => dest.Status,
+                           opt => opt.MapFrom(src => (byte?)src.Status)); 
         }
     }
 }

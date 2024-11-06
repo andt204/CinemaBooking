@@ -50,57 +50,70 @@ namespace CinemaBooking.Services
             return showtimeDto;
         }
 
-		public async Task<Ticket> CreateCustomerTicket(CreateUserTicketRequest request)
-		{
-			var ticketDto = new TicketDto
-			{
-				AccountId = request.AccountId,
-				ShowtimeId = request.ShowtimeId,
-				BookingTime = DateTime.Now,
-				TicketPrice = request.TicketPrice,
-				Status = TicketStatus.Pending,
-			};
+        public async Task<(Ticket?, string)> CreateCustomerTicket(CreateUserTicketRequest request)
+        {
+            var seatIdsList = request.SeatIds
+                              .Split(',')
+                              .Select(int.Parse)
+                              .ToList();
 
-			var ticket = _mapper.Map<Ticket>(ticketDto);
-			await _context.Tickets.AddAsync(ticket);
-			await _context.SaveChangesAsync();
+            // Check if all requested seats are available
+            foreach (var seatId in seatIdsList)
+            {
+                var seat = await _context.Seats.FindAsync(seatId);
+                if (seat == null || seat.Status != (byte)SeatStatus.Available)
+                {
+                    // Seat is unavailable, return null and an error message
+                    return (null, "One or more selected seats are no longer available. Please try again.");
+                }
+            }
 
-			var seatIdsList = request.SeatIds
-							  .Split(',')
-							  .Select(int.Parse)
-							  .ToList();
+            // Proceed to create ticket if all seats are available
+            var ticketDto = new TicketDto
+            {
+                AccountId = request.AccountId,
+                ShowtimeId = request.ShowtimeId,
+                BookingTime = DateTime.Now,
+                TicketPrice = request.TicketPrice,
+                Status = TicketStatus.Pending,
+            };
 
-			foreach (var seatId in seatIdsList)
-			{
-				var ticketSeatAssignment = new TicketSeatAssignment
-				{
-					TicketId = ticket.TicketId,
-					SeatId = seatId
-				};
-				await _context.TicketSeatAssignments.AddAsync(ticketSeatAssignment);
+            var ticket = _mapper.Map<Ticket>(ticketDto);
+            await _context.Tickets.AddAsync(ticket);
+            await _context.SaveChangesAsync();
 
-				var seat = await _context.Seats.FindAsync(seatId);
-				if (seat != null)
-				{
-					seat.Status = (byte)SeatStatus.Unavailable;
-					_context.Seats.Update(seat);
-				}
-			}
+            foreach (var seatId in seatIdsList)
+            {
+                var ticketSeatAssignment = new TicketSeatAssignment
+                {
+                    TicketId = ticket.TicketId,
+                    SeatId = seatId
+                };
+                await _context.TicketSeatAssignments.AddAsync(ticketSeatAssignment);
 
-			// Add data to ShowtimeMovieAssignment table
-			if (request.MovieId.HasValue && request.RoomId.HasValue)
-			{
-				var ticketMovieAssignment = new TicketMovieAssignment
-				{
-					TicketId = ticket.TicketId,
-					MovieId = request.MovieId.Value
-				};
+                // Update seat status to unavailable
+                var seat = await _context.Seats.FindAsync(seatId);
+                if (seat != null)
+                {
+                    seat.Status = (byte)SeatStatus.Unavailable;
+                    _context.Seats.Update(seat);
+                }
+            }
 
-				await _context.TicketMovieAssignments.AddAsync(ticketMovieAssignment);
-			}
+            // Add data to ShowtimeMovieAssignment table
+            if (request.MovieId.HasValue && request.RoomId.HasValue)
+            {
+                var ticketMovieAssignment = new TicketMovieAssignment
+                {
+                    TicketId = ticket.TicketId,
+                    MovieId = request.MovieId.Value
+                };
 
-			await _context.SaveChangesAsync();
-			return ticket;
-		}
-	}
+                await _context.TicketMovieAssignments.AddAsync(ticketMovieAssignment);
+            }
+
+            await _context.SaveChangesAsync();
+            return (ticket, "Ticket created successfully.");
+        }
+    }
 }

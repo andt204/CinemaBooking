@@ -1,0 +1,50 @@
+﻿@page "{id:int}"
+@model CinemaBooking.Pages.Admin.Theater.UpdateModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Update Theater";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Update Theater</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <h4 class="page-title">Update Theater</h4>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            <form method="post">
+                <!-- Hidden field for Theater ID -->
+                <input type="hidden" asp-for="Theater.TheaterId" />
+
+                <!-- Theater Name -->
+                <div class="form-group">
+                    <label asp-for="Theater.TheaterName">Theater Name</label>
+                    <input type="text" class="form-control" asp-for="Theater.TheaterName" required />
+                    <span asp-validation-for="Theater.TheaterName" class="text-danger"></span>
+                </div>
+
+                <!-- Location -->
+                <div class="form-group">
+                    <label asp-for="Theater.Location">Location</label>
+                    <input type="text" class="form-control" asp-for="Theater.Location" required />
+                    <span asp-validation-for="Theater.Location" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Theater</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
