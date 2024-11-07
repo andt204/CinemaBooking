@@ -86,7 +86,7 @@ namespace CinemaBooking.Pages.Customer.Booking {
 				Movie.CategoriesAsString = string.Join(", ", Movie.Categories);
 				Movie.ActorsAsString = string.Join(", ", Movie.Actors);
 			}
-		/*	Theaters = await _cinemaSelectionService.GetListTheaterAsync(movieId)*/;
+			Theaters = await _cinemaSelectionService.GetListTheaterAsync(movieId);
 		}
 	}
 }
