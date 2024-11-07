@@ -121,34 +121,28 @@ Layout = "~/Pages/Shared/_UserLayout.cshtml";
         </div>
         <div class="m-single-article">
             <div class="article-left">
-                <h3>Ticket Details for Movie: @Model.Movie.Title</h3>
-                <p><strong>Theatre:</strong> @Model.Theater.TheaterName</p>
-                <p><strong>Location:</strong> @Model.Theater.Location</p>
-                <p><strong>Seat Info:</strong> @Model.Seat.Column, @Model.Seat.Row</p>
-                <p><strong>Status:</strong>@Model.Status</p>
-                <p><strong>Price:</strong> $@Model.Ticket.TicketPrice₫</p>
+                <h3>Ticket Details for Movie: @Model.TicketInfo.Title</h3>
+                <p><strong>Theatre:</strong> @Model.TicketInfo.TheaterName</p>
+                <p><strong>Location:</strong> @Model.TicketInfo.Location</p>
+
+                <p>
+                    <strong>Seat Info:</strong>
+                    @foreach (var seat in Model.Seat)
+                    {
+                    <span>@seat.Column, @seat.Row</span>
+
+                    <br />
+                    }
+                </p>
+                <p><strong>Price:</strong> @Model.TicketInfo.TicketPrice₫</p>
                 <div class="clearfix"></div>
                 <h4>Movie Information</h4>
-                <p><strong>Title:</strong> @Model.Movie.Title</p>
-                <p><strong>Duration:</strong> @Model.Movie.Length minutes</p>
-                <p><strong>Booking Time:</strong> @Model.formattedPublishTime</p>
+                <p><strong>Title:</strong> @Model.TicketInfo.Title</p>
+                <p><strong>Duration:</strong> @Model.TicketInfo.Length minutes</p>
+                <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p>
                 <div class="article-img">
-                    <img src="~/customer/assets1/images/m4.jpg" alt="Movie Poster" class="img-responsive" />
-                </div>
-            </div>
-            <div class="article-right">
-                <div class="grid_3 grid_5">
-                    <h4>Showtimes</h4>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation"><a href="#showtime-wed" role="tab" data-toggle="tab">Wed-1</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="showtime-tue">
-                            <p>INOX: Lorem Mall, Chicago</p>
-                            <a class="show-time" style="color: white" href="movie-select-show.html">06:30 PM</a>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
+                    <img src="@Model.TicketInfo.ImageBackground"
+                         class="img-responsive" alt="@Model.TicketInfo.Title" />
                 </div>
             </div>
             <div class="clearfix"></div>

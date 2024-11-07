@@ -8,52 +8,30 @@ using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketPrice;
 using CinemaBooking.Repositories.TicketSeat;
+using CinemaBooking.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Customer.Ticket
 {
     public class DetailTicketModel : PageModel
     {
-        private readonly ITicketRepository _ticketRepository;
-        private readonly IMovieRepository _movieRepository;
-        private readonly ISeatRepository _seatRepository;
-        private readonly IRoomRepository _roomRepository;
-        private readonly IShowtimeRepository _showtimeRepository;
-        private readonly ITicketMovieRepository _ticketMovieRepository;
-        private readonly ITheaterRepository _theaterRepository;
-        private readonly ITicketSeatRepository _ticketSeatRepository;
-        public Data.Ticket Ticket { get; set; }
-        public Data.Movie Movie { get; set; }
-        public Seat Seat { get; set; }
-        public Room Room { get; set; }
-        public Showtime Showtime { get; set; }
-        public TicketMovieAssignment TicketMovieAssignment  { get; set; }
-        private TicketSeatAssignment TicketSeatAssignment { get; set; }
-        public Theater Theater { get; set; }
+        private readonly CinemaBookingContext _context;
+
+        [BindProperty] public List<SeatDto> Seat { get; set; }
+      
         private DateTime BookingTime;
         public string Status { get; set; }
         private DateTime PublishTime;
         public string formattedBookingTime;
         public string formattedPublishTime;
-        public DetailTicketModel(ITicketRepository ticketRepository, 
-            IMovieRepository movieRepository, 
-            ISeatRepository seatRepository,
-            IRoomRepository roomRepository,
-           IShowtimeRepository showtimeRepository,
-            ITicketMovieRepository ticketMovieRepository,
-            ITheaterRepository theaterRepository, 
-            ITicketSeatRepository ticketSeatRepository
+        [BindProperty] public PaymentDto TicketInfo { get; set; }
+       
+        public DetailTicketModel(CinemaBookingContext context
             )
         {
-            _ticketRepository = ticketRepository;
-            _movieRepository = movieRepository;
-            _seatRepository = seatRepository;
-            _roomRepository = roomRepository;
-            _showtimeRepository = showtimeRepository;
-            _ticketMovieRepository = ticketMovieRepository;
-            _theaterRepository = theaterRepository;
-            _ticketSeatRepository = ticketSeatRepository;
+            _context = context;
         }
         // public async Task OnGetAsync()
         // {
@@ -61,29 +39,39 @@ namespace CinemaBooking.Pages.Customer.Ticket
         // }
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Ticket = await _ticketRepository.GetByIdAsync(id);
-            TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(Ticket.TicketId);
-            Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
-            //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
-            TicketSeatAssignment = await _ticketSeatRepository.GetByIdAsync(Ticket.TicketId);
-            Seat = await _seatRepository.GetByIdAsync(TicketSeatAssignment.TicketSeatId);
-            Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
-            //Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
-            BookingTime = Ticket.BookingTime;
-             formattedBookingTime = BookingTime.ToString("HH:mm dd-MM-yyyy");
-            if (Ticket.Status == 1)
-            {
-                Status = "Booked";
-            }
-            else
-            {
-                Status = "Not Booked";
-            }
+            TicketInfo = await (from t in _context.Tickets
+                join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
+                join m in _context.Movies on s.MovieId equals m.MovieId
+                join r in _context.Rooms on s.RoomId equals r.RoomId
+                join th in _context.Theaters on r.TheaterId equals th.TheaterId
+                where t.TicketId == id
+                select new PaymentDto
+                {
+                    Title = m.Title,
+                    TheaterName = th.TheaterName,
+                    Location = th.Location,
+                    Date = s.Date,
+                    StartHour = s.StartHour,
+                    TicketPrice = t.TicketPrice,
+                    Length = m.Length,
+                    Image = m.Image,
+                    ImageBackground = m.ImageBackground
+                }).FirstOrDefaultAsync() ?? throw new InvalidOperationException();
             
-            PublishTime = Movie.PublishTime;
-             formattedPublishTime = PublishTime.ToString("HH:mm dd-MM-yyyy");
-             Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
-           //Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
+            Seat = await (from t in _context.Tickets
+                    join ts in _context.TicketSeatAssignments on t.TicketId equals ts.TicketId
+                    join s in _context.Seats on ts.SeatId equals s.SeatId
+                    where t.TicketId == id
+                    select new SeatDto
+                    {
+                        SeatId = s.SeatId,
+                        Column = s.Column,
+                        Row = s.Row
+                    }
+                ).ToListAsync()  ?? throw new InvalidOperationException();
+            BookingTime = TicketInfo.Date;
+            formattedBookingTime = BookingTime.ToString("dd-MM-yyyy");
+            Console.WriteLine(formattedBookingTime);
             return Page();
         }
     }
