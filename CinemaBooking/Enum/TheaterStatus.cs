@@ -2,7 +2,7 @@
 {
     public enum TheaterStatus
     {
-        Active = 0,
-        Inactive = 1,
+        Available = 0,
+        Unavailable = 1,
     }
 }

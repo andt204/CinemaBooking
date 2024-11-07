@@ -1,0 +1,103 @@
+﻿@page "{roomId:int}"
+@model CinemaBooking.Pages.Admin.Room.UpdateRoomModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Edit Room";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Edit Room</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Edit Room</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container mt-5">
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <!-- Hidden Room ID Field -->
+                        <input type="hidden" asp-for="Room.RoomId" />
+
+                        <!-- Room Name -->
+                        <div class="form-group">
+                            <label asp-for="Room.RoomName">Room Name</label>
+                            <input type="text" class="form-control" asp-for="Room.RoomName" placeholder="Enter room name" required>
+                            <span asp-validation-for="Room.RoomName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Room Type Dropdown -->
+                        <div class="form-group">
+                            <label asp-for="Room.RoomTypeId">Room Type</label>
+                            <select class="form-control" asp-for="Room.RoomTypeId" required>
+                                <option value="">Select Room Type</option>
+                                @* Dynamically generate options and mark the selected one *@
+                                @{
+                                    var roomTypeOptions = "";
+                                    foreach (var roomType in Model.RoomTypes)
+                                    {
+                                        var isSelected = roomType.RoomTypeId == Model.Room.RoomTypeId ? "selected" : "";
+                                        roomTypeOptions += $"<option value='{roomType.RoomTypeId}' {isSelected}>{roomType.RoomTypeName}</option>";
+                                    }
+                                }
+                                @Html.Raw(roomTypeOptions)
+                            </select>
+                            <span asp-validation-for="Room.RoomTypeId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Theater Dropdown -->
+                        <div class="form-group">
+                            <label asp-for="Room.TheaterId">Theater</label>
+                            <select class="form-control" asp-for="Room.TheaterId" required>
+                                <option value="">Select Theater</option>
+                                @{
+                                    var theaterOptions = "";
+                                    foreach (var theater in Model.Theaters)
+                                    {
+                                        var isSelected = theater.TheaterId == Model.Room.TheaterId ? "selected" : "";
+                                        theaterOptions += $"<option value='{theater.TheaterId}' {isSelected}>{theater.TheaterName}</option>";
+                                    }
+                                }
+                                @Html.Raw(theaterOptions)
+                            </select>
+                            <span asp-validation-for="Room.TheaterId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Update Room</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" data-reff=""></div>
+    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/admin/assets/js/popper.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
+    <script src="~/admin/assets/js/moment.min.js"></script>
+    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/admin/assets/js/app.js"></script>
+</body>
+
+</html>

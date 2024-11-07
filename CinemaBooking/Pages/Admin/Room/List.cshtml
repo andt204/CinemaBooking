@@ -28,7 +28,7 @@
                     <h4 class="page-title">Room List</h4>
                 </div>
                 <div class="col-sm-8 col-9 text-right m-b-20">
-                    <a target="_blank" href="/Admin/Room/CreateRoom" class="btn btn-primary float-right btn-rounded">
+                    <a target="_blank" href="/Admin/Room/Create" class="btn btn-primary float-right btn-rounded">
                         <i class="fa fa-plus"></i> Add New Room
                     </a>
                 </div>
@@ -114,55 +114,36 @@
                                         <td>@room.Theater.TheaterName</td>
                                         <td>@room.Status</td>
                                         <td class="text-right">
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="/Admin/Room/UpdateRoom/@room.RoomId"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@room.RoomId">
-                                                        <i class="fa fa-trash-o m-r-5"></i> Delete
-                                                    </a>
-                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#manageSeatsModal_@room.RoomId">
-                                                        <i class="fa fa-chair m-r-5"></i> Manage Seats
-                                                    </a>
+                                            @if (room.Status == CinemaBooking.Enum.RoomStatus.Available)
+                                            {
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="/Admin/Room/Edit/@room.RoomId"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@room.RoomId">
+                                                            <i class="fa fa-trash-o m-r-5"></i> Deactivate
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <!-- Delete confirmation modal for each room -->
-                                            <div id="delete_room_@room.RoomId" class="modal fade delete-modal" role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body text-center">
-                                                            <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
-                                                            <h3>Are you sure you want to delete this room?</h3>
-                                                            <div class="m-t-20">
-                                                                <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                                                                <form method="post" action="/Admin/Room/DeleteRoom/@room.RoomId" style="display:inline;">
-                                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                                </form>
+                                                <!-- Delete confirmation modal for each room -->
+                                                <div id="delete_room_@room.RoomId" class="modal fade delete-modal" role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body text-center">
+                                                                <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                                <h3>Are you sure you want to deactivate this room?</h3>
+                                                                <div class="m-t-20">
+                                                                    <a href="#" class="btn btn-white" style="font-size: 10px" data-dismiss="modal">Close</a>
+                                                                    <form method="post" asp-page-handler="Delete" asp-route-id="@room.RoomId" style="display:inline;">
+                                                                        <button type="submit" class="btn btn-danger" style="font-size: 10px">Deactivate</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <!-- Manage Seats modal for each room -->
-                                            <div id="manageSeatsModal_@room.RoomId" class="modal fade" role="dialog">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Manage Seats for @room.RoomName</h4>
-                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Seat management content goes here -->
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-success">Save Changes</button>
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -187,41 +168,7 @@
             </div>
         </div>
     </div>
-    <!-- Popup Manage Seats -->
-    <div id="manageSeatsModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Manage Seats for Room A</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Row Name</th>
-                                    <th>Number of Seats</th>
-                                    <th>Seat Type</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="seatRows">
-                                <!-- Các hàng ghế sẽ được thêm vào động -->
-                            </tbody>
-                        </table>
-                        <!-- Nút thêm hàng -->
-                        <button id="addRow" class="btn btn-secondary">Add Row</button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Save Changes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-   
+
     <div class="sidebar-overlay" data-reff=""></div>
     <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
     <script src="~/admin/assets/js/popper.min.js"></script>

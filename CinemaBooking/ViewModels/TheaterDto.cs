@@ -17,7 +17,7 @@ namespace CinemaBooking.ViewModels
         public string? Location { get; set; }
 
         // Automatically set to Active when creating a new theater
-        public TheaterStatus Status { get; set; } = TheaterStatus.Active;
+        public TheaterStatus Status { get; set; } = TheaterStatus.Available;
 
         public List<ShowtimeDto> Showtimes { get; set; } = new List<ShowtimeDto>();
     }
