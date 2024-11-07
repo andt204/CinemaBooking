@@ -34,14 +34,14 @@ namespace CinemaBooking.Pages.Customer.Payment
 
         public Data.Ticket Ticket { get; set; }
         public Data.Movie Movie { get; set; }
-        public Data.Theater Theater { get; set; }
-		public List<Data.Seat> Seats { get; set; } = new List<Data.Seat>();
+        public Theater Theater { get; set; }
+		public List<Seat> Seats { get; set; } = new List<Seat>();
 
-		public Data.Room Room { get; set; }
-        public Data.Showtime Showtime { get; set; }
-        public Data.TicketMovieAssignment TicketMovieAssignment { get; set; }
+		public Room Room { get; set; }
+        public Showtime Showtime { get; set; }
+        public TicketMovieAssignment TicketMovieAssignment { get; set; }
         private DateTime BookingTime;
-        private Data.TicketSeatAssignment TicketSeatAssignment { get; set; }
+        private TicketSeatAssignment TicketSeatAssignment { get; set; }
         public string Status { get; set; }
         private DateTime PublishTime;
         public string formattedBookingTime;

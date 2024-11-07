@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CinemaBooking;
-using CinemaBooking.Data;
 using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using CinemaBooking.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using CinemaBooking.Repositories.Role;
+using CinemaBooking.Data;
 namespace CinemaBooking.Pages.Customer.Account
 {
     public class SignupModel : PageModel

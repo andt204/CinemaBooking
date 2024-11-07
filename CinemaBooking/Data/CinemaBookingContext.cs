@@ -32,7 +32,6 @@ namespace CinemaBooking.Data
         public virtual DbSet<Seat> Seats { get; set; } = null!;
         public virtual DbSet<SeatType> SeatTypes { get; set; } = null!;
         public virtual DbSet<Showtime> Showtimes { get; set; } = null!;
-        public virtual DbSet<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; } = null!;
         public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
@@ -44,7 +43,7 @@ namespace CinemaBooking.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server =localhost; database =CinemaBooking;uid=sa;pwd=123;TrustServerCertificate=true;");
+                optionsBuilder.UseSqlServer("server=localhost;database=CinemaBooking;uid=sa;pwd=123456");
             }
         }
 
@@ -278,33 +277,22 @@ namespace CinemaBooking.Data
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.MovieId)
+                    .HasConstraintName("FK_Showtime_Movie");
+
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
                     .HasConstraintName("FK_Showtime_Room");
             });
 
-            modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
-            {
-                entity.HasKey(e => e.ShowtimeMovieId)
-                    .HasName("PK__event_fi__173260FA7EF6F97D");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.ShowtimeMovieAssignments)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__event_fil__movie__35BCFE0A");
-
-                entity.HasOne(d => d.Showtime)
-                    .WithMany(p => p.ShowtimeMovieAssignments)
-                    .HasForeignKey(d => d.ShowtimeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__event_fil__event__34C8D9D1");
-            });
-
             modelBuilder.Entity<Theater>(entity =>
             {
                 entity.ToTable("Theater");
+
+                entity.Property(e => e.TheaterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ticket>(entity =>
@@ -331,7 +319,7 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<TicketMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.TicketMovieId)
-                    .HasName("PK__ticket_f__0ABAC5AB0860D343");
+                    .HasName("PK__TicketMo__B0219649770C9F65");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)

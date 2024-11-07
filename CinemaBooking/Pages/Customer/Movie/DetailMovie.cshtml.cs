@@ -1,5 +1,4 @@
-﻿using CinemaBooking.Data;
-using CinemaBooking.Helper;
+﻿using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Movie;
 using CinemaBooking.Repositories.Post;
@@ -15,9 +14,11 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
+using CinemaBooking.Data;
+
 namespace CinemaBooking.Pages.Customer.Movie
 {
-	public class DetailMovieModel : PageModel
+    public class DetailMovieModel : PageModel
 	{
 		private readonly CinemaBookingContext _context;
         private readonly IVoteRepository _voteRepository;
@@ -66,10 +67,10 @@ namespace CinemaBooking.Pages.Customer.Movie
 			}
 
 			// Fetch showtimes associated with the movie using the ShowtimeMovieAssignments
-			Showtimes = await _context.ShowtimeMovieAssignments
-				.Where(s => s.MovieId == movieId) // Get assignments for the specific movie
-				.Select(s => s.Showtime) // Get the related showtime
-				.ToListAsync();
+			//Showtimes = await _context.ShowtimeMovieAssignments
+			//	.Where(s => s.MovieId == movieId) // Get assignments for the specific movie
+			//	.Select(s => s.Showtime) // Get the related showtime
+			//	.ToListAsync();
 
 			Categories = await _context.MovieCategoryAssignments
 				.Where(mc => mc.MovieId == movieId) // Get assignments for the specific movie

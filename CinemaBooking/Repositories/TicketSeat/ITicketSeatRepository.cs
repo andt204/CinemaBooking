@@ -1,6 +1,8 @@
-﻿namespace CinemaBooking.Repositories.TicketSeat;
+﻿using CinemaBooking.Data;
 
-public interface ITicketSeatRepository : IBaseRepository<Data.TicketSeatAssignment>
+namespace CinemaBooking.Repositories.TicketSeat;
+
+public interface ITicketSeatRepository : IBaseRepository<TicketSeatAssignment>
 {
     
 }

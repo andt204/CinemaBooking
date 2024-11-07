@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using CinemaBooking.Data;
 using CinemaBooking.Enum;
 using CinemaBooking.ViewModels;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
 {
-	public class SeatSelectionService
+    public class SeatSelectionService
 	{
 		private readonly CinemaBookingContext _context;
 		private readonly IMapper _mapper;

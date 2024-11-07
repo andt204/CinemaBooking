@@ -19,7 +19,7 @@ public class Add : PageModel
         _roleRepository = roleRepository;
     }
 
-    public IEnumerable<Data.Role> Roles { get; set; }
+    public IEnumerable<Role> Roles { get; set; }
 
    
 
