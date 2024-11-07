@@ -34,14 +34,14 @@ namespace CinemaBooking.Pages.Customer.Payment
 
         public Data.Ticket Ticket { get; set; }
         public Data.Movie Movie { get; set; }
-        public Data.Theater Theater { get; set; }
-		public List<Data.Seat> Seats { get; set; } = new List<Data.Seat>();
+        public Theater Theater { get; set; }
+		public List<Seat> Seats { get; set; } = new List<Seat>();
 
-		public Data.Room Room { get; set; }
-        public Data.Showtime Showtime { get; set; }
-        public Data.TicketMovieAssignment TicketMovieAssignment { get; set; }
+		public Room Room { get; set; }
+        public Showtime Showtime { get; set; }
+        public TicketMovieAssignment TicketMovieAssignment { get; set; }
         private DateTime BookingTime;
-        private Data.TicketSeatAssignment TicketSeatAssignment { get; set; }
+        private TicketSeatAssignment TicketSeatAssignment { get; set; }
         public string Status { get; set; }
         private DateTime PublishTime;
         public string formattedBookingTime;
@@ -77,7 +77,7 @@ namespace CinemaBooking.Pages.Customer.Payment
             Ticket = await _ticketRepository.GetByIdAsync(id);
             var ticketMovieAssignmentId = TempData["TicketMovieAssignmentId"] as int?;
 			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
-			Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
+			//Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
             //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
             // Retrieve the associated seats from the seat repository
             var seatIds = _context.TicketSeatAssignments
@@ -110,8 +110,8 @@ namespace CinemaBooking.Pages.Customer.Payment
             };
             // Console.WriteLine($"OnGetAsync - PaymentRequest.Amount: {PaymentRequest.Amount}");
 
-            PublishTime = Movie.PublishTime;
-            formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
+            //PublishTime = Movie.PublishTime;
+            //formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
             // Showtime = await _showtimeRepository.GetByIdAsync(Showtime.ShowtimeId);
 
             return Page();

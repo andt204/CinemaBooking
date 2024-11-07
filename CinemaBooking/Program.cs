@@ -1,5 +1,4 @@
 ﻿using CinemaBooking.AutoMapper;
-using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Comment;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CinemaBooking.EmailModels;
 using CinemaBooking.Repositories.Movie;
 using CinemaBooking.Repositories.Room;
 using CinemaBooking.Repositories.Seat;
@@ -19,7 +17,7 @@ using CinemaBooking.Repositories.Theater;
 using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketSeat;
-using Microsoft.AspNetCore.Identity;
+using CinemaBooking.Data;
 
 namespace CinemaBooking
 {
@@ -93,12 +91,15 @@ namespace CinemaBooking
             // Register your service
             builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
             builder.Services.AddScoped<SeatSelectionService>();
+            builder.Services.AddScoped<TheaterAdminService>();
+            builder.Services.AddScoped<RoomAdminService>();
+
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
-            var emailConfig = builder.Configuration.GetSection("EmailConfiguration") 
-                .Get<EmailConfiguration>(); 
-            builder.Services.AddSingleton(emailConfig); 
-            builder.Services.AddTransient<IEmailService, EmailService>();
-            
+
+            // Configure DbContext with SQL Server
+            builder.Services.AddDbContext<CinemaBookingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
+
             // Add services to the container
             builder.Services.AddRazorPages();
             // Add auto mapper
@@ -106,7 +107,7 @@ namespace CinemaBooking
             builder.Services.AddAutoMapper(typeof(TheaterProfile));
             builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
             builder.Services.AddAutoMapper(typeof(RoomProfile));
-            builder.Services.AddAutoMapper(typeof(ShowtimeMovieAssignmentProfile));
+
             builder.Services.AddAutoMapper(typeof(SeatProfile));
 
             var app = builder.Build();

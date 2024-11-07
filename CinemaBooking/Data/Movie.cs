@@ -10,7 +10,7 @@ namespace CinemaBooking.Data
             ActorMovieAssignments = new HashSet<ActorMovieAssignment>();
             Comments = new HashSet<Comment>();
             MovieCategoryAssignments = new HashSet<MovieCategoryAssignment>();
-            ShowtimeMovieAssignments = new HashSet<ShowtimeMovieAssignment>();
+            Showtimes = new HashSet<Showtime>();
             TicketMovieAssignments = new HashSet<TicketMovieAssignment>();
             Votes = new HashSet<Vote>();
         }
@@ -33,7 +33,7 @@ namespace CinemaBooking.Data
         public virtual ICollection<ActorMovieAssignment> ActorMovieAssignments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<MovieCategoryAssignment> MovieCategoryAssignments { get; set; }
-        public virtual ICollection<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; }
+        public virtual ICollection<Showtime> Showtimes { get; set; }
         public virtual ICollection<TicketMovieAssignment> TicketMovieAssignments { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
     }

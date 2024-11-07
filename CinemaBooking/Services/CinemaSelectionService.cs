@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CinemaBooking.Data; 
+using CinemaBooking.Data;
 using CinemaBooking.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
 {
-	public class CinemaSelectionService
+    public class CinemaSelectionService
 	{
 		private readonly CinemaBookingContext _context;
 		private readonly IMapper _mapper;
@@ -42,18 +42,18 @@ namespace CinemaBooking.Services
 			return movieDto;
 		}
 
-        public async Task<List<TheaterDto>> GetListTheaterAsync(int movieId)
-        {
-            var theaters = await _context.Theaters
-                .Include(t => t.Rooms)
-                .ThenInclude(r => r.Showtimes)
-                .ThenInclude(s => s.ShowtimeMovieAssignments)
-                .Where(t => t.Rooms.Any(r => r.Showtimes.Any(s => s.ShowtimeMovieAssignments.Any(sma => sma.MovieId == movieId))))
-                .ToListAsync();
+		//public async Task<List<TheaterDto>> GetListTheaterAsync(int movieId)
+		//{
+		//	var theaters = await _context.Theaters
+		//		.Include(t => t.Rooms)
+		//		.ThenInclude(r => r.Showtimes)
+		//		.ThenInclude(s => s.ShowtimeMovieAssignments)
+		//		.Where(t => t.Rooms.Any(r => r.Showtimes.Any(s => s.ShowtimeMovieAssignments.Any(sma => sma.MovieId == movieId))))
+		//		.ToListAsync();
 
-            var theaterDtos = _mapper.Map<List<TheaterDto>>(theaters);
+		//	var theaterDtos = _mapper.Map<List<TheaterDto>>(theaters);
 
-            return theaterDtos;
-        }
-    }
+		//	return theaterDtos;
+		//}
+	}
 }

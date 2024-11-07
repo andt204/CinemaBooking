@@ -32,7 +32,6 @@ namespace CinemaBooking.Data
         public virtual DbSet<Seat> Seats { get; set; } = null!;
         public virtual DbSet<SeatType> SeatTypes { get; set; } = null!;
         public virtual DbSet<Showtime> Showtimes { get; set; } = null!;
-        public virtual DbSet<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; } = null!;
         public virtual DbSet<Theater> Theaters { get; set; } = null!;
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
         public virtual DbSet<TicketMovieAssignment> TicketMovieAssignments { get; set; } = null!;
@@ -53,6 +52,8 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.ToTable("Account");
+
+                entity.HasIndex(e => e.RoleId, "IX_Account_RoleId");
 
                 entity.HasIndex(e => e.FullName, "UQ__account__F3DBC57261217132")
                     .IsUnique();
@@ -90,6 +91,10 @@ namespace CinemaBooking.Data
                 entity.HasKey(e => e.ActorMovieId)
                     .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
 
+                entity.HasIndex(e => e.ActorId, "IX_ActorMovieAssignments_ActorId");
+
+                entity.HasIndex(e => e.MovieId, "IX_ActorMovieAssignments_MovieId");
+
                 entity.HasOne(d => d.Actor)
                     .WithMany(p => p.ActorMovieAssignments)
                     .HasForeignKey(d => d.ActorId)
@@ -113,6 +118,12 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.ToTable("Comment");
+
+                entity.HasIndex(e => e.AccountId, "IX_Comment_AccountId");
+
+                entity.HasIndex(e => e.MovieId, "IX_Comment_MovieId");
+
+                entity.HasIndex(e => e.PostId, "IX_Comment_PostId");
 
                 entity.Property(e => e.CreatedAt).HasColumnType("datetime");
 
@@ -146,6 +157,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Movie");
 
+                entity.HasIndex(e => e.DirectorId, "IX_Movie_DirectorId");
+
                 entity.Property(e => e.Country).HasMaxLength(50);
 
                 entity.Property(e => e.Image).HasMaxLength(255);
@@ -167,6 +180,10 @@ namespace CinemaBooking.Data
             {
                 entity.HasKey(e => e.MovieCategoryId);
 
+                entity.HasIndex(e => e.CategoryId, "IX_MovieCategoryAssignments_CategoryId");
+
+                entity.HasIndex(e => e.MovieId, "IX_MovieCategoryAssignments_MovieId");
+
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.MovieCategoryAssignments)
                     .HasForeignKey(d => d.CategoryId)
@@ -184,6 +201,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Payment");
 
+                entity.HasIndex(e => e.TicketId, "IX_Payment_TicketId");
+
                 entity.Property(e => e.PaymentDate).HasColumnType("date");
 
                 entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
@@ -198,6 +217,8 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
+
+                entity.HasIndex(e => e.AccountId, "IX_Post_AccountId");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -223,6 +244,10 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Room");
 
+                entity.HasIndex(e => e.RoomTypeId, "IX_Room_RoomTypeId");
+
+                entity.HasIndex(e => e.TheaterId, "IX_Room_TheaterId");
+
                 entity.Property(e => e.RoomName).HasMaxLength(100);
 
                 entity.HasOne(d => d.RoomType)
@@ -247,6 +272,10 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Seat>(entity =>
             {
                 entity.ToTable("Seat");
+
+                entity.HasIndex(e => e.RoomId, "IX_Seat_RoomId");
+
+                entity.HasIndex(e => e.SeatTypeId, "IX_Seat_SeatTypeId");
 
                 entity.Property(e => e.Row).HasMaxLength(50);
 
@@ -276,7 +305,16 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Showtime");
 
+                entity.HasIndex(e => e.MovieId, "IX_Showtime_MovieId");
+
+                entity.HasIndex(e => e.RoomId, "IX_Showtime_RoomId");
+
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.MovieId)
+                    .HasConstraintName("FK_Showtime_Movie");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
@@ -284,34 +322,18 @@ namespace CinemaBooking.Data
                     .HasConstraintName("FK_Showtime_Room");
             });
 
-            modelBuilder.Entity<ShowtimeMovieAssignment>(entity =>
-            {
-                entity.HasKey(e => e.ShowtimeMovieId)
-                    .HasName("PK__event_fi__173260FA7EF6F97D");
-
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.ShowtimeMovieAssignments)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__event_fil__movie__35BCFE0A");
-
-                entity.HasOne(d => d.Showtime)
-                    .WithMany(p => p.ShowtimeMovieAssignments)
-                    .HasForeignKey(d => d.ShowtimeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__event_fil__event__34C8D9D1");
-            });
-
             modelBuilder.Entity<Theater>(entity =>
             {
                 entity.ToTable("Theater");
-
-                entity.Property(e => e.TheaterId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ticket>(entity =>
             {
                 entity.ToTable("Ticket");
+
+                entity.HasIndex(e => e.AccountId, "IX_Ticket_AccountId");
+
+                entity.HasIndex(e => e.ShowtimeId, "IX_Ticket_ShowtimeId");
 
                 entity.Property(e => e.BookingTime).HasColumnType("datetime");
 
@@ -333,7 +355,11 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<TicketMovieAssignment>(entity =>
             {
                 entity.HasKey(e => e.TicketMovieId)
-                    .HasName("PK__ticket_f__0ABAC5AB0860D343");
+                    .HasName("PK__TicketMo__B0219649770C9F65");
+
+                entity.HasIndex(e => e.MovieId, "IX_TicketMovieAssignments_MovieId");
+
+                entity.HasIndex(e => e.TicketId, "IX_TicketMovieAssignments_TicketId");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.TicketMovieAssignments)
@@ -352,6 +378,10 @@ namespace CinemaBooking.Data
             {
                 entity.HasKey(e => e.TicketSeatId);
 
+                entity.HasIndex(e => e.SeatId, "IX_TicketSeatAssignments_SeatId");
+
+                entity.HasIndex(e => e.TicketId, "IX_TicketSeatAssignments_TicketId");
+
                 entity.HasOne(d => d.Seat)
                     .WithMany(p => p.TicketSeatAssignments)
                     .HasForeignKey(d => d.SeatId)
@@ -366,6 +396,10 @@ namespace CinemaBooking.Data
             modelBuilder.Entity<Vote>(entity =>
             {
                 entity.ToTable("Vote");
+
+                entity.HasIndex(e => e.AccountId, "IX_Vote_AccountId");
+
+                entity.HasIndex(e => e.MovieId, "IX_Vote_MovieId");
 
                 entity.Property(e => e.VoteDate)
                     .HasColumnType("datetime")

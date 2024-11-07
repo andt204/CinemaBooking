@@ -25,12 +25,12 @@ namespace CinemaBooking.Pages.Customer.Ticket
         private readonly ITicketSeatRepository _ticketSeatRepository;
         public Data.Ticket Ticket { get; set; }
         public Data.Movie Movie { get; set; }
-        public Data.Seat Seat { get; set; }
-        public Data.Room Room { get; set; }
-        public Data.Showtime Showtime { get; set; }
-        public Data.TicketMovieAssignment TicketMovieAssignment  { get; set; }
-        private Data.TicketSeatAssignment TicketSeatAssignment { get; set; }
-        public Data.Theater Theater { get; set; }
+        public Seat Seat { get; set; }
+        public Room Room { get; set; }
+        public Showtime Showtime { get; set; }
+        public TicketMovieAssignment TicketMovieAssignment  { get; set; }
+        private TicketSeatAssignment TicketSeatAssignment { get; set; }
+        public Theater Theater { get; set; }
         private DateTime BookingTime;
         public string Status { get; set; }
         private DateTime PublishTime;

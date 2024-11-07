@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using Microsoft.EntityFrameworkCore;
 using CinemaBooking.Repositories.Role;
 using CinemaBooking.Repositories;
+using CinemaBooking.Data;
 namespace CinemaBooking.Pages.Customer.Account
 {
     [Authorize(Roles = "Customer")]
