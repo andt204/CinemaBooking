@@ -95,7 +95,8 @@ namespace CinemaBooking
             builder.Services.AddScoped<TheaterService>();
             builder.Services.AddScoped<RoomService>();
             builder.Services.AddScoped<RoomTypeService>();
-
+            builder.Services.AddScoped<SeatService>();
+            builder.Services.AddScoped<SeatTypeService>();
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
             // Configure DbContext with SQL Server
@@ -127,9 +128,14 @@ namespace CinemaBooking
             _ = app.UseAuthorization();
 
             app.UseSession();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages(); //Routes for pages
+                endpoints.MapControllers(); //Routes for my API controllers
+            });
 
 
             app.Use(async (context, next) =>
