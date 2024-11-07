@@ -2458,7 +2458,7 @@ ul.chat-user-total li i.old-users {
 
 .filter-row .btn {
 	border-radius: 1;
-	min-height: 30px;
+	min-height: 50px;
 	padding: 6px 12px;
 	text-transform: uppercase;
 }
