@@ -11,17 +11,19 @@ using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketPrice;
 using CinemaBooking.Repositories.TicketSeat;
 using CinemaBooking.Services;
+using CinemaBooking.ViewModels;
 using CinemaBooking.VnPayModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Customer.Payment
 {
     public class PaymentModel : PageModel
     {
-		private readonly CinemaBookingContext _context;
-		private readonly IMapper _mapper;
-		private readonly IMovieRepository _movieRepository;
+        private readonly CinemaBookingContext _context;
+        private readonly IMapper _mapper;
+        private readonly IMovieRepository _movieRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly ISeatRepository _seatRepository;
         private readonly IRoomRepository _roomRepository;
@@ -31,21 +33,14 @@ namespace CinemaBooking.Pages.Customer.Payment
         private readonly ITicketSeatRepository _ticketSeatRepository;
         private readonly IVnPayService _vnPayService;
         [BindProperty] public VnPaymentRequestModel PaymentRequest { get; set; }
-
-        public Data.Ticket Ticket { get; set; }
-        public Data.Movie Movie { get; set; }
-        public Theater Theater { get; set; }
-		public List<Seat> Seats { get; set; } = new List<Seat>();
-
-		public Room Room { get; set; }
-        public Showtime Showtime { get; set; }
-        public TicketMovieAssignment TicketMovieAssignment { get; set; }
+[BindProperty] public List<SeatDto> Seat { get; set; }
+      
         private DateTime BookingTime;
-        private TicketSeatAssignment TicketSeatAssignment { get; set; }
         public string Status { get; set; }
         private DateTime PublishTime;
         public string formattedBookingTime;
         public string formattedPublishTime;
+        [BindProperty] public PaymentDto TicketInfo { get; set; }
 
         public PaymentModel(
             IMovieRepository movieRepository,
@@ -57,7 +52,7 @@ namespace CinemaBooking.Pages.Customer.Payment
             ITheaterRepository theaterRepository,
             ITicketSeatRepository ticketSeatRepository,
             IVnPayService vnPayService, CinemaBookingContext context, IMapper mapper
-		)
+        )
         {
             _movieRepository = movieRepository;
             _ticketRepository = ticketRepository;
@@ -68,51 +63,49 @@ namespace CinemaBooking.Pages.Customer.Payment
             _theaterRepository = theaterRepository;
             _ticketSeatRepository = ticketSeatRepository;
             _vnPayService = vnPayService;
-			_context = context;
-			_mapper = mapper;
-		}
+            _context = context;
+            _mapper = mapper;
+        }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Ticket = await _ticketRepository.GetByIdAsync(id);
-            var ticketMovieAssignmentId = TempData["TicketMovieAssignmentId"] as int?;
-			TicketMovieAssignment = await _ticketMovieRepository.GetByIdAsync(ticketMovieAssignmentId ?? 0);
-			//Movie = await _movieRepository.GetByIdAsync(TicketMovieAssignment.MovieId);
-            //Room = await _roomRepository.GetByIdAsync(TicketMovieAssignment.RoomId);
-            // Retrieve the associated seats from the seat repository
-            var seatIds = _context.TicketSeatAssignments
-	            .Where(x => x.TicketId == id)
-	            .Select(tsa => tsa.SeatId)
-	            .ToList();
+            TicketInfo = await (from t in _context.Tickets
+                join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
+                join m in _context.Movies on s.MovieId equals m.MovieId
+                join r in _context.Rooms on s.RoomId equals r.RoomId
+                join th in _context.Theaters on r.TheaterId equals th.TheaterId
+                where t.TicketId == id
+                select new PaymentDto
+                {
+                    Title = m.Title,
+                    TheaterName = th.TheaterName,
+                    Location = th.Location,
+                    Date = s.Date,
+                    StartHour = s.StartHour,
+                    TicketPrice = t.TicketPrice
+                }).FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+            
+            Seat = await (from t in _context.Tickets
+                    join ts in _context.TicketSeatAssignments on t.TicketId equals ts.TicketId
+                    join s in _context.Seats on ts.SeatId equals s.SeatId
+                    where t.TicketId == id
+                        select new SeatDto
+                    {
+                        SeatId = s.SeatId,
+                        Column = s.Column,
+                        Row = s.Row
+                    }
+                ).ToListAsync()  ?? throw new InvalidOperationException();
+            BookingTime = TicketInfo.Date;
 
-			Seats = _context.Seats
-				.Where(s => seatIds.Contains(s.SeatId))
-				.ToList();
+            formattedBookingTime = BookingTime.ToString("dd-MM-yyyy");
 
-			Showtime = await _showtimeRepository.GetByIdAsync(Ticket.ShowtimeId);
-            //Theater = await _theaterRepository.GetByIdAsync(Showtime.TheaterId);
-            BookingTime = Ticket.BookingTime;
 
-            formattedBookingTime = BookingTime.ToString("HH:mm dd-MM-yyyy");
-            if (Ticket.Status == 1)
-            {
-                Status = "Booked";
-            }
-            else
-            {
-                Status = "Not Booked";
-            }
             PaymentRequest = new VnPaymentRequestModel
             {
-                Amount = Math.Floor(Ticket.TicketPrice ?? 0),
-                TicketId = Ticket.TicketId
-                
+                Amount = Math.Floor(TicketInfo.TicketPrice ?? 0),
+                TicketId = id
             };
-            // Console.WriteLine($"OnGetAsync - PaymentRequest.Amount: {PaymentRequest.Amount}");
-
-            //PublishTime = Movie.PublishTime;
-            //formattedPublishTime = PublishTime.ToString("dd-MM-yyyy");
-            // Showtime = await _showtimeRepository.GetByIdAsync(Showtime.ShowtimeId);
 
             return Page();
         }
