@@ -15,6 +15,9 @@
     <EmbeddedResource Remove="wwwroot\customer\assets2\**" />
     <None Remove="Models\**" />
     <None Remove="wwwroot\customer\assets2\**" />
+    <Compile Update="Pages\Customer\Ticket\HistoryTicket.cshtml.cs">
+      <DependentUpon>HistoryTicket.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
