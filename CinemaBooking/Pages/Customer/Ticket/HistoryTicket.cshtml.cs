@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using CinemaBooking.ViewModels;
 
 namespace CinemaBooking.Pages.Customer.Ticket
 {
@@ -20,7 +21,15 @@ namespace CinemaBooking.Pages.Customer.Ticket
             _context = context;
         }
 
-        public List<TicketHistoryViewModel> TicketHistories { get; set; }
+        [BindProperty] public List<SeatDto> Seat { get; set; }
+      
+        private DateTime BookingTime;
+        public string Status { get; set; }
+        private DateTime PublishTime;
+        public string formattedBookingTime;
+        public string formattedPublishTime;
+        [BindProperty] public List<PaymentDto> TicketInfo { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -36,85 +45,39 @@ namespace CinemaBooking.Pages.Customer.Ticket
                     ViewData["Account"] = account; // Pass account data to ViewData
                 }
             }
-
-            var ticketDetails = await _context.Tickets
-                .Where(t => t.AccountId == idAccount)
-                .Join(
-                    _context.TicketSeatAssignments,
-                    t => t.TicketId,
-                    tsa => tsa.TicketId,
-                    (t, tsa) => new { Ticket = t, TicketSeatAssignment = tsa }
-                )
-                .Join(
-                    _context.Seats,
-                    combined => combined.TicketSeatAssignment.SeatId,
-                    s => s.SeatId,
-                    (combined, s) => new { combined.Ticket, combined.TicketSeatAssignment, Seat = s }
-                )
-                .Join(
-                    _context.Rooms,
-                    combined => combined.Seat.RoomId,
-                    r => r.RoomId,
-                    (combined, r) => new { combined.Ticket, combined.TicketSeatAssignment, combined.Seat, Room = r }
-                )
-                .Join(
-                    _context.RoomTypes,
-                    combined => combined.Room.RoomTypeId,
-                    rt => rt.RoomTypeId,
-                    (combined, rt) => new
-                        { combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, RoomType = rt }
-                )
-                // .Join(
-                //     _context.TicketMovieAssignments,
-                //     combined => combined.Ticket.TicketId,
-                //     tms => tms.TicketId,
-                //     (combined, tms) => new
-                //     {
-                //         combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, combined.RoomType,
-                //         TicketMovieAssignment = tms
-                //     }
-                // )
-                // .Join(
-                //     _context.Movies,
-                //     combined => combined.TicketMovieAssignment.MovieId,
-                //     m => m.MovieId,
-                //     (combined, m) => new
-                //     {
-                //         combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, combined.RoomType,
-                //         combined.TicketMovieAssignment, Movie = m
-                //     }
-                // )
-                //.Join(
-                //    _context.Showtimes,
-                //    combined => combined.Room.RoomId,
-                //    st => st.RoomId,
-                //    (combined, st) => new
-                //    {
-                //        combined.Ticket, combined.TicketSeatAssignment, combined.Seat, combined.Room, combined.RoomType,
-                //    }
-                //)
-                .Select(t => new TicketHistoryViewModel
+            TicketInfo = await (from t in _context.Tickets
+                join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
+                join m in _context.Movies on s.MovieId equals m.MovieId
+                join r in _context.Rooms on s.RoomId equals r.RoomId
+                join th in _context.Theaters on r.TheaterId equals th.TheaterId
+                where t.AccountId == idAccount
+                select new PaymentDto
                 {
-                    TicketId = t.Ticket.TicketId,
-                    // AccountId = t.AccountId,
-                    // MovieTitle = t.Movie.Title,
-                    // Seat = t.Seat.Row ,
-                    // RoomName = t.Room.RoomName,
-                    // Hour = t.Showtime.Date.ToString("HH:mm"),
-                    // Date = t.Showtime.Date.ToString("dd/MM/yyyy"),
-                    // TicketPrice = t.Ticket.TicketPrice ?? 0,
-                    // Status = t.Ticket.Status.ToString()
-                })
-                .ToListAsync();
-            TicketHistories = ticketDetails;
-            Console.WriteLine($"Ticket Histories Count: {TicketHistories.Count}");
-            foreach (var ticket in TicketHistories)
-            {
-                Console.WriteLine($"Ticket Histories price: {ticket.TicketId}");
-                // Console.WriteLine($"Ticket Histories id: {ticket.TicketPrice}");
-                //
-                // Console.WriteLine($"Ticket Histories stats: {ticket.Status}");
-            }
+                    TicketId = t.TicketId,
+                    Title = m.Title,
+                    TheaterName = th.TheaterName,
+                    Location = th.Location,
+                    Date = s.Date,
+                    StartHour = s.StartHour,
+                    TicketPrice = t.TicketPrice
+                }).ToListAsync() ?? throw new InvalidOperationException();
+            
+            Seat = await (from t in _context.Tickets
+                    join ts in _context.TicketSeatAssignments on t.TicketId equals ts.TicketId
+                    join s in _context.Seats on ts.SeatId equals s.SeatId
+                    where t.TicketId == idAccount
+                    select new SeatDto
+                    {
+                        SeatId = s.SeatId,
+                        Column = s.Column,
+                        Row = s.Row
+                    }
+                ).ToListAsync()  ?? throw new InvalidOperationException();
+            // BookingTime = TicketInfo.Date;
+            //
+            // formattedBookingTime = BookingTime.ToString("dd-MM-yyyy");
+
+            
             
             return Page();
         }

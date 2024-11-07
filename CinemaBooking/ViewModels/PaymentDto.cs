@@ -2,6 +2,7 @@
 
 public class PaymentDto
 {
+    public int TicketId { get; set; }
     public string Title { get; set; }
     public string TheaterName { get; set; }
     public string Location { get; set; }

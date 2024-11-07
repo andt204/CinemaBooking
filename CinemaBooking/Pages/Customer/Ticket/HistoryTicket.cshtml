@@ -61,33 +61,32 @@
 <div class="container">
     <div class="main-content">
         <h3>Your Ticket Booking History</h3>
-        @if (Model.TicketHistories != null && Model.TicketHistories.Any())
+        @if (Model.TicketInfo != null && Model.TicketInfo.Any())
         {
             <table>
                 <thead>
                 <tr>
                     <th>Ticket ID</th>
                     <th>Movie</th>
-                    <th>Seat</th>
-                    <th>Room</th>
+                    @* <th>Seat</th> *@
+                    <th>TheaterName</th>
                     <th>Showtime</th>
                     <th>Date</th>
                     <th>Price</th>
-                    <th>Status</th>
+                    @* <th>Status</th> *@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var ticket in Model.TicketHistories)
+                @foreach (var ticket in Model.TicketInfo)
                 {
                     <tr>
                         <td>@ticket.TicketId</td>
-                        @* <td>@ticket.MovieTitle</td> *@
+                        <td>@ticket.Title</td>
                         @* <td>@ticket.Seat</td> *@
-                        @* <td>@ticket.RoomName</td> *@
-                        @* <td>@ticket.Hour</td> *@
-                        @* <td>@ticket.Date</td> *@
+                        <td>@ticket.TheaterName</td>
+                        <td>@ticket.StartHour</td>
+                        <td>@ticket.Date.ToString("dd/MM/yyyy")</td>
                         <td>@ticket.TicketPrice</td>
-                        <td>@ticket.Status</td>
                     </tr>
                 }
                 </tbody>

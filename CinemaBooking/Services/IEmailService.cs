@@ -1,6 +1,8 @@
-﻿namespace CinemaBooking.Services;
+﻿using CinemaBooking.EmailModels;
+
+namespace CinemaBooking.Services;
 
 public interface IEmailService
 {
-     Task  SendEmailAsync(string to, string subject, string body);
+    void ForgotPassword(string email);
 }

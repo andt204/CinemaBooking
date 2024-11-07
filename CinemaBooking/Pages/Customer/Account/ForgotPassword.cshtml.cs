@@ -10,12 +10,10 @@ namespace CinemaBooking.Pages.Customer.Account;
 
 public class ForgotPassword : PageModel
 {
-    private readonly CinemaBookingContext _context;
     private readonly IEmailService _emailService;
 
-    public ForgotPassword(CinemaBookingContext context, IEmailService emailService)
+    public ForgotPassword( IEmailService emailService)
     {
-        _context = context;
         _emailService = emailService;
     }
 
@@ -25,27 +23,17 @@ public class ForgotPassword : PageModel
     public string Message { get; set; }
 
 
-    public async Task OnPostAsync()
+    public  void  OnPost()
     {
-        var user =  _context.Accounts.Where(a => a.Email == Email).FirstOrDefault();
-
-        if (user != null)
+        try
         {
-            var newPassword = PasswordGenerator.GeneratePassword(8);
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-
-            _context.Accounts.Update(user);
-
-            var subject = "Your new Password";
-            var body = $"Your new Password is: {newPassword}";
-            await _emailService.SendEmailAsync(user.Email, subject, body);
-
-            Message = "Your password has been sent to your email address";
+            // Gọi service để xử lý logic quên mật khẩu
+            _emailService.ForgotPassword(Email);
+            Message = "Mật khẩu mới đã được gửi đến email của bạn.";
         }
-        else
+        catch (Exception ex)
         {
-            Message = "Not found this email address.";
+            Message = $"Có lỗi xảy ra: {ex.Message}";
         }
-    }
+    } 
 }
