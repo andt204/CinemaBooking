@@ -1,5 +1,4 @@
 ﻿using CinemaBooking.AutoMapper;
-using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Comment;
@@ -18,8 +17,10 @@ using CinemaBooking.Repositories.Theater;
 using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketSeat;
+using CinemaBooking.Data;
 
-namespace CinemaBooking {
+namespace CinemaBooking
+{
     public class Program {
         public static void Main(string[] args) {
            var builder = WebApplication.CreateBuilder(args);
@@ -102,7 +103,7 @@ namespace CinemaBooking {
 		builder.Services.AddAutoMapper(typeof(TheaterProfile));
 		builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
 		builder.Services.AddAutoMapper(typeof(RoomProfile));
-		builder.Services.AddAutoMapper(typeof(ShowtimeMovieAssignmentProfile));
+
   builder.Services.AddAutoMapper(typeof(SeatProfile));
 
   var app = builder.Build();

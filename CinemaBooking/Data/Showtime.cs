@@ -7,7 +7,6 @@ namespace CinemaBooking.Data
     {
         public Showtime()
         {
-            ShowtimeMovieAssignments = new HashSet<ShowtimeMovieAssignment>();
             Tickets = new HashSet<Ticket>();
         }
 
@@ -15,9 +14,10 @@ namespace CinemaBooking.Data
         public int? RoomId { get; set; }
         public TimeSpan StartHour { get; set; }
         public DateTime Date { get; set; }
+        public int? MovieId { get; set; }
 
+        public virtual Movie? Movie { get; set; }
         public virtual Room? Room { get; set; }
-        public virtual ICollection<ShowtimeMovieAssignment> ShowtimeMovieAssignments { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

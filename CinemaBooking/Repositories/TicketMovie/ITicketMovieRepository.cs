@@ -1,6 +1,8 @@
-﻿namespace CinemaBooking.Repositories.TicketMovie;
+﻿using CinemaBooking.Data;
 
-public interface ITicketMovieRepository : IBaseRepository<Data.TicketMovieAssignment>
+namespace CinemaBooking.Repositories.TicketMovie;
+
+public interface ITicketMovieRepository : IBaseRepository<TicketMovieAssignment>
 {
     
 }

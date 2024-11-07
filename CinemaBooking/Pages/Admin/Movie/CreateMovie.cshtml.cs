@@ -1,4 +1,5 @@
-﻿using CinemaBooking.Data;
+﻿
+using CinemaBooking.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;

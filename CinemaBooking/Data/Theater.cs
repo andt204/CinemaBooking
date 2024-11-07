@@ -13,7 +13,6 @@ namespace CinemaBooking.Data
         public int TheaterId { get; set; }
         public string? TheaterName { get; set; }
         public string? Location { get; set; }
-        public byte? Status { get; set; }
 
         public virtual ICollection<Room> Rooms { get; set; }
     }

@@ -45,7 +45,7 @@ namespace CinemaBooking.Services
             }
             if (status.HasValue)
             {
-                query = query.Where(t => t.Status == (byte)status.Value);
+                //query = query.Where(t => t.Status == (byte)status.Value);
             }
 
             var theaters = await query.ToListAsync();
@@ -99,7 +99,7 @@ namespace CinemaBooking.Services
             var theater = await _context.Theaters.FindAsync(theaterId);
             if (theater != null)
             {
-                theater.Status = (byte)status;  // Assuming Status is stored as a byte in the database
+               /* theater.Status = (byte)status;*/  // Assuming Status is stored as a byte in the database
                 await _context.SaveChangesAsync();
             }
         }

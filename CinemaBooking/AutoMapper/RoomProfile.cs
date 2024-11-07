@@ -4,7 +4,7 @@ using CinemaBooking.ViewModels;
 
 namespace CinemaBooking.AutoMapper
 {
-	public class RoomProfile : Profile
+    public class RoomProfile : Profile
 	{
 		public RoomProfile()
 		{

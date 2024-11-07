@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CinemaBooking.Data;
-using Microsoft.EntityFrameworkCore; // Adjust the namespace as per your project structure
+using Microsoft.EntityFrameworkCore;
+using CinemaBooking.Data; // Adjust the namespace as per your project structure
 
 namespace CinemaBooking.Pages.Admin.Account
 {

@@ -2,7 +2,7 @@
 
 namespace CinemaBooking.Repositories.TicketMovie;
 
-public class TicketMovieRepository : BaseRepository<Data.TicketMovieAssignment>, ITicketMovieRepository
+public class TicketMovieRepository : BaseRepository<TicketMovieAssignment>, ITicketMovieRepository
 {
     public TicketMovieRepository(CinemaBookingContext context) : base(context)
     {
