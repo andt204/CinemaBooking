@@ -6,9 +6,9 @@ using CinemaBooking.Enum;
 namespace CinemaBooking.Pages.Admin.Theater;
 public class ListModel : PageModel
 {
-    private readonly TheaterAdminService _theaterService;
+    private readonly TheaterService _theaterService;
 
-    public ListModel(TheaterAdminService theaterService)
+    public ListModel(TheaterService theaterService)
     {
         _theaterService = theaterService;
     }
@@ -33,7 +33,7 @@ public class ListModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        await _theaterService.SetTheaterStatusAsync(id, TheaterStatus.Inactive);
+        await _theaterService.SetTheaterStatusAsync(id, TheaterStatus.Unavailable);
         return RedirectToPage();
     }
 }
