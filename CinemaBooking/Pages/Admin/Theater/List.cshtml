@@ -96,15 +96,15 @@
                                                     <i class="fa fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    @if (theater.Status == TheaterStatus.Active)
+                                                    @if (theater.Status == TheaterStatus.Available)
                                                     {
                                                         <a class="dropdown-item" href="/Admin/Theater/Edit/@theater.TheaterId">
                                                             <i class="fa fa-pencil m-r-5"></i> Edit
                                                         </a>
                                                     }
-                                                    <a class="dropdown-item @(theater.Status == TheaterStatus.Inactive ? "disabled text-muted" : "")"
+                                                    <a class="dropdown-item @(theater.Status == TheaterStatus.Unavailable ? "disabled text-muted" : "")"
                                                        href="#"
-                                                    @(theater.Status == TheaterStatus.Inactive ? "style='pointer-events: none; opacity: 0.5;'" : "")
+                                                    @(theater.Status == TheaterStatus.Unavailable ? "style='pointer-events: none; opacity: 0.5;'" : "")
                                                        data-toggle="modal"
                                                        data-target="#delete_theater_@theater.TheaterId">
                                                         <i class="fa fa-trash-o m-r-5"></i> Deactivate

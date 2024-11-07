@@ -18,6 +18,7 @@ using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketSeat;
 using CinemaBooking.Data;
+using CinemaBooking.ViewModels;
 
 namespace CinemaBooking
 {
@@ -91,8 +92,9 @@ namespace CinemaBooking
             // Register your service
             builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
             builder.Services.AddScoped<SeatSelectionService>();
-            builder.Services.AddScoped<TheaterAdminService>();
-            builder.Services.AddScoped<RoomAdminService>();
+            builder.Services.AddScoped<TheaterService>();
+            builder.Services.AddScoped<RoomService>();
+            builder.Services.AddScoped<RoomTypeService>();
 
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
@@ -107,8 +109,8 @@ namespace CinemaBooking
             builder.Services.AddAutoMapper(typeof(TheaterProfile));
             builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
             builder.Services.AddAutoMapper(typeof(RoomProfile));
-
             builder.Services.AddAutoMapper(typeof(SeatProfile));
+            builder.Services.AddAutoMapper(typeof(TicketProfile));
 
             var app = builder.Build();
 
@@ -138,7 +140,6 @@ namespace CinemaBooking
                 {
                     logger.LogInformation($"{header.Key}: {header.Value}");
                 }
-
                 await next();
             });
 

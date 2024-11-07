@@ -8,10 +8,10 @@ namespace CinemaBooking.Pages.Admin.Theater
 {
     public class UpdateModel : PageModel
     {
-        private readonly TheaterAdminService _theaterService;
+        private readonly TheaterService _theaterService;
 
         // Constructor
-        public UpdateModel(TheaterAdminService theaterService)
+        public UpdateModel(TheaterService theaterService)
         {
             _theaterService = theaterService;
         }
@@ -41,7 +41,7 @@ namespace CinemaBooking.Pages.Admin.Theater
             }
 
             await _theaterService.UpdateTheaterAsync(Theater);
-            TempData["SuccessMessage"] = "Theater updated successfully!";
+            TempData["SuccessEditTheaterMessage"] = "Theater updated successfully!";
             return RedirectToPage("/Admin/Theater/List");
         }
     }
