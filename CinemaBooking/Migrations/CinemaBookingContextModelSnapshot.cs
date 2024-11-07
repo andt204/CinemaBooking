@@ -484,6 +484,9 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
+                    b.Property<int?>("MovieId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
@@ -492,48 +495,20 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("ShowtimeId");
 
+                    b.HasIndex("MovieId");
+
                     b.HasIndex("RoomId");
 
                     b.ToTable("Showtime", (string)null);
                 });
 
-            modelBuilder.Entity("CinemaBooking.Data.ShowtimeMovieAssignment", b =>
-                {
-                    b.Property<int>("ShowtimeMovieId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShowtimeMovieId"), 1L, 1);
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShowtimeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShowtimeMovieId")
-                        .HasName("PK__event_fi__173260FA7EF6F97D");
-
-                    b.HasIndex("MovieId");
-
-                    b.HasIndex("ShowtimeId");
-
-                    b.ToTable("ShowtimeMovieAssignments");
-                });
-
             modelBuilder.Entity("CinemaBooking.Data.Theater", b =>
                 {
                     b.Property<int>("TheaterId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TheaterId"), 1L, 1);
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte?>("Status")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("TheaterName")
                         .HasColumnType("nvarchar(max)");
@@ -590,7 +565,7 @@ namespace CinemaBooking.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TicketMovieId")
-                        .HasName("PK__ticket_f__0ABAC5AB0860D343");
+                        .HasName("PK__TicketMo__B0219649770C9F65");
 
                     b.HasIndex("MovieId");
 
@@ -799,31 +774,19 @@ namespace CinemaBooking.Migrations
 
             modelBuilder.Entity("CinemaBooking.Data.Showtime", b =>
                 {
+                    b.HasOne("CinemaBooking.Data.Movie", "Movie")
+                        .WithMany("Showtimes")
+                        .HasForeignKey("MovieId")
+                        .HasConstraintName("FK_Showtime_Movie");
+
                     b.HasOne("CinemaBooking.Data.Room", "Room")
                         .WithMany("Showtimes")
                         .HasForeignKey("RoomId")
                         .HasConstraintName("FK_Showtime_Room");
 
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("CinemaBooking.Data.ShowtimeMovieAssignment", b =>
-                {
-                    b.HasOne("CinemaBooking.Data.Movie", "Movie")
-                        .WithMany("ShowtimeMovieAssignments")
-                        .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK__event_fil__movie__35BCFE0A");
-
-                    b.HasOne("CinemaBooking.Data.Showtime", "Showtime")
-                        .WithMany("ShowtimeMovieAssignments")
-                        .HasForeignKey("ShowtimeId")
-                        .IsRequired()
-                        .HasConstraintName("FK__event_fil__event__34C8D9D1");
-
                     b.Navigation("Movie");
 
-                    b.Navigation("Showtime");
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("CinemaBooking.Data.Ticket", b =>
@@ -934,7 +897,7 @@ namespace CinemaBooking.Migrations
 
                     b.Navigation("MovieCategoryAssignments");
 
-                    b.Navigation("ShowtimeMovieAssignments");
+                    b.Navigation("Showtimes");
 
                     b.Navigation("TicketMovieAssignments");
 
@@ -975,8 +938,6 @@ namespace CinemaBooking.Migrations
 
             modelBuilder.Entity("CinemaBooking.Data.Showtime", b =>
                 {
-                    b.Navigation("ShowtimeMovieAssignments");
-
                     b.Navigation("Tickets");
                 });
 
