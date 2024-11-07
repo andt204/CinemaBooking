@@ -53,71 +53,73 @@ namespace CinemaBooking.Pages.Admin.Movie
             Countries = countryList?.ConvertAll(c => c.CountryName);
         }
 
-        public async Task<IActionResult> OnPostAsync( int[] ActorIds, IFormFile image, IFormFile imageBackground)
+        public async Task<IActionResult> OnPostAsync(int[] ActorIds, int[] CategoryIds, IFormFile image, IFormFile imageBackground)
         {
-            if (!ModelState.IsValid)
+            var newMovie = new Data.Movie
             {
-                await OnGetAsync(); // Reload data for dropdowns if validation fails
-                return Page();
-            }
+                Title = Movie.Title,
+                Length = Movie.Length,
+                Description = Movie.Description,
+                AgeLimit = Movie.AgeLimit,
+                WarningText = Movie.WarningText,
+                PublishTime = Movie.PublishTime,
+                Country = Movie.Country,
+                Status = Movie.Status,
+                DirectorId = Movie.DirectorId,
+                VideoTrailer = Movie.VideoTrailer
+            };
 
-            var newMovie = Movie; 
-
-            newMovie.AgeLimit = Movie.AgeLimit;
-            newMovie.WarningText = Movie.WarningText;
-            newMovie.PublishTime = Movie.PublishTime;
-            newMovie.Country = Movie.Country;
-            newMovie.Status = Movie.Status;
-            newMovie.DirectorId = Movie.DirectorId;
-            newMovie.VideoTrailer = Movie.VideoTrailer;
-
+            // Save main image
             if (image != null && image.Length > 0)
             {
                 var imagePath = Path.Combine("wwwroot/images", image.FileName);
-                Console.WriteLine($"Saving main image to: {imagePath}");
-
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
                     await image.CopyToAsync(stream);
                 }
-                newMovie.Image = $"/images/{image.FileName}"; // Lưu đường dẫn vào `newMovie`
-                Console.WriteLine($"Image Path: {newMovie.Image}");
+                newMovie.Image = $"/images/{image.FileName}";
             }
 
+            // Save background image
             if (imageBackground != null && imageBackground.Length > 0)
             {
                 var bgImagePath = Path.Combine("wwwroot/images", imageBackground.FileName);
-                Console.WriteLine($"Saving background image to: {bgImagePath}");
                 using (var stream = new FileStream(bgImagePath, FileMode.Create))
                 {
                     await imageBackground.CopyToAsync(stream);
                 }
-                newMovie.ImageBackground = $"/images/{imageBackground.FileName}"; // Lưu đường dẫn vào `newMovie`
-                Console.WriteLine($"Background Image Path: {newMovie.ImageBackground}");
-
+                newMovie.ImageBackground = $"/images/{imageBackground.FileName}";
             }
-            
+            Console.WriteLine("New Movie Details:");
+            Console.WriteLine($"Title: {newMovie.Title}");
+            Console.WriteLine($"Length: {newMovie.Length}");
+            Console.WriteLine($"Description: {newMovie.Description}");
+            Console.WriteLine($"AgeLimit: {newMovie.AgeLimit}");
+            Console.WriteLine($"WarningText: {newMovie.WarningText}");
+            Console.WriteLine($"PublishTime: {newMovie.PublishTime}");
+            Console.WriteLine($"Country: {newMovie.Country}");
+            Console.WriteLine($"Status: {newMovie.Status}");
+            Console.WriteLine($"DirectorId: {newMovie.DirectorId}");
+            Console.WriteLine($"VideoTrailer: {newMovie.VideoTrailer}");
+            Console.WriteLine($"Image: {newMovie.Image}");
+            Console.WriteLine($"ImageBackground: {newMovie.ImageBackground}");
             _context.Movies.Add(newMovie);
-            await _context.SaveChangesAsync(); 
-            // Lưu movie để lấy `MovieId`
-            Console.WriteLine($"cate{CategoryIds.Count}");
-            // Lưu các thể loại
+            await _context.SaveChangesAsync();
+            Console.WriteLine("New Movie ID: " + newMovie.MovieId);
+
+
+            // Assign categories
             foreach (var categoryId in CategoryIds)
             {
-                Console.WriteLine($"cate in lít : {categoryId}");
                 var categoryAssignment = new MovieCategoryAssignment
                 {
-                    //categoryId =//tự gen
                     MovieId = newMovie.MovieId,
                     CategoryId = categoryId
-                }; 
-                Console.WriteLine($"cate{categoryAssignment.CategoryId}");
-                Console.WriteLine($"cate{categoryAssignment.MovieId}");
-                newMovie.MovieCategoryAssignments.Add(categoryAssignment); // Thêm vào danh sách
+                };
                 _context.MovieCategoryAssignments.Add(categoryAssignment);
-
             }
 
+            // Assign actors
             foreach (var actorId in ActorIds)
             {
                 var actorAssignment = new ActorMovieAssignment
@@ -125,16 +127,13 @@ namespace CinemaBooking.Pages.Admin.Movie
                     MovieId = newMovie.MovieId,
                     ActorId = actorId
                 };
-                newMovie.ActorMovieAssignments.Add(actorAssignment); // Thêm vào danh sách
+                _context.ActorMovieAssignments.Add(actorAssignment);
             }
 
-
-
             await _context.SaveChangesAsync();
-            Console.WriteLine("Movie saved successfully with ID: " + newMovie.MovieId);
+            TempData["SuccessMessage"] = "Movie saved successfully with ID: " + newMovie.MovieId;
 
-
-            return RedirectToPage("ListMovie");
+            return RedirectToPage("/Admin/Movie/CreateMovie");
         }
 
         public async Task<IActionResult> OnPostAddCategory(string categoryName)

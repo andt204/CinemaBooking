@@ -15,6 +15,9 @@
     <EmbeddedResource Remove="wwwroot\customer\assets2\**" />
     <None Remove="Models\**" />
     <None Remove="wwwroot\customer\assets2\**" />
+    <Compile Update="Pages\Customer\Ticket\HistoryTicket.cshtml.cs">
+      <DependentUpon>HistoryTicket.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.31" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.33" />

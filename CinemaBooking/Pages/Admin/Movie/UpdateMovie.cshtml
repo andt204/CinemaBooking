@@ -1,8 +1,9 @@
-﻿@page
+﻿@page "{id:int}"
 @model CinemaBooking.Pages.Admin.Movie.UpdateMovieModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Movie List";
+    ViewData["Title"] = "Edit Movie";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -10,121 +11,144 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
 </head>
+
 <body>
-        <div class="page-wrapper">
-            <div class="content">
-                <div class="row">
-                    <div class="col-sm-4 col-3">
-                        <h4 class="page-title">Edit Movie</h4>
-                    </div>
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-4 col-3">
+                    <h4 class="page-title">Edit Movie</h4>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post" enctype="multipart/form-data">
                         <!-- Hidden field for Movie ID -->
-                        <input type="hidden" name="movieId" value="1"> <!-- Replace with actual movie ID -->
+                        <input type="hidden" asp-for="Movie.MovieId" />
+
                         <!-- Movie Title -->
                         <div class="form-group">
                             <label for="title">Movie Title</label>
-                            <input type="text" class="form-control" id="title" name="title" value="Inception" required> <!-- Replace with actual title -->
+                            <input type="text" class="form-control" asp-for="Movie.Title" required />
                         </div>
 
                         <!-- Category -->
                         <div class="form-group">
-                            <label for="category">Category</label>
-                            <input type="text" class="form-control" id="category" name="category" value="Sci-Fi" required> <!-- Replace with actual category -->
+                            <label for="categories">Category</label>
+                            <select class="form-control" asp-for="CategoryIds" required>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.CategoryId">
+                                        @category.CategoryName
+                                    </option>
+                                }
+                            </select>
                         </div>
 
                         <!-- Length -->
                         <div class="form-group">
                             <label for="length">Length (minutes)</label>
-                            <input type="number" class="form-control" id="length" name="length" value="148" required> <!-- Replace with actual length -->
+                            <input type="number" class="form-control" asp-for="Movie.Length" required />
                         </div>
 
                         <!-- Description -->
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="4" required>A mind-bending thriller...</textarea> <!-- Replace with actual description -->
+                            <textarea class="form-control" asp-for="Movie.Description" rows="4" required></textarea>
                         </div>
 
                         <!-- Age Limit -->
                         <div class="form-group">
                             <label for="ageLimit">Age Limit</label>
-                            <input type="number" class="form-control" id="ageLimit" name="ageLimit" value="13" required> <!-- Replace with actual age limit -->
+                            <input type="number" class="form-control" asp-for="Movie.AgeLimit" required />
                         </div>
 
                         <!-- Warning Text -->
                         <div class="form-group">
                             <label for="warningText">Warning Text</label>
-                            <input type="text" class="form-control" id="warningText" name="warningText" value="Violence"> <!-- Replace with actual warning text -->
+                            <input type="text" class="form-control" asp-for="Movie.WarningText" />
                         </div>
 
                         <!-- Publish Time -->
                         <div class="form-group">
                             <label for="publishTime">Publish Time</label>
-                            <input type="datetime-local" class="form-control" id="publishTime" name="publishTime" value="2010-07-16T00:00" required> <!-- Replace with actual publish time -->
+                            <input type="datetime-local" class="form-control" asp-for="Movie.PublishTime" required />
                         </div>
 
                         <!-- Origin -->
                         <div class="form-group">
-                            <label for="origin">Origin</label>
-                            <input type="text" class="form-control" id="origin" name="origin" value="USA" required> <!-- Replace with actual origin -->
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control" asp-for="Movie.Country" required />
                         </div>
 
                         <!-- Image (Optional) -->
                         <div class="form-group">
                             <label for="image">Movie Poster</label>
-                            <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
-                            <!-- Add a preview of the current image -->
-                            <img src="path_to_current_poster.jpg" alt="Current Poster" width="100"> <!-- Replace with actual image path -->
+                            <input type="file" class="form-control-file" asp-for="Image" accept="image/*" />
+                            <img src="@Model.Movie.Image" alt="Current Poster" width="100" />
                         </div>
 
                         <!-- Image Background (Optional) -->
                         <div class="form-group">
                             <label for="imageBackground">Background Image</label>
-                            <input type="file" class="form-control-file" id="imageBackground" name="imageBackground" accept="image/*">
-                            <!-- Add a preview of the current background image -->
-                            <img src="path_to_current_background.jpg" alt="Current Background" width="100"> <!-- Replace with actual background image path -->
+                            <input type="file" class="form-control-file" asp-for="ImageBackground" accept="image/*" />
+                            <img src="@Model.Movie.ImageBackground" alt="Current Background" width="100" />
                         </div>
-
+                        <div class="form-group">
+                            <label for="linkVideoUrl">Trailer Video</label>
+                            <input type="url" class="form-control" asp-for="Movie.VideoTrailer" id="linkVideoUrl" >
+                        </div>
                         <!-- Status -->
                         <div class="form-group">
                             <label for="status">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="Released" selected>Released</option>
-                                <option value="Unreleased">Unreleased</option>
+                            <select class="form-control" asp-for="Movie.Status">
+                                <option value="1" >Released</option>
+                                <option value="2" >Unreleased</option>
                             </select>
                         </div>
 
-                        <!-- Director ID -->
+                        <!-- Director -->
                         <div class="form-group">
-                            <label for="directorId">Director ID</label>
-                            <input type="number" class="form-control" id="directorId" name="directorId" value="123" required> <!-- Replace with actual director ID -->
+                            <label for="director">Director</label>
+                            <select class="form-control" asp-for="Movie.DirectorId" required>
+                                @foreach (var director in Model.Directors)
+                                {
+                                    <option value="@director.Value">
+                                        @director.Text
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Actors -->
+                        <div class="form-group">
+                            <label for="actors">Actors</label>
+                            <select class="form-control" asp-for="ActorIds" required>
+                                @foreach (var actor in Model.Actors)
+                                {
+                                    <option value="@actor.Value">
+                                        @actor.Text
+                                    </option>
+                                }
+                            </select>
                         </div>
 
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-primary">Update Movie</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
     <div class="sidebar-overlay" data-reff=""></div>
     <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
-    <script src="~/admin/assets/js/popper.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap.min.js"></script>
-    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
-    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
     <script src="~/admin/assets/js/select2.min.js"></script>
-    <script src="~/admin/assets/js/moment.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/admin/assets/js/app.js"></script>
 </body>
+
 </html>

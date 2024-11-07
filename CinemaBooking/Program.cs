@@ -18,7 +18,7 @@ using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketSeat;
 using CinemaBooking.Data;
-using CinemaBooking.ViewModels;
+using CinemaBooking.EmailModels;
 
 namespace CinemaBooking
 {
@@ -110,8 +110,8 @@ namespace CinemaBooking
             builder.Services.AddAutoMapper(typeof(TheaterProfile));
             builder.Services.AddAutoMapper(typeof(ShowtimeProfile));
             builder.Services.AddAutoMapper(typeof(RoomProfile));
+
             builder.Services.AddAutoMapper(typeof(SeatProfile));
-            builder.Services.AddAutoMapper(typeof(TicketProfile));
 
             var app = builder.Build();
 
@@ -146,6 +146,7 @@ namespace CinemaBooking
                 {
                     logger.LogInformation($"{header.Key}: {header.Value}");
                 }
+
                 await next();
             });
 
