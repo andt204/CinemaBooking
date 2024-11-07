@@ -54,7 +54,8 @@ namespace CinemaBooking
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
 
                     options.Events = new JwtBearerEvents
@@ -128,13 +129,11 @@ namespace CinemaBooking
             app.UseSession();
             app.UseStaticFiles();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
+
+
+            app.Use(async (context, next) =>
             {
-                endpoints.MapRazorPages();
-            });
-
-
-            app.Use(async (context, next) => {
                 var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
                 logger.LogInformation("Request Headers:");
                 foreach (var header in context.Request.Headers)

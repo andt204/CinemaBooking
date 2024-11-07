@@ -1,6 +1,6 @@
 ﻿@page
 @model CinemaBooking.Pages.Admin.Account.List
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Account List";
@@ -30,14 +30,30 @@
                 <div class="col-sm-4 col-3">
                     <h4 class="page-title">Account</h4>
                 </div>
-                <div class="col-sm-8 col-9 text-right m-b-20">
-                    <a href="/Admin/Account/Add" class="btn btn-primary float-right btn-rounded"><i class="fa fa-plus"></i> Add Account</a>
-                </div>
+
             </div>
-            <form action="employee" method="get" class="form-inline">
-                <input class="form-control mr-sm-2" name="searchValue" type="text" placeholder="Search"
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            <form method="get" class="form-inline">
+                <input class="form-control mr-sm-2" name="name" type="text" placeholder="Search"
                        aria-label="Search" style="height: 30px;">
-                <button class="btn btn-outline-success my-2 my-sm-0"
+                <button class="btn btn-outline-success my-2 my-sm-0 ml-2"
                         type="submit">
                     Search
                 </button>
@@ -54,6 +70,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th style="min-width: 110px;">Hire Date</th>
+                                <th style="min-width: 110px;">Status</th>
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
@@ -65,24 +82,41 @@
                                     <td>@account.FullName</td>
                                     <td>@account.Email</td>
                                     <td>@account.PhoneNumber</td>
-                                    <td>@account.DateOfBirth?.ToString("yyyy-MM-dd")</td>
+                                    <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>   
+                                    @if (account.Status == 1)
+                                    {
+                                        <td>Active</td>
+                                    }
+                                    else
+                                    {
+                                        <td>InActive</td>
+                                    }
+
+                                   
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                               aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                               aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="/Admin/Account/Edit">
-                                                    <i class="fa fa-pencil m-r-5"></i> Edit
-                                                </a>
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
-                                                    <i class="fa fa-trash-o m-r-5"></i> Delete
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie"
+                                                   data-id="@account.AccountId">
+                                                   
+                                                    @if (account.Status == 1)
+                                                    {
+                                                    <i class="fa fa-trash-o m-r-5">InActive</i>
+                                                    }
+                                                    else
+                                                    {
+                                                    <i class="fa fa-trash-o m-r-5">Active</i>
+                                                    }
                                                 </a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                             }
-                            
                             </tbody>
                         </table>
 
@@ -97,15 +131,29 @@
         <div class="modal-content">
             <div class="modal-body text-center">
                 <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
-                <h3>Are you sure want to delete this Account?</h3>
+                <h3>Are you sure you want to change this Account?</h3>
                 <div class="m-t-20">
                     <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <form method="post" asp-page-handler="DeleteAccount">
+                        <input type="hidden" id="accountIdToDelete" name="id"/>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#delete_movie').on('show.bs.modal', function (event) {
+            
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var accountId = button.data('id'); // Extract the AccountId from data-* attributes
+            var modal = $(this);
+            modal.find('#accountIdToDelete').val(accountId); // Set the value of the hidden input
+        });
+    });
+</script>
 <div class="sidebar-overlay" data-reff=""></div>
 <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
 <script src="~/admin/assets/js/popper.min.js"></script>

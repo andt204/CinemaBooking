@@ -60,24 +60,24 @@ ViewData["Title"] = "Payment";
         <div class="payment-header">
             <h2>Payment Options</h2>
         </div>
-           @*  <div class="ticket-summary">
+            <div class="ticket-summary">
                 <h3>Ticket Summary</h3>
-                <h6><strong>Movie Name:</strong> @Model.Movie.Title</h6>
-                <p><strong>Theatre:</strong> @Model.Theater.TheaterName</p>
-                <p><strong>Location:</strong> @Model.Theater.Location</p>
-                <p><strong>Date:</strong> @Model.formattedPublishTime</p>
-                <p><strong>Time:</strong> @Model.Showtime.StartHour</p>
+                <h6><strong>Movie Name:</strong> @Model.TicketInfo.Title</h6>
+                <p><strong>Theatre:</strong> @Model.TicketInfo.TheaterName</p>
+                <p><strong>Location:</strong> @Model.TicketInfo.Location</p>
+                <p><strong>Date:</strong> @Model.formattedBookingTime</p>
+                <p><strong>Time:</strong> @Model.TicketInfo.StartHour</p>
                 <p>
                     <strong>Seat Info:</strong>
-                    @foreach (var seat in Model.Seats)
+                    @foreach (var seat in Model.Seat)
                     {
                         <span>@seat.Column, @seat.Row</span>
-
+                    
                         <br />
                     }
                 </p>
-                <h4><strong>Total:</strong> @Model.Ticket.TicketPrice₫</h4>
-            </div> *@
+                <h4><strong>Total:</strong> @Model.TicketInfo.TicketPrice₫</h4>
+            </div> 
 
         <div class="ticket-note">
             <h4>Note:</h4>

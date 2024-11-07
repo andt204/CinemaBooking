@@ -4,11 +4,39 @@
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Create Director";
 }
-<h2>Create New Director</h2>
-<form method="post">
-    <div class="form-group">
-        <label for="DirectorName">Director Name</label>
-        <input type="text" id="DirectorName" name="DirectorName" class="form-control" required />
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Create New Director</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="content">
+            <h2>Create New Director</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger">@Model.ErrorMessage</div>
+            }
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="DirectorName">Director Name</label>
+                    <input type="text" id="DirectorName" name="DirectorName" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Save Director</button>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Save Director</button>
-</form>
+</body>
+</html>
