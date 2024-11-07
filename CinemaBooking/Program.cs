@@ -86,9 +86,10 @@ namespace CinemaBooking
   builder.Services.AddScoped<ITheaterRepository, TheaterRepository>();
   builder.Services.AddScoped<ITicketSeatRepository, TicketSeatRepository>();
 		// Register your service
-		builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
-		builder.Services.AddScoped<SeatSelectionService>();
-        builder.Services.AddScoped<TheaterAdminService>();
+		    builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
+		    builder.Services.AddScoped<SeatSelectionService>();
+            builder.Services.AddScoped<TheaterAdminService>();
+            builder.Services.AddScoped<RoomAdminService>();
 
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
 
