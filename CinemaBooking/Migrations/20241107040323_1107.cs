@@ -95,9 +95,11 @@ namespace CinemaBooking.Migrations
                 name: "Theater",
                 columns: table => new
                 {
-                    TheaterId = table.Column<int>(type: "int", nullable: false),
+                    TheaterId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TheaterName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<byte>(type: "tinyint", nullable: true)
                 },
                 constraints: table =>
                 {

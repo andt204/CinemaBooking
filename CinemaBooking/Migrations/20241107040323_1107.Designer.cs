@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    [Migration("20241107034249_1107")]
+    [Migration("20241107040323_1107")]
     partial class _1107
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex(new[] { "RoleId" }, "IX_Account_RoleId");
 
                     b.HasIndex(new[] { "FullName" }, "UQ__account__F3DBC57261217132")
                         .IsUnique();
@@ -114,9 +114,9 @@ namespace CinemaBooking.Migrations
                     b.HasKey("ActorMovieId")
                         .HasName("PK__MovieAct__EEA9AABEAA76A3E9");
 
-                    b.HasIndex("ActorId");
+                    b.HasIndex(new[] { "ActorId" }, "IX_ActorMovieAssignments_ActorId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_ActorMovieAssignments_MovieId");
 
                     b.ToTable("ActorMovieAssignments");
                 });
@@ -174,11 +174,11 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex(new[] { "AccountId" }, "IX_Comment_AccountId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_Comment_MovieId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex(new[] { "PostId" }, "IX_Comment_PostId");
 
                     b.ToTable("Comment", (string)null);
                 });
@@ -253,7 +253,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("MovieId");
 
-                    b.HasIndex("DirectorId");
+                    b.HasIndex(new[] { "DirectorId" }, "IX_Movie_DirectorId");
 
                     b.ToTable("Movie", (string)null);
                 });
@@ -274,9 +274,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("MovieCategoryId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex(new[] { "CategoryId" }, "IX_MovieCategoryAssignments_CategoryId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_MovieCategoryAssignments_MovieId");
 
                     b.ToTable("MovieCategoryAssignments");
                 });
@@ -303,7 +303,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex(new[] { "TicketId" }, "IX_Payment_TicketId");
 
                     b.ToTable("Payment", (string)null);
                 });
@@ -339,7 +339,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex(new[] { "AccountId" }, "IX_Post_AccountId");
 
                     b.ToTable("Post", (string)null);
                 });
@@ -386,9 +386,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("RoomId");
 
-                    b.HasIndex("RoomTypeId");
+                    b.HasIndex(new[] { "RoomTypeId" }, "IX_Room_RoomTypeId");
 
-                    b.HasIndex("TheaterId");
+                    b.HasIndex(new[] { "TheaterId" }, "IX_Room_TheaterId");
 
                     b.ToTable("Room", (string)null);
                 });
@@ -447,9 +447,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("SeatId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex(new[] { "RoomId" }, "IX_Seat_RoomId");
 
-                    b.HasIndex("SeatTypeId");
+                    b.HasIndex(new[] { "SeatTypeId" }, "IX_Seat_SeatTypeId");
 
                     b.ToTable("Seat", (string)null);
                 });
@@ -497,9 +497,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("ShowtimeId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_Showtime_MovieId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex(new[] { "RoomId" }, "IX_Showtime_RoomId");
 
                     b.ToTable("Showtime", (string)null);
                 });
@@ -507,10 +507,16 @@ namespace CinemaBooking.Migrations
             modelBuilder.Entity("CinemaBooking.Data.Theater", b =>
                 {
                     b.Property<int>("TheaterId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TheaterId"), 1L, 1);
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("TheaterName")
                         .HasColumnType("nvarchar(max)");
@@ -545,9 +551,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex(new[] { "AccountId" }, "IX_Ticket_AccountId");
 
-                    b.HasIndex("ShowtimeId");
+                    b.HasIndex(new[] { "ShowtimeId" }, "IX_Ticket_ShowtimeId");
 
                     b.ToTable("Ticket", (string)null);
                 });
@@ -569,9 +575,9 @@ namespace CinemaBooking.Migrations
                     b.HasKey("TicketMovieId")
                         .HasName("PK__TicketMo__B0219649770C9F65");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_TicketMovieAssignments_MovieId");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex(new[] { "TicketId" }, "IX_TicketMovieAssignments_TicketId");
 
                     b.ToTable("TicketMovieAssignments");
                 });
@@ -592,9 +598,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("TicketSeatId");
 
-                    b.HasIndex("SeatId");
+                    b.HasIndex(new[] { "SeatId" }, "IX_TicketSeatAssignments_SeatId");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex(new[] { "TicketId" }, "IX_TicketSeatAssignments_TicketId");
 
                     b.ToTable("TicketSeatAssignments");
                 });
@@ -623,9 +629,9 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("VoteId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex(new[] { "AccountId" }, "IX_Vote_AccountId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex(new[] { "MovieId" }, "IX_Vote_MovieId");
 
                     b.ToTable("Vote", (string)null);
                 });
