@@ -9,10 +9,10 @@ namespace CinemaBooking.Pages.Admin.Theater
 {
     public class AddModel : PageModel
     {
-        private readonly TheaterAdminService _theaterService;
+        private readonly TheaterService _theaterService;
 
         // Constructor
-        public AddModel(TheaterAdminService theaterService)
+        public AddModel(TheaterService theaterService)
         {
             _theaterService = theaterService;
         }
@@ -30,10 +30,10 @@ namespace CinemaBooking.Pages.Admin.Theater
             }
 
             // Set default status to Active
-            Theater.Status = TheaterStatus.Active;
+            Theater.Status = TheaterStatus.Available;  
 
             await _theaterService.CreateTheaterAsync(Theater);
-            TempData["SuccessMessage"] = "Theater created successfully.";
+            TempData["SuccessCreateTheaterMessage"] = "Theater created successfully.";
             return RedirectToPage("/Admin/Theater/List");
         }
     }

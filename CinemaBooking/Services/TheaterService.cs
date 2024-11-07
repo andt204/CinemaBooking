@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
 {
-    public class TheaterAdminService
+    public class TheaterService
     {
         private readonly CinemaBookingContext _context;
         private readonly IMapper _mapper;
 
-        public TheaterAdminService(CinemaBookingContext context, IMapper mapper)
+        public TheaterService(CinemaBookingContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
 {
-    public class RoomAdminService
+    public class RoomService
     {
         private readonly CinemaBookingContext _context;
         private readonly IMapper _mapper;
 
-        public RoomAdminService(CinemaBookingContext context, IMapper mapper)
+        public RoomService(CinemaBookingContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -80,10 +80,56 @@ namespace CinemaBooking.Services
                         TheaterId = room.Theater.TheaterId,
                         TheaterName = room.Theater.TheaterName,
                         Location = room.Theater.Location,
-                        Status = room.Theater.Status == 0 ? TheaterStatus.Active : TheaterStatus.Inactive
+                        Status = room.Theater.Status == 0 ? TheaterStatus.Available : TheaterStatus.Unavailable
                     } : null
                 })
                 .ToListAsync();
         }
+
+        public async Task CreateRoomAsync(RoomDto roomDto)
+        {
+            // Map RoomDto to Room entity
+            var room = _mapper.Map<Room>(roomDto);
+
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<RoomDto?> GetRoomByIdAsync(int roomId)
+        {
+            var room = await _context.Rooms
+                .Include(r => r.RoomType)
+                .Include(r => r.Theater)
+                .FirstOrDefaultAsync(r => r.RoomId == roomId);
+
+            return room != null ? _mapper.Map<RoomDto>(room) : null;
+        }
+
+        public async Task UpdateRoomAsync(RoomDto roomDto)
+        {
+            // Find the existing room entity
+            var room = await _context.Rooms.FindAsync(roomDto.RoomId);
+
+            if (room == null)
+            {
+                throw new KeyNotFoundException("Room not found.");
+            }
+
+            // Update the entity with the new values from the DTO
+            _mapper.Map(roomDto, room);
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task SetRoomStatusAsync(int roomId, RoomStatus status)
+        {
+            var room = await _context.Rooms.FindAsync(roomId);
+            if (room != null)
+            {
+                room.Status = (byte)status; 
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
     }
 }

@@ -92,14 +92,15 @@ namespace CinemaBooking
             // Register your service
             builder.Services.AddScoped<CinemaSelectionService>(); // Register CinemaSelectionService
             builder.Services.AddScoped<SeatSelectionService>();
-            builder.Services.AddScoped<TheaterAdminService>();
-            builder.Services.AddScoped<RoomAdminService>();
+            builder.Services.AddScoped<TheaterService>();
+            builder.Services.AddScoped<RoomService>();
+            builder.Services.AddScoped<RoomTypeService>();
 
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
 
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-
+            // Configure DbContext with SQL Server
+            builder.Services.AddDbContext<CinemaBookingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
 
             // Add services to the container
             builder.Services.AddRazorPages();
