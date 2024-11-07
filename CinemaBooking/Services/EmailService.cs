@@ -1,29 +1,36 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Options;
+using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
+using CinemaBooking.EmailModels;
 
 namespace CinemaBooking.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly string _smtpServer = "smtp.example.com"; // Thay bằng SMTP server của bạn
-    private readonly string _smtpUser = "your-email@example.com"; // Tài khoản gửi email
-    private readonly string _smtpPassword = "your-email-password"; // Mật khẩu email
-
-    public void SendEmail(string to, string subject, string body)
+    private readonly SmtpSettings _smtpSettings;
+   public EmailService(IOptions<SmtpSettings> smtpSettings)
     {
-        var message = new MailMessage
+        _smtpSettings = smtpSettings.Value;
+    }
+    public async Task SendEmailAsync(string toEmail, string subject, string body)
+    {
+        using (var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port))
         {
-            From = new MailAddress(_smtpUser),
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = true
-        };
-        message.To.Add(to);
+            client.Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password);
+            client.EnableSsl = true;
 
-        using (var client = new SmtpClient(_smtpServer))
-        {
-            client.Credentials = new NetworkCredential(_smtpUser, _smtpPassword);
-            client.Send(message);
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_smtpSettings.FromEmail),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            mailMessage.To.Add(toEmail);
+
+            await client.SendMailAsync(mailMessage);
         }
     }
 }

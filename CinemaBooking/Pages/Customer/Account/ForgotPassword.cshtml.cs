@@ -1,4 +1,8 @@
-﻿using CinemaBooking.Services;
+﻿using CinemaBooking.Data;
+using CinemaBooking.EmailModels;
+using CinemaBooking.Helper;
+using CinemaBooking.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -6,39 +10,42 @@ namespace CinemaBooking.Pages.Customer.Account;
 
 public class ForgotPassword : PageModel
 {
-    private readonly IEmailService _emailService; // Giả sử bạn đã tạo một dịch vụ gửi email
-    private readonly IUserService _userService; // Dịch vụ để lấy người dùng từ email
+    private readonly CinemaBookingContext _context;
+    private readonly IEmailService _emailService;
 
-    public ForgotPassword(IEmailService emailService, IUserService userService)
+    public ForgotPassword(CinemaBookingContext context, IEmailService emailService)
     {
+        _context = context;
         _emailService = emailService;
-        _userService = userService;
     }
 
-    [BindProperty]
-    public string Email { get; set; }
 
-    public IActionResult OnPost()
+    [BindProperty] public string Email { get; set; }
+
+    public string Message { get; set; }
+
+
+    public async Task OnPostAsync()
     {
-        if (string.IsNullOrEmpty(Email))
+        var user =  _context.Accounts.Where(a => a.Email == Email).FirstOrDefault();
+
+        if (user != null)
         {
-            ModelState.AddModelError(string.Empty, "Email không hợp lệ.");
-            return Page();
-        }
+            var newPassword = PasswordGenerator.GeneratePassword(8);
 
-        var user = _userService.GetUserByEmail(Email);
-        if (user == null)
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            _context.Accounts.Update(user);
+
+            var subject = "Your new Password";
+            var body = $"Your new Password is: {newPassword}";
+            await _emailService.SendEmailAsync(user.Email, subject, body);
+
+            Message = "Your password has been sent to your email address";
+        }
+        else
         {
-            ModelState.AddModelError(string.Empty, "Email không tồn tại.");
-            return Page();
+            Message = "Not found this email address.";
         }
-
-        var newPassword = _userService.GenerateNewPassword(user); // Hàm tạo mật khẩu mới
-
-        // Gửi email chứa mật khẩu mới
-        var emailContent = $"Mật khẩu mới của bạn là: {newPassword}";
-        _emailService.SendEmail(Email, "Mật khẩu mới", emailContent);
-
-        return RedirectToPage("/Account/ResetPasswordConfirmation"); // Trang xác nhận
     }
 }
