@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaBooking.Pages.Admin.Movie
 {
+    [Authorize(Roles = "Admin")]
     public class UpdateMovieModel : PageModel
     {
         private readonly CinemaBookingContext _context;

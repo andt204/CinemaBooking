@@ -1,11 +1,13 @@
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Admin.Theater
 {
+    [Authorize(Roles = "Admin")]
     public class UpdateModel : PageModel
     {
         private readonly TheaterService _theaterService;

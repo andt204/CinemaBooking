@@ -1,9 +1,10 @@
 ﻿using CinemaBooking.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages.Admin.Account;
-
+[Authorize(Roles = "Admin")]
 public class Delete : PageModel
 {
     private readonly CinemaBookingContext _context;

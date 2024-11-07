@@ -3,9 +3,12 @@ using CinemaBooking.ViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using CinemaBooking.Enum;
+using Microsoft.AspNetCore.Authorization;
 namespace CinemaBooking.Pages.Admin.Theater;
+[Authorize(Roles = "Admin")]
 public class ListModel : PageModel
 {
+
     private readonly TheaterService _theaterService;
 
     public ListModel(TheaterService theaterService)
