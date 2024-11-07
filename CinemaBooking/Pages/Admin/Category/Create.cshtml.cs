@@ -21,14 +21,14 @@ namespace CinemaBooking.Pages.Admin.Category
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Kiểm tra ModelState trước
+            // Check ModelState first
             if (!ModelState.IsValid)
                 return Page();
 
-            // Kiểm tra xem danh mục đã tồn tại chưa
+            // Check if the category already exists
             if (await _context.Categories.AnyAsync(c => c.CategoryName == CategoryName))
             {
-                ModelState.AddModelError(string.Empty, "Danh mục này đã tồn tại!"); // Thêm thông báo lỗi vào ModelState
+                ModelState.AddModelError(string.Empty, "This category already exists!"); // Add error message to ModelState
                 return Page();
             }
 
@@ -36,9 +36,8 @@ namespace CinemaBooking.Pages.Admin.Category
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Danh mục đã được thêm thành công!";
-            return RedirectToPage("/Admin/Movie/CreateMovie");
+            TempData["SuccessMessage"] = "Category has been successfully added!";
+            return Page();
         }
-
     }
 }
