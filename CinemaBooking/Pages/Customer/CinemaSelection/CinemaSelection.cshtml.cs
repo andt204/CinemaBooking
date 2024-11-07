@@ -4,13 +4,19 @@ using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
 using System.Threading.Tasks;
 using System.Net.WebSockets;
+using Microsoft.AspNetCore.Authorization;
+using CinemaBooking.Data;
+using CinemaBooking.Helper;
 
 namespace CinemaBooking.Pages.Customer.Booking {
-	public class CinemaSelectionModel : PageModel {
+    [Authorize(Roles = "Customer")]
+    public class CinemaSelectionModel : PageModel {
 		private readonly CinemaSelectionService _cinemaSelectionService;
-
-		// Property to hold the movie data
-		public MovieDto Movie { get; set; }
+        private readonly CinemaBookingContext _context = new CinemaBookingContext();
+        [BindProperty]
+        public Data.Account account { get; set; }
+        // Property to hold the movie data
+        public MovieDto Movie { get; set; }
 		public List<TheaterDto> Theaters { get; set; } = new List<TheaterDto>();
 
 		// Constructor injection for the service
@@ -21,8 +27,18 @@ namespace CinemaBooking.Pages.Customer.Booking {
 
 		public async Task OnGet(int movieId)
 		{
-			// Check if movieId is valid
-			if (movieId <= 0)
+            // Check if movieId is valid
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
+            if (movieId <= 0)
 			{
 				// Handle invalid movieId case
 				Movie = new MovieDto

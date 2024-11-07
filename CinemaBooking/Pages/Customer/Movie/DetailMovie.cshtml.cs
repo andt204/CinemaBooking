@@ -23,8 +23,10 @@ namespace CinemaBooking.Pages.Customer.Movie
 		private readonly CinemaBookingContext _context;
         private readonly IVoteRepository _voteRepository;
         private readonly ICommentRepository _commentRepository;
-
+     
+        [BindProperty]
         public Data.Account account { get; set; }
+  
         public DetailMovieModel(CinemaBookingContext context, ICommentRepository commentRepository, IVoteRepository voteRepository)
 		{
 			_context = context;
