@@ -75,14 +75,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach (var account in Model.Accounts)
+                            @if (Model.Accounts == null)
+                            {
+                                <p>No data</p>
+                            }
+                            else
+                            {
+                                @foreach (var account in Model.Accounts)
                             {
                                 <tr>
                                     <td>@account.AccountId</td>
                                     <td>@account.FullName</td>
                                     <td>@account.Email</td>
                                     <td>@account.PhoneNumber</td>
-                                    <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>   
+                                    <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>
                                     @if (account.Status == 1)
                                     {
                                         <td>Active</td>
@@ -92,7 +98,7 @@
                                         <td>InActive</td>
                                     }
 
-                                   
+
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -100,23 +106,40 @@
                                                 <i class="fa fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie"
-                                                   data-id="@account.AccountId">
-                                                   
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@account.AccountId">
                                                     @if (account.Status == 1)
                                                     {
-                                                    <i class="fa fa-trash-o m-r-5">InActive</i>
+                                                        <i class="fa fa-trash-o m-r-5">InActive</i>
                                                     }
                                                     else
                                                     {
-                                                    <i class="fa fa-trash-o m-r-5">Active</i>
+                                                        <i class="fa fa-trash-o m-r-5">Active</i>
                                                     }
                                                 </a>
                                             </div>
                                         </div>
                                     </td>
+                                    <div id="delete_room_@account.AccountId" class="modal fade delete-modal" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                    <h3>Are you sure you want to delete this Account?</h3>
+                                                    <div class="m-t-20">
+                                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                                        <form method="post" style="display:inline;">
+                                                            <input type="hidden" name="id" value="@account.AccountId"/>
+                                                            <button type="submit" class="btn btn-danger">Action</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </tr>
                             }
+                            }
+                            
                             </tbody>
                         </table>
 
@@ -124,36 +147,23 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div id="delete_movie" class="modal fade delete-modal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
-                <h3>Are you sure you want to change this Account?</h3>
-                <div class="m-t-20">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                    <form method="post" asp-page-handler="DeleteAccount">
-                        <input type="hidden" id="accountIdToDelete" name="id"/>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+        <div id="delete_room" class="modal fade delete-modal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <img src="assets/img/sent.png" alt="" width="50" height="46">
+                        <h3>Are you sure want to delete this Account?</h3>
+                        <div class="m-t-20">
+                            <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('#delete_movie').on('show.bs.modal', function (event) {
-            
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var accountId = button.data('id'); // Extract the AccountId from data-* attributes
-            var modal = $(this);
-            modal.find('#accountIdToDelete').val(accountId); // Set the value of the hidden input
-        });
-    });
-</script>
+
 <div class="sidebar-overlay" data-reff=""></div>
 <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
 <script src="~/admin/assets/js/popper.min.js"></script>

@@ -1,37 +1,22 @@
 ﻿using CinemaBooking.Data;
-using CinemaBooking.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages.Admin.Account;
 
-public class List : PageModel
+public class Delete : PageModel
 {
-    private readonly IAccountRepository _accountRepository;
     private readonly CinemaBookingContext _context;
 
-    public List(IAccountRepository accountRepository, CinemaBookingContext context)
+    public Delete( CinemaBookingContext context)
     {
-        _accountRepository = accountRepository;
         _context = context;
     }
 
-    public IEnumerable<Data.Account> Accounts { get; set; }
-
-    public string name { get; set; }
-
-    public async Task OnGetAsync(string? name)
+    public void OnGet()
     {
-        if (name != null)
-        {
-            Accounts = await _accountRepository.GetByNameAsync(name);
-        }
-        else
-        {
-            Accounts = await _accountRepository.GetListAsync();
-        }
+        
     }
-
     public async Task<IActionResult> OnPostAsync(int id)        
     {
         var account = await _context.Accounts.FindAsync(id);
@@ -52,6 +37,6 @@ public class List : PageModel
             TempData["ErrorMessage"] = "Account not found!";
         }
 
-        return RedirectToPage();
+        return Page();
     }
 }

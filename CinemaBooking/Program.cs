@@ -18,6 +18,7 @@ using CinemaBooking.Repositories.Ticket;
 using CinemaBooking.Repositories.TicketMovie;
 using CinemaBooking.Repositories.TicketSeat;
 using CinemaBooking.Data;
+using CinemaBooking.EmailModels;
 
 namespace CinemaBooking
 {
@@ -95,10 +96,10 @@ namespace CinemaBooking
             builder.Services.AddScoped<RoomAdminService>();
 
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
-            // Configure DbContext with SQL Server
-            builder.Services.AddDbContext<CinemaBookingContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 
             // Add services to the container
             builder.Services.AddRazorPages();
