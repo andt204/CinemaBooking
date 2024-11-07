@@ -42,7 +42,7 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
 
 			if (!hasAvailableSeat)
 			{
-				TempData["ErrorMessage"] = "Hết chỗ cho showtime này.";
+				TempData["ErrorMessage"] = "There are no seats available for this showtime.";
 			}
 
 			return Page();
