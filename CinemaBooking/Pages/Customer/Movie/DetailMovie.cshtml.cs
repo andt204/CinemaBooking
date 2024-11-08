@@ -1,158 +1,166 @@
 ﻿using CinemaBooking.Helper;
-using CinemaBooking.Repositories;
-using CinemaBooking.Repositories.Movie;
-using CinemaBooking.Repositories.Post;
-using CinemaBooking.Repositories.Vote;
-using CinemaBooking.Repositories.Comment;
-
-using CinemaBooking.ViewModels;
+using CinemaBooking.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
-
-using CinemaBooking.Data;
+using System.Linq;
+using CinemaBooking.ViewModels;
 
 namespace CinemaBooking.Pages.Customer.Movie
 {
     public class DetailMovieModel : PageModel
-	{
-		private readonly CinemaBookingContext _context;
-        private readonly IVoteRepository _voteRepository;
-        private readonly ICommentRepository _commentRepository;
+    {
+        private readonly CinemaBookingContext _context;
+        private readonly MovieInteractionService _movieInteractionService;
 
         public Data.Account account { get; set; }
-        public DetailMovieModel(CinemaBookingContext context, ICommentRepository commentRepository, IVoteRepository voteRepository)
-		{
-			_context = context;
-            _commentRepository = commentRepository;
-            _voteRepository = voteRepository;
-		}
+        public Data.Movie Movie { get; set; }
+        public List<CommentDto> Comments { get; set; }
+        public double AverageRating { get; set; }
+        public List<Category> Categories { get; set; } = new List<Category>();
+        public List<Actor> Actors { get; set; } = new List<Actor>();
+        public Director Director { get; set; }
+        public bool HasUserRated { get; set; }
+        public int? UserRating { get; set; }
 
-		public Data.Movie Movie { get; set; }
-		public List<Showtime> Showtimes { get; set; } = new List<Showtime>(); // List to hold showtimes
-		public List<Category> Categories { get; set; } = new List<Category>(); // List to hold categories
-        public List<Actor> Actors { get; set; } = new List<Actor>(); // List to hold actors
-        public Director Director { get; set; } // To hold director information
+        [BindProperty(SupportsGet = true)]
+        public int MovieId { get; set; }
 
-        public List<VoteDto> Votes { get; set; } = new List<VoteDto>();
-        public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
         [BindProperty]
         public int Rating { get; set; }
 
         [BindProperty]
         public string CommentContent { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int movieId) // Using movieId as the parameter
-		{
-            // Fetch the movie details
+        [TempData]
+        public string SuccessMessage { get; set; }
+
+        [TempData]
+        public string ErrorMessage { get; set; }
+
+        public DetailMovieModel(CinemaBookingContext context, MovieInteractionService movieInteractionService)
+        {
+            _context = context;
+            _movieInteractionService = movieInteractionService;
+        }
+
+        private async Task<int?> GetCurrentUserIdAsync()
+        {
             var token = Request.Cookies["jwtToken"];
-            if (token != null)
+            if (string.IsNullOrEmpty(token))
             {
-                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-                if (email != null)
+                return null;
+            }
+
+            var accountIdStr = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                return accountId;
+            }
+            return null;
+        }
+
+        private async Task LoadMovieData()
+        {
+            Movie = await _context.Movies
+                .Include(m => m.MovieCategoryAssignments)
+                .ThenInclude(mc => mc.Category)
+                .Include(m => m.ActorMovieAssignments)
+                .ThenInclude(am => am.Actor)
+                .Include(m => m.Director)
+                .FirstOrDefaultAsync(m => m.MovieId == MovieId);
+
+            if (Movie != null)
+            {
+                var userId = await GetCurrentUserIdAsync();
+                Comments = await _movieInteractionService.GetMovieCommentsAsync(MovieId);
+                AverageRating = await _movieInteractionService.GetMovieAverageRatingAsync(MovieId);
+
+                if (userId.HasValue)
                 {
-                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-                    ViewData["Account"] = account; // Pass account data to ViewData
+                    account = await _context.Accounts.FindAsync(userId.Value);
+                    var existingVote = await _context.Votes
+                        .FirstOrDefaultAsync(v => v.MovieId == MovieId && v.AccountId == userId.Value);
+
+                    HasUserRated = existingVote != null;
+                    UserRating = existingVote?.Rating;
                 }
+
+                Categories = Movie.MovieCategoryAssignments.Select(mc => mc.Category).ToList();
+                Actors = Movie.ActorMovieAssignments.Select(am => am.Actor).ToList();
+                Director = Movie.Director;
             }
-            Movie = await _context.Movies.FindAsync(movieId);
+        }
 
-			if (Movie == null)
-			{
-				return NotFound(); // Return 404 if movie not found
-			}
-
-			// Fetch showtimes associated with the movie using the ShowtimeMovieAssignments
-			//Showtimes = await _context.ShowtimeMovieAssignments
-			//	.Where(s => s.MovieId == movieId) // Get assignments for the specific movie
-			//	.Select(s => s.Showtime) // Get the related showtime
-			//	.ToListAsync();
-
-			Categories = await _context.MovieCategoryAssignments
-				.Where(mc => mc.MovieId == movieId) // Get assignments for the specific movie
-				.Select(mc => mc.Category) // Get the related category
-				.ToListAsync();
-
-            Actors = await _context.ActorMovieAssignments
-                .Where(am => am.MovieId == movieId)
-                .Select(am => am.Actor)
-                .ToListAsync();
-
-           Director = await _context.Directors
-                .Where(d => d.DirectorId == Movie.DirectorId)
-                .FirstOrDefaultAsync();
-
-            // Fetch votes and comments
-            Votes = await _context.Votes
-                .Where(v => v.MovieId == movieId)
-                .Select(v => new VoteDto
-                {
-                    VoteId = v.VoteId,
-                    Rating = v.Rating,
-                    FullName = v.Account.FullName,
-                    VoteDate = v.VoteDate
-                }).ToListAsync();
-            double averageRating = 0;
-            if (Votes.Any())
+        public async Task<IActionResult> OnGetAsync(int movieId)
+        {
+            MovieId = movieId;
+            await LoadMovieData();
+            if (Movie == null)
             {
-                averageRating = Votes.Average(v => v.Rating);
+                return NotFound();
             }
-            ViewData["AverageRating"] = averageRating;
-
-            Comments = await _context.Comments
-                .Where(c => c.MovieId == movieId)
-                .Select(c => new CommentDto
-                {
-                    CommentId = c.CommentId,
-                    Content = c.Content,
-                    FullName = c.Account.FullName,
-                    CreatedAt = c.CreatedAt
-                }).ToListAsync();
             return Page();
         }
-        public async Task<IActionResult> OnPostRateAsync(int movieId)
+
+        public async Task<IActionResult> OnPostSubmitReviewAsync()
         {
-            if (account == null)
+            MovieId = Int32.Parse(Request.Form["movieId"]);
+            var userId = await GetCurrentUserIdAsync();
+
+            if (!userId.HasValue)
             {
                 return RedirectToPage("/Account/Login");
             }
 
-            var vote = new Vote
-            {
-                MovieId = movieId,
-                AccountId = account.AccountId,
-                Rating = Rating,
-                VoteDate = DateTime.UtcNow
-            };
-            await _voteRepository.CreateAsync(vote);
-            
-            return RedirectToPage(new { movieId });
-        }
+            var hasErrors = false;
 
-
-        // Phương thức để lưu comment
-        public async Task<IActionResult> OnPostCommentAsync(int movieId)
-        {
-            if (ModelState.IsValid && !string.IsNullOrWhiteSpace(CommentContent))
+            // Xử lý Rating
+            if (!string.IsNullOrEmpty(Request.Form["rating"]))
             {
-                var comment = new Comment
+                Rating = Int32.Parse(Request.Form["rating"]);
+                if (Rating < 1 || Rating > 5)
                 {
-                    MovieId = movieId,
-                    AccountId = account.AccountId,
-                    Content = CommentContent,
-                    CreatedAt = DateTime.UtcNow
-                };
-                await _commentRepository.CreateAsync(comment);
-        }
+                    TempData["ErrorMessage"] = "Rating must be between 1 and 5.";
+                    hasErrors = true;
+                }
+                else
+                {
+                    var ratingSuccess = await _movieInteractionService.AddVoteAsync(MovieId, userId.Value, Rating);
+                    if (!ratingSuccess)
+                    {
+                        TempData["ErrorMessage"] = "Failed to submit rating.";
+                        hasErrors = true;
+                    }
+                }
+            }
 
-            return RedirectToPage(new { movieId
-    });
+            // Xử lý Comment
+            CommentContent = Request.Form["CommentContent"].ToString();
+            if (!string.IsNullOrWhiteSpace(CommentContent))
+            {
+                var commentSuccess = await _movieInteractionService.AddCommentAsync(MovieId, userId.Value, CommentContent);
+                if (!commentSuccess)
+                {
+                    TempData["ErrorMessage"] = string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString())
+                        ? "Failed to post comment."
+                        : TempData["ErrorMessage"] + " And failed to post comment.";
+                    hasErrors = true;
+                }
+            }
+
+            // Nếu cả hai đều thành công
+            if (!hasErrors)
+            {
+                TempData["SuccessMessage"] = "Review submitted successfully!";
+                CommentContent = string.Empty;
+            }
+
+            await LoadMovieData();
+            return Page();
         }
     }
-
 }
-

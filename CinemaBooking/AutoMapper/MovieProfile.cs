@@ -8,7 +8,14 @@ namespace CinemaBooking.AutoMapper
 {
     public class MovieProfile : Profile {
 		public MovieProfile() {
-			CreateMap<Movie, MovieDto>().ReverseMap();	
-		}
+			CreateMap<Movie, MovieDto>().ReverseMap();
+            CreateMap<Vote, VoteDto>()
+                .ForMember(dest => dest.FullName,
+                          opt => opt.MapFrom(src => src.Account.FullName));
+
+            CreateMap<Comment, CommentDto>()
+                .ForMember(dest => dest.FullName,
+                            opt => opt.MapFrom(src => src.Account.FullName));
+        }
 	}
 }
