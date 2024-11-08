@@ -7,13 +7,19 @@ using CinemaBooking.Data;
 using Microsoft.EntityFrameworkCore;
 using CinemaBooking.ViewModels.Request;
 using CinemaBooking.Enum;
+using Microsoft.AspNetCore.Authorization;
+using CinemaBooking.Helper;
+using System.Security.Principal;
 
 namespace CinemaBooking.Pages.Customer.CinemaSelection
 {
+    [Authorize(Roles = "Customer")]
     public class SeatSelectionModel : BasePageCustomerModel
     {
         private readonly SeatSelectionService _seatSelectionService;
-
+        private readonly CinemaBookingContext _context=new CinemaBookingContext();
+        [BindProperty]
+        public Data.Account account { get; set; }
         // Property to hold the showtime details
         public ShowtimeDto Showtime { get; set; }
 
@@ -22,10 +28,20 @@ namespace CinemaBooking.Pages.Customer.CinemaSelection
         {
             _seatSelectionService = seatSelectionService;
         }
-
-		public async Task<IActionResult> OnGet(int showtimeId)
+       
+        public async Task<IActionResult> OnGet(int showtimeId)
 		{
-			LoadUserClaims();
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
+            LoadUserClaims();
 
 			// Fetch the showtime details including the seats
 			Showtime = await _seatSelectionService.GetShowtimeById(showtimeId);

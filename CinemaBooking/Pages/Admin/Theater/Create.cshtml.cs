@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using CinemaBooking.Enum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaBooking.Pages.Admin.Theater
 {
+    [Authorize(Roles = "Admin")]
     public class AddModel : PageModel
     {
         private readonly TheaterService _theaterService;

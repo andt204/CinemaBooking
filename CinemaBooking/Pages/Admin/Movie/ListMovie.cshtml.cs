@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaBooking.Pages.Admin.Movie
 {
+    [Authorize(Roles = "Admin")]
     public class ListMovieModel : PageModel
     {
         private readonly CinemaBookingContext _context;

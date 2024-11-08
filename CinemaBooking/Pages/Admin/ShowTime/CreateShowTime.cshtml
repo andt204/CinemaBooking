@@ -1,5 +1,5 @@
-﻿@page
-@model CinemaBooking.Pages.Admin.ShowTime.CreateShowTimeModel
+﻿    @page
+    @model CinemaBooking.Pages.Admin.ShowTime.CreateShowTimeModel
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Movie List";
@@ -10,98 +10,678 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .delete-slot-btn {
+            background-color: transparent;
+            color: red;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+            .delete-slot-btn:hover {
+                color: darkred;
+            }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+
+        .selection-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #theaterSelect {
+            display: none;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            position: relative;
+            display: none;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #007BFF;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .arrow-left {
+            left: -25px;
+        }
+
+        .arrow-right {
+            right: -25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .slot {
+            background-color: #d5f8f9;
+            border-radius: 5px;
+            padding: 10px;
+            height: auto;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+            .slot.disabled {
+                background-color: #f1f1f1;
+                color: #aaa;
+                cursor: not-allowed;
+            }
+
+        .add-slot-btn {
+            display: block;
+            margin-top: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .add-slot-btn.disabled {
+                background-color: #f1f1f1;
+                color: #aaa;
+                cursor: not-allowed;
+            }
+    </style>
 </head>
 
 <body>
     <div class="page-wrapper">
         <div class="content">
             <div class="row">
-                <div class="col-sm-4 col-3">
-                    <h4 class="page-title">Create Showtime</h4>
+                <div>
+                    <h1 class="page-title" style="text-align:center">Schedule for Cinemas</h1>
                 </div>
                 <div class="col-sm-8 col-9 text-right m-b-20"></div>
-                <a href="/Admin/ShowTime/ShowTimeList" class="btn btn-primary float-right btn-rounded"><i class="fa fa-list"></i> Showtime List</a>
+                <!-- Dropdown selection for cinema and theater -->
+                <div class="selection-row">
+                    <div>
+                        <label for="cinemaSelect">Select Cinema:</label>
+                        <select id="cinemaSelect" class="form-control">
+                            <option value="">Select a Theater</option>
+                            @foreach (var cinema in Model.Cinemas)
+                            {
+                                <option value="@cinema.TheaterId">@cinema.TheaterName</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label for="theaterSelect">Select Room:</label>
+                        <select id="theaterSelect" class="form-control">
+                            <option value="">Select a Theater</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <i class="fas fa-chevron-left arrow arrow-left" id="prevWeek"></i>
+                    <i class="fas fa-chevron-right arrow arrow-right" id="nextWeek"></i>
+
+                    <table id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th>Time Slots</th>
+                                <th id="day1"></th>
+                                <th id="day2"></th>
+                                <th id="day3"></th>
+                                <th id="day4"></th>
+                                <th id="day5"></th>
+                                <th id="day6"></th>
+                                <th id="day7"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleBody">
+                            <!-- Dynamic rows for showtimes will be added here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <form action="/create-showtime" method="POST">
-                    <!-- Movie Selection -->
-                    <div class="form-group">
-                        <label for="movie">Movie</label>
-                        <select class="form-control" id="movie" name="movieId" required>
-                            <option value="">Select Movie</option>
-                            <option value="1">Inception</option>
-                            <option value="2">Interstellar</option>
-                            <option value="3">The Dark Knight</option>
-                            <!-- Thêm các phim khác từ DB -->
-                        </select>
+        <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSlotModalLabel">Add Showtime Slot</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <form id="addSlotForm">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="modalTheaterId">
+                            <input type="hidden" id="modalRoomId">
+                            <input type="hidden" id="modalDate">
+                            <div class="mb-3">
+                                <label id="displayDate" class="form-label" style="font-weight: bold; font-size: 16px;"></label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modalTheaterName" class="form-label">Theater Name</label>
+                                <input type="text" class="form-control" id="modalTheaterName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modalRoomName" class="form-label">Room Name</label>
+                                <input type="text" class="form-control" id="modalRoomName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="movieSelect" class="form-label">Select Movie</label>
+                                <select id="movieSelect" class="form-control">
+                                    <!-- Movies will be dynamically loaded here -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="startTime" class="form-label">Start Time</label>
+                                <input type="time" id="startTime" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="endTime" class="form-label">End Time</label>
+                                <input type="text" id="endTime" class="form-control" readonly>
+                            </div>
+                            <div class="mb-3">
 
-                    <!-- Room Selection -->
-                    <div class="form-group">
-                        <label for="room">Room</label>
-                        <select class="form-control" id="room" name="roomId" required>
-                            <option value="">Select Room</option>
-                            <option value="1">Room A</option>
-                            <option value="2">Room B</option>
-                            <option value="3">Room C</option>
-                            <!-- Thêm các phòng chiếu khác từ DB -->
-                        </select>
+                                <input type="date" class="form-control" id="modalDate" hidden>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitSlot">Submit</button>
+                        </form>
                     </div>
-
-                    <!-- Show Date -->
-                    <div class="form-group">
-                        <label for="showDate">Show Date</label>
-                        <input type="date" class="form-control" id="showDate" name="showDate" required>
-                    </div>
-
-                    <!-- Start Time -->
-                    <div class="form-group">
-                        <label for="startTime">Start Time</label>
-                        <input type="time" class="form-control" id="startTime" name="startTime" required>
-                    </div>
-
-                    <!-- End Time -->
-                    <div class="form-group">
-                        <label for="endTime">End Time</label>
-                        <input type="time" class="form-control" id="endTime" name="endTime" required>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select class="form-control" id="status" name="status" required>
-                            <option value="Scheduled">Scheduled</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Create Showtime</button>
-                </form>
+                </div>
             </div>
         </div>
+        <!-- Scripts -->
+        <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
+        <script src="~/admin/assets/js/popper.min.js"></script>
+        <script src="~/admin/assets/js/bootstrap.min.js"></script>
+        <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
+        <script src="~/admin/assets/js/select2.min.js"></script>
+        <script src="~/admin/assets/js/moment.min.js"></script>
+        <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="~/admin/assets/js/app.js"></script>
+
+
+        <script>
+            let isUpdateAction = false; // Biến để kiểm tra đang ở chế độ cập nhật hay thêm mới
+            let currentShowtimeId = null;
+            const cinemaSelect = document.getElementById('cinemaSelect');
+            const theaterSelect = document.getElementById('theaterSelect');
+            const tableContainer = document.querySelector('.table-container');
+            const prevWeekButton = document.getElementById('prevWeek');
+            const nextWeekButton = document.getElementById('nextWeek');
+            let currentWeekOffset = 0;
+
+            // Dữ liệu từ backend cho showtimes và cinemas
+            const showtimesData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Showtimes));
+            const cinemasData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Cinemas));
+            const movies = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Movies));
+
+            // Sự kiện khi chọn cinema
+            cinemaSelect.addEventListener('change', function () {
+                const selectedCinemaId = parseInt(cinemaSelect.value);
+                theaterSelect.innerHTML = '<option value="">Select a Room</option>';
+                const selectedCinema = cinemasData.find(cinema => cinema.TheaterId === selectedCinemaId);
+
+                if (selectedCinema && selectedCinema.Rooms && selectedCinema.Rooms.length > 0) {
+                    selectedCinema.Rooms.forEach(room => {
+                        const option = document.createElement('option');
+                        option.value = room.RoomId;
+                        option.textContent = room.RoomName;
+                        theaterSelect.appendChild(option);
+                    });
+
+                    // Hiển thị theaterSelect sau khi chọn rạp
+                    theaterSelect.style.display = 'block';
+                } else {
+                    // Ẩn theaterSelect nếu không có rạp nào được chọn
+                    theaterSelect.style.display = 'none';
+                }
+            });
+
+
+            // Sự kiện khi chọn phòng (theater)
+            theaterSelect.addEventListener('change', function () {
+                if (theaterSelect.value) {
+                    tableContainer.style.display = 'block';
+                    displayDates();
+                    populateSlots(cinemaSelect.value, theaterSelect.value);
+                } else {
+                    tableContainer.style.display = 'none';
+                }
+            });
+
+            // Hiển thị các ngày trong tuần hiện tại
+            function displayDates() {
+                const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                const now = new Date();
+                const startOfWeek = new Date();
+                startOfWeek.setDate(now.getDate() + currentWeekOffset * 7 - now.getDay() + 1);
+
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(startOfWeek);
+                    date.setDate(startOfWeek.getDate() + i);
+                    const dayElement = document.getElementById(`day${i + 1}`);
+
+                    // Hiển thị thứ ở trên, ngày ở dưới
+                    const weekdayText = weekdays[i];
+                    const dateText = date.toLocaleDateString(); // Hiển thị ngày theo giờ client
+                    dayElement.innerHTML = `<span>${weekdayText}</span><br><span>${dateText}</span>`;
+
+                    const localDate = date.toLocaleDateString('en-CA'); // Định dạng 'YYYY-MM-DD'
+                    dayElement.setAttribute('data-date', localDate);
+                    console.log("Heeloo", localDate);
+                }
+            }
+
+
+
+            function populateSlots(cinemaId, roomId) {
+                const scheduleBody = document.getElementById('scheduleBody');
+                scheduleBody.innerHTML = '';
+
+                // Filter showtimes by roomId
+                const filteredShowtimes = showtimesData.filter(showtime => showtime.RoomId === parseInt(roomId));
+
+                // Sort by date and start time
+                filteredShowtimes.sort((a, b) => {
+                    const dateA = new Date(a.Date);
+                    const dateB = new Date(b.Date);
+                    const timeA = a.StartHour;
+                    const timeB = b.StartHour;
+
+                    // Compare by date first, then by time
+                    return dateA - dateB || timeA.localeCompare(timeB);
+                });
+
+                const dayShowtimes = {};
+                for (let i = 1; i <= 7; i++) {
+                    dayShowtimes[i] = [];
+                }
+
+                const now = new Date(); // Lấy thời gian hiện tại của client
+                now.setSeconds(0, 0); // Đặt giây và mili giây về 0 để so sánh chính xác
+
+                const startOfWeek = new Date();
+                startOfWeek.setDate(now.getDate() + currentWeekOffset * 7 - now.getDay() + 1);
+                startOfWeek.setHours(0, 0, 0, 0);
+
+                filteredShowtimes.forEach(showtime => {
+                    const showtimeDate = new Date(showtime.Date);
+                    const dayIndex = Math.floor((showtimeDate - startOfWeek) / (1000 * 60 * 60 * 24)) + 1;
+
+                    if (dayIndex >= 1 && dayIndex <= 7) {
+                        const startHour = new Date(showtimeDate); // Ngày chiếu phim
+                        const [hours, minutes] = showtime.StartHour.split(":").map(Number);
+                        startHour.setHours(hours, minutes);
+                        const startTimeFormatted = startHour.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        const endTime = new Date(startHour);
+                        const movieLengthMinutes = showtime.Movie.Length;
+                        endTime.setMinutes(startHour.getMinutes() + movieLengthMinutes + 20);
+                        const endTimeFormatted = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        const slotElement = document.createElement('div');
+                        slotElement.classList.add('slot');
+                        slotElement.innerHTML = `<strong>${showtime.Movie.Title}</strong><br>${startTimeFormatted} - ${endTimeFormatted}`;
+
+                        // So sánh ngày và giờ của slot với ngày giờ hiện tại của client
+                        if (showtimeDate < now || (showtimeDate.getTime() === now.getTime() && startHour <= now)) {
+                            slotElement.classList.add('disabled');
+                        } else {
+                            // Add 'X' button to delete slot
+                            slotElement.onclick = () => openUpdateSlotModal(showtime);
+                            const deleteButton = document.createElement('button');
+                            deleteButton.classList.add('delete-slot-btn');
+                            deleteButton.textContent = 'X';
+                            deleteButton.onclick = () => deleteSlot(showtime.ShowtimeId);
+                            slotElement.appendChild(deleteButton);
+                        }
+
+                        dayShowtimes[dayIndex].push({
+                            element: slotElement,
+                            startTime: showtime.StartHour
+                        });
+                    }
+                });
+
+                // Sort slots within each day
+                for (let i = 1; i <= 7; i++) {
+                    dayShowtimes[i].sort((a, b) => a.startTime.localeCompare(b.startTime));
+                }
+
+                let maxRows = 0;
+                for (let i = 1; i <= 7; i++) {
+                    maxRows = Math.max(maxRows, dayShowtimes[i].length);
+                }
+
+                for (let rowIndex = 0; rowIndex < maxRows + 1; rowIndex++) {
+                    let row = document.createElement('tr');
+
+                    for (let dayIndex = 0; dayIndex <= 7; dayIndex++) {
+                        let cell = document.createElement('td');
+
+                        if (dayIndex === 0) {
+                            cell.textContent = `Slot ${rowIndex + 1}`;
+                        } else if (rowIndex < dayShowtimes[dayIndex].length) {
+                            cell.appendChild(dayShowtimes[dayIndex][rowIndex].element);
+                        } else if (rowIndex === dayShowtimes[dayIndex].length) {
+                            const addButton = document.createElement('button');
+                            addButton.classList.add('add-slot-btn');
+                            addButton.textContent = 'Add Slot';
+
+                            const today = new Date();
+                            const dayElement = document.getElementById(`day${dayIndex}`);
+                            const dayDate = new Date(dayElement.getAttribute('data-date'));
+                            dayDate.setHours(0, 0, 0, 0);
+                            console.log(today);
+                            console.log(dayDate);
+                            if (dayDate > today) {
+                                addButton.classList.remove('disabled');
+                                addButton.addEventListener('click', () => openAddSlotModal(dayIndex, dayElement.getAttribute('data-date')));
+                            } else {
+                                addButton.classList.add('disabled');
+                                addButton.style.backgroundColor = '#f1f1f1';
+                                addButton.style.color = '#aaa';
+                                addButton.style.cursor = 'not-allowed';
+                            }
+
+                            cell.appendChild(addButton);
+                        }
+                        row.appendChild(cell);
+                    }
+                    scheduleBody.appendChild(row);
+                }
+            }
+
+            // Function to delete a slot
+            // Function to delete a slot
+            function deleteSlot(showtimeId) {
+                if (confirm("Are you sure you want to delete this showtime?")) {
+                    $.ajax({
+                        url: '/Admin/ShowTime/DeleteShowTime', // Adjust URL based on your route
+                        type: 'POST', // Use POST to delete as Razor Pages may not handle DELETE easily
+                        data: {
+                            showtimeId: showtimeId, // Pass the showtime ID as data
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() // CSRF token
+                        },
+                        success: function (response) {
+                            console.log("Deleting showtime with ID:", showtimeId);
+                            console.log("Deleting showtime with ID:", cinemaSelect.value);
+                            console.log("Deleting showtime with ID:", theaterSelect.value);
+                            if (response.success) {
+                                alert("Showtime deleted successfully!");
+                                localStorage.setItem('selectedCinema', cinemaSelect.value);
+                                localStorage.setItem('selectedTheater', theaterSelect.value);
+                                window.location.reload(true);// Refresh slots
+                            } else {
+                                alert(response.message || "Failed to delete showtime.");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error Status:", status);
+                            console.error("Error:", error);
+                            console.error("Response Text:", xhr.responseText);
+                            alert(`Error deleting showtime:\nStatus: ${status}\nError: ${error}\nResponse: ${xhr.responseText}`);
+                        }
+                    });
+                }
+            }
+
+
+
+            // Tính toán tự động endTime khi chọn startTime
+            document.getElementById('startTime').addEventListener('change', function () {
+                const startTimeInput = document.getElementById('startTime').value;
+                const movieId = document.getElementById('movieSelect').value;
+
+                if (startTimeInput && movieId) {
+                    const selectedMovie = movies.find(movie => movie.MovieId == movieId);
+                    const movieLength = selectedMovie ? selectedMovie.Length : 0;
+
+                    const [hours, minutes] = startTimeInput.split(':').map(Number);
+                    const startDate = new Date();
+                    startDate.setHours(hours, minutes, 0, 0);
+
+                    const endDate = new Date(startDate);
+                    endDate.setMinutes(endDate.getMinutes() + movieLength + 20);
+                    const endTimeFormatted = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('endTime').value = endTimeFormatted;
+                }
+            });
+
+            // Hàm mở modal cho chế độ cập nhật
+            function openUpdateSlotModal(showtime) {
+                isUpdateAction = true; // Đặt chế độ thành "Update"
+                currentShowtimeId = showtime.ShowtimeId; // Lưu lại ID của slot cần cập nhật
+                document.getElementById('submitSlot').textContent = 'Update Slot'; // Thay đổi nút thành "Update Slot"
+
+                // Điền thông tin của slot vào modal
+                document.getElementById('modalTheaterName').value = cinemaSelect.options[cinemaSelect.selectedIndex].text;
+                document.getElementById('modalRoomName').value = theaterSelect.options[theaterSelect.selectedIndex].text;
+                const fullDate = showtime.Date; // Example: "2024-11-08T00:00:00"
+                const formattedDate = fullDate.split('T')[0]; // Should be "2024-11-08"
+                document.getElementById('modalDate').value = formattedDate;
+                document.getElementById('displayDate').textContent = `Show Date: ${formattedDate}`;
+                // Confirm in the console
+                console.log("Assigned date value:", document.getElementById('modalDate').value);
+                // Đặt giá trị cho movieSelect và startTime
+                const movieSelect = document.getElementById('movieSelect');
+                movieSelect.innerHTML = ''; // Clear existing options
+                movies.forEach(movie => {
+                    const option = document.createElement('option');
+                    option.value = movie.MovieId;
+                    option.textContent = movie.Title;
+                    movieSelect.appendChild(option);
+                });
+                movieSelect.value = showtime.Movie.MovieId;
+                document.getElementById('startTime').value = showtime.StartHour;
+
+                // Tự động tính toán endTime
+                calculateEndTime();
+
+                $('#addSlotModal').modal('show'); // Hiển thị modal
+            }
+            function calculateEndTime() {
+                const startTimeInput = document.getElementById('startTime').value;
+                const movieId = document.getElementById('movieSelect').value;
+
+                if (startTimeInput && movieId) {
+                    const selectedMovie = movies.find(movie => movie.MovieId == movieId);
+                    const movieLength = selectedMovie ? selectedMovie.Length : 0;
+
+                    const [hours, minutes] = startTimeInput.split(':').map(Number);
+                    const startDate = new Date();
+                    startDate.setHours(hours, minutes, 0, 0);
+
+                    const endDate = new Date(startDate);
+                    endDate.setMinutes(endDate.getMinutes() + movieLength + 20);
+                    const endTimeFormatted = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('endTime').value = endTimeFormatted;
+                }
+            }
+
+            // Gọi hàm calculateEndTime khi thay đổi startTime trong chế độ cập nhật
+            document.getElementById('startTime').addEventListener('change', calculateEndTime);
+            document.getElementById('movieSelect').addEventListener('change', calculateEndTime);
+            // Sự kiện khi bấm nút "Submit" trong modal
+            function openAddSlotModal(dayIndex, date) {
+                isUpdateAction = false; // Đặt chế độ thành "Add"
+                currentShowtimeId = null; // Không có ID showtime khi thêm mới
+                document.getElementById('submitSlot').textContent = 'Add Slot';
+
+                const theaterName = cinemaSelect.options[cinemaSelect.selectedIndex].text;
+                const roomName = theaterSelect.options[theaterSelect.selectedIndex].text;
+                const roomId = theaterSelect.value;
+                const dateObj = new Date(date);
+                const formattedDate = dateObj.toISOString().split('T')[0];
+
+                // Đặt lại các giá trị trong modal
+                document.getElementById('modalTheaterName').value = theaterName;
+                document.getElementById('modalRoomName').value = roomName;
+                document.getElementById('modalDate').value = formattedDate;
+                document.getElementById('startTime').value = '';
+                document.getElementById('endTime').value = ''; // Đặt endTime về trống trong chế độ thêm mới
+                document.getElementById('displayDate').textContent = `Show Date: ${formattedDate}`;
+
+                // Xóa các lựa chọn phim cũ và thêm các lựa chọn mới từ dữ liệu
+                const movieSelect = document.getElementById('movieSelect');
+                movieSelect.innerHTML = ''; // Xóa các lựa chọn cũ
+                movies.forEach(movie => {
+                    const option = document.createElement('option');
+                    option.value = movie.MovieId;
+                    option.textContent = movie.Title;
+                    movieSelect.appendChild(option);
+                });
+
+                $('#addSlotModal').modal('show'); // Hiển thị modal
+            }
+
+
+            document.getElementById('addSlotForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const roomId = theaterSelect.value;
+                const movieId = document.getElementById('movieSelect').value;
+                const startTime = document.getElementById('startTime').value;
+                const date = document.getElementById('modalDate').value;
+
+                const formData = {
+                    RoomId: roomId,
+                    MovieId: movieId,
+                    StartHour: startTime,
+                    Date: date,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                };
+
+                // Chỉ thêm `ShowtimeId` nếu đang ở chế độ cập nhật
+                if (isUpdateAction && currentShowtimeId) {
+                    formData.ShowtimeId = currentShowtimeId;
+                }
+
+                const url = isUpdateAction ? `/Admin/ShowTime/UpdateShowTime` : '/Admin/ShowTime/CreateShowTime';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            alert(isUpdateAction ? 'Showtime updated successfully!' : 'Showtime added successfully!');
+                            $('#addSlotModal').modal('hide');
+                            localStorage.setItem('selectedCinema', cinemaSelect.value);
+                            localStorage.setItem('selectedTheater', theaterSelect.value);
+                            window.location.reload(true);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        if (xhr.status === 400) {
+                            alert("Bad Request: " + xhr.responseText);
+                        } else {
+                            console.error("Error:", error);
+                            alert(`Error:\nStatus: ${status}\nError: ${error}`);
+                        }
+                    }
+                });
+            });
+
+
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Lấy giá trị `currentWeekOffset` từ `localStorage`
+                const savedWeekOffset = localStorage.getItem('currentWeekOffset');
+                if (savedWeekOffset !== null) {
+                    currentWeekOffset = parseInt(savedWeekOffset, 10);
+                }
+
+                const selectedCinema = localStorage.getItem('selectedCinema');
+                const selectedTheater = localStorage.getItem('selectedTheater');
+
+                if (selectedCinema) {
+                    cinemaSelect.value = selectedCinema;
+                    cinemaSelect.dispatchEvent(new Event('change')); // Kích hoạt sự kiện `change` để cập nhật theater
+                }
+
+                if (selectedTheater) {
+                    theaterSelect.value = selectedTheater;
+                    theaterSelect.dispatchEvent(new Event('change')); // Kích hoạt sự kiện `change` để hiển thị bảng
+                }
+
+                // Hiển thị ngày và tuần hiện tại dựa trên `currentWeekOffset`
+                displayDates();
+                populateSlots(cinemaSelect.value, theaterSelect.value);
+
+                // Xóa dữ liệu khỏi localStorage sau khi sử dụng, giữ lại `currentWeekOffset`
+                localStorage.removeItem('selectedCinema');
+                localStorage.removeItem('selectedTheater');
+            });
+
+
+            // Sự kiện khi nhấn nút tuần trước
+            prevWeekButton.addEventListener('click', () => {
+                currentWeekOffset--;
+                localStorage.setItem('currentWeekOffset', currentWeekOffset); // Lưu tuần hiện tại vào localStorage
+                displayDates();
+                populateSlots(cinemaSelect.value, theaterSelect.value);
+            });
+
+            // Sự kiện khi nhấn nút tuần sau
+            nextWeekButton.addEventListener('click', () => {
+                currentWeekOffset++;
+                localStorage.setItem('currentWeekOffset', currentWeekOffset); // Lưu tuần hiện tại vào localStorage
+                displayDates();
+                populateSlots(cinemaSelect.value, theaterSelect.value);
+            });
+
+            // Hiển thị ngày ban đầu cho tuần hiện tại
+            displayDates();
+
+        </script>
+
+
     </div>
-    <div class="sidebar-overlay" data-reff=""></div>
-    <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
-    <script src="~/admin/assets/js/popper.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap.min.js"></script>
-    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
-    <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
-    <script src="~/admin/assets/js/select2.min.js"></script>
-    <script src="~/admin/assets/js/moment.min.js"></script>
-    <script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/admin/assets/js/app.js"></script>
 </body>
 
 </html>
