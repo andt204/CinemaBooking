@@ -64,13 +64,13 @@ namespace CinemaBooking
                         {
                             // Trỏ đến trang 404 nếu chưa xác thực
                             context.HandleResponse();
-                            context.Response.Redirect("/404");
+                            context.Response.Redirect("/Customer/Account/Login");
                             return Task.CompletedTask;
                         },
                         OnForbidden = context =>
                         {
                             // Trỏ đến trang 403 nếu không đủ quyền
-                            context.Response.Redirect("/403");
+                            context.Response.Redirect("/Customer/Account/Login");
                             return Task.CompletedTask;
                         }
                     };
