@@ -1,10 +1,12 @@
 using CinemaBooking.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Admin.Actor
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly CinemaBookingContext _context;
@@ -23,12 +25,12 @@ namespace CinemaBooking.Pages.Admin.Actor
 
         public string ErrorMessage { get; private set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string? title)
         {
-            ActorList = string.IsNullOrEmpty(SearchTerm)
+            ActorList = string.IsNullOrEmpty(title)
                 ? await _context.Actors.ToListAsync()
                 : await _context.Actors
-                    .Where(a => a.ActorName.Contains(SearchTerm))
+                    .Where(a => a.ActorName.Contains(title))
                     .ToListAsync();
 
             return Page();
@@ -36,14 +38,14 @@ namespace CinemaBooking.Pages.Admin.Actor
         public async Task<IActionResult> OnPostAsync()
         {
             // Check ModelState first
-            if (!ModelState.IsValid)
-                return Page();
+            // if (!ModelState.IsValid)
+            //     return Page();
 
             // Check if the actor already exists
             if (await _context.Actors.AnyAsync(a => a.ActorName == ActorName))
             {
                 ModelState.AddModelError(string.Empty, "This actor already exists!"); // Add error message to ModelState
-                return Page();
+                // return Page();
             }
 
             var actor = new Data.Actor { ActorName = ActorName };
@@ -51,7 +53,7 @@ namespace CinemaBooking.Pages.Admin.Actor
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Actor has been successfully added!";
-            return Page();
+            return RedirectToPage();
         }
     }
 }

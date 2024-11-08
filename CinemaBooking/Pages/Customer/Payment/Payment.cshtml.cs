@@ -1,5 +1,6 @@
 using AutoMapper;
 using CinemaBooking.Data;
+using CinemaBooking.Helper;
 using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.Movie;
 using CinemaBooking.Repositories.Room;
@@ -13,14 +14,20 @@ using CinemaBooking.Repositories.TicketSeat;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
 using CinemaBooking.VnPayModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Principal;
 
 namespace CinemaBooking.Pages.Customer.Payment
 {
+    [Authorize(Roles = "Customer")]
     public class PaymentModel : PageModel
     {
+      
+        [BindProperty]
+        public Data.Account account { get; set; }
         private readonly CinemaBookingContext _context;
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
@@ -69,6 +76,16 @@ namespace CinemaBooking.Pages.Customer.Payment
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
             TicketInfo = await (from t in _context.Tickets
                 join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
                 join m in _context.Movies on s.MovieId equals m.MovieId

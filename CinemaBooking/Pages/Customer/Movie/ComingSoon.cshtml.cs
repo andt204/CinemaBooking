@@ -1,4 +1,4 @@
-using CinemaBooking.Data;
+﻿using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,9 +23,6 @@ namespace CinemaBooking.Pages.Customer.Movie
 
         public async Task<IActionResult> OnGetAsync(string? searchTitle)
         {
-            Console.WriteLine($"SearchTitle: {searchTitle}");
-            SearchTitle = searchTitle;
-            var currentTime = DateTime.Now;
             var token = Request.Cookies["jwtToken"];
             if (token != null)
             {
@@ -33,9 +30,13 @@ namespace CinemaBooking.Pages.Customer.Movie
                 if (email != null)
                 {
                     account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-                    ViewData["Account"] = account; 
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
                 }
             }
+            Console.WriteLine($"SearchTitle: {searchTitle}");
+            SearchTitle = searchTitle;
+            var currentTime = DateTime.Now;
+          
             var movies = _context.Movies.AsQueryable();
             if (!string.IsNullOrEmpty(SearchTitle))
             {

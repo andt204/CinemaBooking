@@ -8,12 +8,15 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using CinemaBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaBooking.Pages.Customer.Ticket
 {
+    [Authorize(Roles = "Customer")]
     public class HistoryTicketModel : PageModel
     {
         private readonly CinemaBookingContext _context;
+        [BindProperty]
         public Data.Account account { get; set; }
 
         public HistoryTicketModel(CinemaBookingContext context)

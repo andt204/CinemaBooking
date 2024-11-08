@@ -21,25 +21,25 @@
 
     <style>
         /* .tag {
-            display: inline-block;
-            background-color: #007bff;
-            padding: 5px 10px;
-            margin: 5px 5px 0 0;
-            border-radius: 5px;
-            color: white;
-            font-size: 14px;
-        }
+                    display: inline-block;
+                    background-color: #007bff;
+                    padding: 5px 10px;
+                    margin: 5px 5px 0 0;
+                    border-radius: 5px;
+                    color: white;
+                    font-size: 14px;
+                }
 
-            .tag .remove-tag {
-                margin-left: 8px;
-                cursor: pointer;
-                font-weight: bold;
-                color: #ffcccc;
-            }
+                    .tag .remove-tag {
+                        margin-left: 8px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        color: #ffcccc;
+                    }
 
-                .tag .remove-tag:hover {
-                    color: #ff6666;
-                } */
+                        .tag .remove-tag:hover {
+                            color: #ff6666;
+                        } */
     </style>
 </head>
 <body>
@@ -61,9 +61,9 @@
 
                 <!-- Category -->
                 <div class="form-group">
-                    <label for="category">Category</label>
-                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addCategoryPopup">Thêm danh mục mới</button>
-                    <select id="categorySelect" class="form-control" name="CategoryIds[]" multiple onchange="addTag('categorySelect', 'categoryDisplay')">
+                    <label for="categorySelect">Category</label>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addCategoryPopup">Add New Category</button>
+                    <select id="categorySelect" class="form-control" name="CategoryIds" multiple onchange="addTag('categorySelect', 'categoryDisplay')">
                         @foreach (var category in Model.Categories)
                         {
                             <option value="@category.CategoryId">@category.CategoryName</option>
@@ -71,6 +71,7 @@
                     </select>
                     <div id="categoryDisplay" class="mt-2"></div>
                 </div>
+
                 <!-- Length -->
                 <div class="form-group">
                     <label for="length">Length (minutes)</label>
@@ -101,7 +102,7 @@
                     <input type="datetime-local" class="form-control" id="publishTime" name="PublishTime" required>
                 </div>
 
-                 <!-- Country -->
+                <!-- Country -->
                 <div class="form-group">
                     <label for="country">Country</label>
                     <select class="form-control" id="country" name="Country" required>
@@ -111,8 +112,8 @@
                             <option value="@country">@country</option>
                         }
                     </select>
-                </div> 
-                
+                </div>
+
                 <!-- Image -->
                 <div class="form-group">
                     <label for="image">Movie Poster</label>
@@ -141,7 +142,7 @@
                 </div>
 
                 <!-- Director -->
-               <div class="form-group">
+                <div class="form-group">
                     <label for="director">Director</label>
                     <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addDirectorModal">Add New</button>
                     <select class="form-control" id="director" name="DirectorId" required>
@@ -154,9 +155,9 @@
                 </div>
                 <!-- Actors -->
                 <div class="form-group">
-                    <label for="actors">Actors</label>
-                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addActorModal">Add New</button>
-                    <select id="actorSelect" class="form-control" name="ActorIds[]" multiple onchange="addTag('actorSelect', 'actorDisplay')">
+                    <label for="actorSelect">Actors</label>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#addActorModal">Add New Actor</button>
+                    <select id="actorSelect" class="form-control" name="ActorIds" multiple onchange="addTag('actorSelect', 'actorDisplay')">
                         @foreach (var actor in Model.Actors)
                         {
                             <option value="@actor.Value">@actor.Text</option>
@@ -164,7 +165,7 @@
                     </select>
                     <div id="actorDisplay" class="mt-2"></div>
                 </div>
-                
+
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">Create Movie</button>
             </form>
@@ -172,26 +173,35 @@
     </div>
     <script type="text/javascript">
         function addTag(selectId, displayId) {
-            var selectedTagText = $("#" + selectId + " option:selected").text(); // Lấy text của option đang chọn
-            var selectedTagValue = $("#" + selectId).val(); // Lấy value của option đang chọn
+            // Lấy text và giá trị của tùy chọn đang chọn
+            var selectedOption = $("#" + selectId + " option:selected");
+            var selectedTagText = selectedOption.text();
+            var selectedTagValue = selectedOption.val();
 
-            if (selectedTagValue) { // Kiểm tra nếu có giá trị được chọn
-                // Tạo một thẻ span để hiển thị tag
-                var tagElement = $('<span style="background-color: #007bff; padding: 5px; margin-right: 5px; border-radius: 5px; color: white;">'
-                    + selectedTagText
-                    + '<span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span></span>');
-                // Thêm thẻ tag vào div hiển thị
+            // Kiểm tra nếu một lựa chọn hợp lệ được thực hiện và tag chưa tồn tại
+            if (selectedTagValue && !$("#" + displayId).find(`span[data-value='${selectedTagValue}']`).length) {
+                // Tạo phần tử tag với thuộc tính `data-value` để tránh trùng lặp
+                var tagElement = $(
+                    `<span data-value="${selectedTagValue}" style="background-color: #007bff; padding: 5px; margin-right: 5px; border-radius: 5px; color: white;">
+                            ${selectedTagText}
+                            <span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span>
+                        </span>`
+                );
+
+                // Thêm tag vào vùng hiển thị
                 $("#" + displayId).append(tagElement);
-                // Không nên reset dropdown ở đây, vì điều này sẽ xóa giá trị đã chọn
-                // $("#" + selectId).val("");
 
-                // Xóa tag khi nhấp vào dấu "x"
+                // Xử lý xóa tag khi nhấp vào dấu "x"
                 tagElement.find(".remove-tag").on("click", function () {
+                    // Xóa tag khỏi vùng hiển thị
                     $(this).parent().remove();
+                    // Bỏ chọn mục trong dropdown
+                    $("#" + selectId + " option[value='" + selectedTagValue + "']").prop("selected", false);
                 });
             }
         }
     </script>
+
     <!-- Popup cho thêm mới category -->
     <div class="modal fade" id="addCategoryPopup" tabindex="-1" role="dialog" aria-labelledby="addCategoryPopupLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -265,7 +275,7 @@
             document.getElementById('addCategoryPopup').style.display = 'none';
         }
     </script>
-    
+
 
 </body>
 </html>

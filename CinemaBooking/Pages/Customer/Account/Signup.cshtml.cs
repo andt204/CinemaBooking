@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using CinemaBooking.Repositories.Role;
 using CinemaBooking.Data;
+using CinemaBooking.Helper;
 namespace CinemaBooking.Pages.Customer.Account
 {
     public class SignupModel : PageModel
@@ -31,10 +32,33 @@ namespace CinemaBooking.Pages.Customer.Account
         [BindProperty]
         public Data.Account Account { get; set; }
 
-        public void OnGet()
-        {
-            _logger.LogInformation("OnGet method called.");
-        }
+   
+            public async Task<ActionResult> OnGetAsync()
+            {
+                var token = Request.Cookies["jwtToken"];
+                if (token != null)
+                {
+                    var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                    if (email != null)
+                    {
+                        var account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                        if (account != null)
+                        {
+                            if (account.RoleId == 1)
+                            {
+                                return RedirectToPage("/HomeAdmin");
+                            }
+                            else
+                            {
+                                return RedirectToPage("/Customer/Movie/List");
+                            }
+                        }
+                    }
+                }
+                return await Task.FromResult(Page());
+            }
+
+        
 
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostAsync()
