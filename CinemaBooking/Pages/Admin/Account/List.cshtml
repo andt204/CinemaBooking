@@ -99,11 +99,11 @@
                                     <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>
                                     @if (account.Status == 1)
                                     {
-                                        <td>Active</td>
+                                        <td><span class='custom-badge status-green'>Active</span></td>
                                     }
                                     else
                                     {
-                                        <td>InActive</td>
+                                        <td><span class='custom-badge status-red'>InActive</span></td>
                                     }
 
 
