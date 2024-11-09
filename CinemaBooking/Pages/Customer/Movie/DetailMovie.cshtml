@@ -1,6 +1,7 @@
-﻿@page "{movieId:int}"
+﻿@page "{movieId:int?}"
 @using System.Web
 @model CinemaBooking.Pages.Customer.Movie.DetailMovieModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
@@ -56,6 +57,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </head>
 <body>
     <div class="container">
+        @if (Model.Movie != null)  @* Thêm null check ở đây *@
+    {
         <div class="main-content">
             <div class="m-single-article">
                 <div class="background-poster" style="background-image: url('@Model.Movie.ImageBackground'); position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.5; background-size: cover; z-index: -1;"></div>
@@ -96,51 +99,91 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <iframe src="@GetEmbedUrl(@Model.Movie.VideoTrailer)" frameborder="0" allowfullscreen></iframe>
                         </div>
 
-                        <div class="review-info">
-                            @{
-                                double averageRating = (double)ViewData["AverageRating"];
-                            }
+                            <div class="movie-interaction">
+                                <!-- Rating Section -->
+                                <div class="rating-section">
+                                    <h4>Rating</h4>
+                                    <div class="current-rating">
+                                        <p>Average Rating: @Model.AverageRating.ToString("F1") / 5</p>
+                                        @if (Model.UserRating.HasValue)
+                                        {
+                                            <p class="user-rating">Your Rating: @Model.UserRating / 5</p>
+                                        }
+                                    </div>
+                                </div>
 
-                            <p class="ratingview">Critic's Rating:</p>
-                            <div class="rating">
-                                @for (int i = 1; i <= 5; i++)
+                                @if (Model.account != null)
                                 {
-                                    <span class="@(i <= averageRating ? "filled" : "")">☆</span>
+                                    <form method="post" asp-page-handler="SubmitReview">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="movieId" value="@Model.MovieId" />
+
+                                        <!-- Star Rating -->
+                                        <div class="star-rating">
+                                            <input type="radio" id="star5" name="rating" value="5" @(Model.UserRating == 5 ? "checked" : "") />
+                                            <label for="star5" title="5 stars">★</label>
+                                            <input type="radio" id="star4" name="rating" value="4" @(Model.UserRating == 4 ? "checked" : "") />
+                                            <label for="star4" title="4 stars">★</label>
+                                            <input type="radio" id="star3" name="rating" value="3" @(Model.UserRating == 3 ? "checked" : "") />
+                                            <label for="star3" title="3 stars">★</label>
+                                            <input type="radio" id="star2" name="rating" value="2" @(Model.UserRating == 2 ? "checked" : "") />
+                                            <label for="star2" title="2 stars">★</label>
+                                            <input type="radio" id="star1" name="rating" value="1" @(Model.UserRating == 1 ? "checked" : "") />
+                                            <label for="star1" title="1 star">★</label>
+                                        </div>
+
+                                        <!-- Comment Section -->
+                                        <div class="form-group mt-3">
+                                            <textarea name="CommentContent" class="form-control"
+                                                      rows="3" placeholder="Write your comment..." required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-2">Submit Review</button>
+                                    </form>
                                 }
+                                else
+                                {
+                                    <p>Please <a href="/Account/Login">login</a> to rate and comment.</p>
+                                }
+
+                                @if (TempData["SuccessMessage"] != null)
+                                {
+                                    <div class="alert alert-success">
+                                        @TempData["SuccessMessage"]
+                                    </div>
+                                }
+
+                                @if (TempData["ErrorMessage"] != null)
+                                {
+                                    <div class="alert alert-danger">
+                                        @TempData["ErrorMessage"]
+                                    </div>
+                                }
+
+                                <!-- Comments List -->
+                                <div class="comments-list mt-4">
+                                    @if (Model.Comments != null && Model.Comments.Any())
+                                    {
+                                        foreach (var comment in Model.Comments)
+                                        {
+                                            <div class="comment">
+                                                <div class="comment-header">
+                                                    <span class="comment-author">@comment.FullName</span>
+                                                    <span class="comment-date">@comment.CreatedAt.ToString("dd MMM yyyy HH:mm")</span>
+                                                </div>
+                                                <div class="comment-content">
+                                                    @comment.Content
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>No comments yet. Be the first to comment!</p>
+                                    }
+                                </div>
                             </div>
-                            <p class="ratingview">&nbsp;@averageRating.ToString("F1")/5</p> <!-- Hiển thị điểm trung bình -->
-
-                            <form method="post" asp-page-handler="Rate">
-                                @Html.AntiForgeryToken()
-                                <select name="Rating" required style="padding: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;">
-                                    <option value="">Select Rating</option>
-                                    <option value="1">1 - Poor</option>
-                                    <option value="2">2 - Below average</option>
-                                    <option value="3">3 - Average</option>
-                                    <option value="4">4 - Good</option>
-                                    <option value="5">5 - Excellent</option>
-                                </select>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 10px; padding: 10px 20px; color: white; background-color: #007bff; border: none; border-radius: 4px; cursor: pointer;">Submit Rating</button>
-                            </form>
-                            <h3 style="padding-top: 20pxs">Comments</h3>
-                            <ul style="list-style-type: none; padding: 0;">
-                                @foreach (var comment in Model.Comments)
-                                {
-                                    <li style="border-bottom: 1px solid #ccc; padding: 10px 0;">
-                                        <strong>@comment.FullName</strong>: @comment.Content <br />
-                                        <small>(Posted on @comment.CreatedAt)</small>
-                                    </li>
-                                }
-                            </ul>
-
-                            <form method="post" asp-page-handler="Comment">
-                                @Html.AntiForgeryToken()
-                                <textarea id="review-text" name="commentContent" rows="4" placeholder="Write your review here..." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-                                <br />
-                                <button type="submit" class="btn btn-success" style="margin-top: 10px; padding: 10px 20px; color: white; background-color: #28a745; border: none; border-radius: 4px; cursor: pointer;">Submit Review</button>
-                            </form>
-
-                        </div>
+                    </div>
                     </div>
                 </div>
                 <div class="article-right">
@@ -159,8 +202,60 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
                 <div class="clearfix"></div>
             </div>
+    }
         </div>
-    </div>
+    <style>
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+            padding: 20px;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                color: #bbb;
+                font-size: 30px;
+                padding: 0;
+                cursor: pointer;
+                -webkit-transition: all .3s ease-in-out;
+                transition: all .3s ease-in-out;
+            }
+
+                .star-rating label:hover,
+                .star-rating label:hover ~ label,
+                .star-rating input:checked ~ label {
+                    color: #f2b600;
+                }
+
+        .user-rating {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .comment {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+        }
+
+        .comment-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
     <script src="~/customer/assets1/js/responsive-tabs.js"></script>
     <script type="text/javascript">
         $('#myTab a').click(function (e) {

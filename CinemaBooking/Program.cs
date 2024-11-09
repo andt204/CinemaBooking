@@ -101,8 +101,10 @@ namespace CinemaBooking
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.AddScoped<MovieInteractionService>();
             // Configure DbContext with SQL Server
-          
+            builder.Services.AddDbContext<CinemaBookingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
 
             // Add services to the container
             builder.Services.AddRazorPages();
