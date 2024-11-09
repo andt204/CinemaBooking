@@ -19,6 +19,7 @@ public class EmailService : IEmailService
 
     public void SendNewPasswordByEmail(string email, string newPassword)
     {
+     
         var message = new MimeMessage();
       
         message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
@@ -28,13 +29,29 @@ public class EmailService : IEmailService
         {
             Text = $"Mật khẩu mới của bạn là: {newPassword}"
         };
-        Console.WriteLine(message);
-        using (var client = new SmtpClient())
+        if (message != null)
         {
-            client.Connect(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-            client.Authenticate(_emailSettings.Username, _emailSettings.Password);
-            client.Send(message);
-            client.Disconnect(true);
+            Console.WriteLine(message);
+        }
+        else
+        {
+            Console.WriteLine("null roi");
+        }
+        try
+        {
+            using (var client = new SmtpClient())
+            {
+                client.Connect(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                client.Authenticate(_emailSettings.Username, _emailSettings.Password);
+                client.Send(message);
+                client.Disconnect(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            // In ra lỗi nếu kết nối SMTP hoặc gửi email thất bại
+            Console.WriteLine($"Lỗi khi gửi email: {ex.Message}");
+            throw new Exception("Có lỗi khi gửi email khôi phục mật khẩu.");
         }
     }
 
@@ -55,8 +72,7 @@ public class EmailService : IEmailService
         _context.SaveChanges();
 
         // Gửi mật khẩu mới qua email
-        Console.WriteLine(email);
-        Console.WriteLine(newPassword);
+       
 
         SendNewPasswordByEmail(email, newPassword);
     }
