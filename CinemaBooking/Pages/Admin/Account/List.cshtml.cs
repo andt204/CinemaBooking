@@ -1,10 +1,11 @@
 ﻿using CinemaBooking.Data;
 using CinemaBooking.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages.Admin.Account;
-
+[Authorize(Roles = "Admin")]
 public class List : PageModel
 {
     private readonly IAccountRepository _accountRepository;

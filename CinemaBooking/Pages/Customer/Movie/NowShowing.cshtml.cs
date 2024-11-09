@@ -23,19 +23,20 @@ namespace CinemaBooking.Pages.Customer.Movie
 
 		public async Task<IActionResult> OnGetAsync(string? searchTitle)
 		{
-			Console.WriteLine($"SearchTitle: {searchTitle}");
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
+            Console.WriteLine($"SearchTitle: {searchTitle}");
 			SearchTitle = searchTitle;
 			var currentTime = DateTime.Now;
-			var token = Request.Cookies["jwtToken"];
-			if (token != null)
-			{
-				var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-				if (email != null)
-				{
-					account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-					ViewData["Account"] = account; 
-				}
-			}
+			
 			// Tìm kiếm phim theo tiêu đề
 			var movies = _context.Movies.AsQueryable();
 			if (!string.IsNullOrEmpty(SearchTitle))

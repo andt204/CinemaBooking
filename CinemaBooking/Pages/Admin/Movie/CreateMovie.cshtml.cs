@@ -1,5 +1,6 @@
 ﻿
 using CinemaBooking.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace CinemaBooking.Pages.Admin.Movie
 {
+    [Authorize(Roles = "Admin")]
     public class CreateMovieModel : PageModel
     {
         private readonly CinemaBookingContext _context;

@@ -1,12 +1,15 @@
 ﻿using CinemaBooking.Services;
 using CinemaBooking.VnPayModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages;
 
+[Authorize(Roles = "Customer")]
 public class PaymentResponse : PageModel
 {
+
     private readonly IVnPayService _vnPayService;
 
     public PaymentResponse(IVnPayService vnPayService)

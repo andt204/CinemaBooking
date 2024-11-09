@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using CinemaBooking.Data;
+using CinemaBooking.Helper;
 
 namespace CinemaBooking.Pages.Customer.Account
 {
@@ -17,6 +18,9 @@ namespace CinemaBooking.Pages.Customer.Account
     {
         private readonly IConfiguration _configuration;
         private readonly CinemaBookingContext _context;
+
+        [BindProperty]
+        public Data.Account account { get; set; }
         [BindProperty]
         public string messageForEmail { get; set; }
         [BindProperty]
@@ -52,7 +56,7 @@ namespace CinemaBooking.Pages.Customer.Account
                 else
                 {
                     //Tạo JWT token
-                   var token = GenerateJwtToken(account);
+                    var token = GenerateJwtToken(account);
 
                     Response.Cookies.Append("jwtToken", token, new CookieOptions
                     {
@@ -64,7 +68,7 @@ namespace CinemaBooking.Pages.Customer.Account
 
                     if (account.RoleId == 1)
                     {
-                        return RedirectToPage("/HomeAdmin");
+                        return RedirectToPage("/Admin/ShowTime/CreateShowTime");
                     }
                     return RedirectToPage("/Customer/Movie/List");
                 }
@@ -80,7 +84,7 @@ namespace CinemaBooking.Pages.Customer.Account
             {
                 Subject = new ClaimsIdentity(new[]
                 {   new Claim("AccountId", account.AccountId.ToString()),
-                 
+
                     new Claim("Email", account.Email),
                     new Claim(ClaimTypes.Role, account.RoleId == 1 ? "Admin" : "Customer")
                 }),
@@ -96,7 +100,28 @@ namespace CinemaBooking.Pages.Customer.Account
 
         public async Task<ActionResult> OnGetAsync()
         {
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    var account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    if (account != null)
+                    {
+                        if (account.RoleId == 1)
+                        {
+                            return RedirectToPage("/HomeAdmin");
+                        }
+                        else
+                        {
+                            return RedirectToPage("/Customer/Movie/List");
+                        }
+                    }
+                }
+            }
             return await Task.FromResult(Page());
         }
+
     }
 }

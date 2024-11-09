@@ -64,13 +64,13 @@ namespace CinemaBooking
                         {
                             // Trỏ đến trang 404 nếu chưa xác thực
                             context.HandleResponse();
-                            context.Response.Redirect("/404");
+                            context.Response.Redirect("/Customer/Account/Login");
                             return Task.CompletedTask;
                         },
                         OnForbidden = context =>
                         {
                             // Trỏ đến trang 403 nếu không đủ quyền
-                            context.Response.Redirect("/403");
+                            context.Response.Redirect("/Customer/Account/Login");
                             return Task.CompletedTask;
                         }
                     };
@@ -98,7 +98,10 @@ namespace CinemaBooking
             builder.Services.AddScoped<SeatService>();
             builder.Services.AddScoped<SeatTypeService>();
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.AddScoped<MovieInteractionService>();
             // Configure DbContext with SQL Server
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));
