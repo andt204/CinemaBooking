@@ -97,7 +97,8 @@ namespace CinemaBooking
             builder.Services.AddScoped<RoomTypeService>();
             builder.Services.AddScoped<SeatService>();
             builder.Services.AddScoped<SeatTypeService>();
-            builder.Services.AddSingleton<IVnPayService, VnPayService>();
+            //builder.Services.AddSingleton<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 

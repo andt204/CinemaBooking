@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Admin.Seat
 {
-    public class CreateSeatsModel : PageModel
+    public class ManageSeatsModel : PageModel
     {
         private readonly RoomService _roomService;
         private readonly SeatService _seatService;
         private readonly SeatTypeService _seatTypeService;
 
-        public CreateSeatsModel(RoomService roomService, SeatService seatService, SeatTypeService seatTypeService)
+        public ManageSeatsModel(RoomService roomService, SeatService seatService, SeatTypeService seatTypeService)
         {
             _roomService = roomService;
             _seatService = seatService;
@@ -138,7 +138,7 @@ namespace CinemaBooking.Pages.Admin.Seat
             await _seatService.CreateSeatsAsync(Seats, RoomId);
 
             TempData["SuccessMessage"] = "Seats successfully added!";
-            return RedirectToPage("/Admin/Seat/CreateSeats");
+            return RedirectToPage("/Admin/Seat/ManageSeats");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
