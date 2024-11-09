@@ -2,6 +2,7 @@
 using CinemaBooking.Data;
 using CinemaBooking.Enum;
 using CinemaBooking.ViewModels;
+using CinemaBooking.ViewModels.Request;
 
 namespace CinemaBooking.AutoMapper
 {
@@ -15,6 +16,10 @@ namespace CinemaBooking.AutoMapper
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => (byte)src.Status));
 
             CreateMap<SeatType, SeatTypeDto>().ReverseMap();
+
+            CreateMap<SeatDto, UpdateSeatRequest>().ReverseMap();
+
+            CreateMap<Seat, UpdateSeatRequest>().ReverseMap();
         }
     }
 }

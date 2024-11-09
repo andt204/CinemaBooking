@@ -1,0 +1,365 @@
+﻿@page
+@model CinemaBooking.Pages.Admin.Seat.ManageSeatsModel
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Add Multiple Seats";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Create New Seats</title>
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
+    <style>
+        .seat-row {
+            display: flex; /* Use flexbox for row layout */
+            margin-bottom: 5px; /* Spacing between rows */
+        }
+
+        .seat {
+            width: 50px; /* Fixed width for each seat */
+            height: 50px; /* Fixed height for each seat */
+            border: 1px solid #333; /* Solid border for each seat */
+            display: flex;
+            justify-content: center; /* Center the seat text */
+            align-items: center; /* Center the seat text vertically */
+            margin-right: 5px; /* Space between seats */
+            font-size: 12px; /* Font size for seat text */
+            cursor: pointer; /* Show pointer cursor for clickable seats */
+            border-radius: 5px; /* Slightly rounded corners for seats */
+        }
+
+            .seat.empty {
+                background-color: transparent; /* Transparent background for empty seats */
+                border: 1px dashed #ccc; /* Dashed border to indicate empty seats */
+            }
+
+            .seat.available {
+                background-color: lightgreen;
+                border: 2px solid #33cc33;
+                color: black;
+                font-weight: bold;
+            }
+
+            .seat.unavailable {
+                background-color: red;
+                border: 2px solid #ff3333;
+                color: black;
+                font-weight: bold;
+            }
+
+        #seatLayout {
+            display: flex;
+            flex-direction: column; /* Stack rows vertically */
+            margin-top: 20px;
+        }
+
+        .seat-row {
+            margin-bottom: 10px;
+        }
+
+            .seat-row::before {
+                content: attr(data-row);
+                display: inline-block;
+                width: 30px;
+                text-align: center;
+                margin-right: 10px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+
+        .seat.selected {
+            background-color: #ffcc00;
+            border: 2px solid #ff9900;
+        }
+
+        .seat:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h4 class="page-title">Add Multiple Seats to Room</h4>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <strong>Please correct the following errors:</strong>
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="RoomId">Room</label>
+                <select class="form-control" asp-for="RoomId" required>
+                    <option value="">Select Room</option>
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <option value="@room.RoomId">@room.RoomName</option>
+                    }
+                </select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+
+            <div id="seatsContainer">
+                <h5>Seats</h5>
+                <div class="form-row seat-row mb-2">
+                    <input type="text" name="Seats[0].Row" placeholder="Row" class="form-control col-md-2 mr-1" required />
+                    <input type="number" name="Seats[0].Column" placeholder="Column" class="form-control col-md-2 mr-1" required />
+                    <select name="Seats[0].SeatTypeId" class="form-control col-md-3 mr-1" required>
+                        <option value="">Seat Type</option>
+                        @foreach (var type in Model.SeatTypes)
+                        {
+                            <option value="@type.SeatTypeId">@type.SeatTypeName</option>
+                        }
+                    </select>
+                    <select name="Seats[0].Status" class="form-control col-md-2 mr-1" required>
+                        <option value="0">Available</option>
+                        <option value="1">Unavailable</option>
+                    </select>
+                    <button type="button" class="btn btn-danger remove-seat-row">Remove</button>
+                </div>
+            </div>
+
+            <button type="button" id="addSeatBtn" class="btn btn-secondary mt-2">Add Seat</button>
+            <button type="submit" class="btn btn-primary mt-2">Save Seats</button>
+        </form>
+
+        <!-- Modal for Seat Details -->
+        <div class="modal fade" id="seatDetailsModal" tabindex="-1" role="dialog" aria-labelledby="seatDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="seatDetailsModalLabel">Seat Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="seatDetailsForm">
+                            <div class="form-group">
+                                <label for="seatRow">Row</label>
+                                <input type="text" id="seatRow" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label for="seatColumn">Column</label>
+                                <input type="number" id="seatColumn" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label for="seatStatus">Status</label>
+                                <select id="seatStatus" class="form-control">
+                                    <option value="0">Available</option>
+                                    <option value="1">Unavailable</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="seatType">Seat Type</label>
+                                <select id="seatType" class="form-control">
+                                    <option value="">Select Seat Type</option>
+                                    @foreach (var type in Model.SeatTypes)
+                                    {
+                                        <option value="@type.SeatTypeId">@type.SeatTypeName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" id="saveSeatBtn">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="seatLayout" class="mt-3">
+            <!-- Seats will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roomSelect = document.querySelector('select[name="RoomId"]');
+            const layoutContainer = document.getElementById('seatLayout');
+            let seatIndex = 1; // Initialize seat index
+
+            roomSelect.addEventListener('change', function () {
+                const roomId = this.value;
+                if (roomId) {
+                    console.log("Fetching room details for room ID:", roomId);
+
+                    // Fetch room details to get max rows, columns, and room type name
+                    fetch(`/Admin/Seat/ManageSeats?handler=RoomDetails&roomId=${roomId}`)
+                        .then(response => response.json())
+                        .then(roomDetails => {
+                            const maxRows = roomDetails.numberOfRow;
+                            const maxColumns = roomDetails.numberOfColumn;
+                            const roomTypeName = roomDetails.roomTypeName; // Get room type name
+
+                            console.log('Room type name:', roomTypeName); // Log room type name
+
+                            fetch(`/Admin/Seat/ManageSeats?handler=Seats&roomId=${roomId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    layoutContainer.innerHTML = "";
+
+                                    const seatMap = {};
+
+                                    // Lưu tất cả các ghế vào seatMap
+                                    data.forEach(seat => {
+                                        const row = seat.row.toUpperCase();
+                                        const column = seat.column;
+                                        if (!seatMap[row]) {
+                                            seatMap[row] = {};
+                                        }
+                                        seatMap[row][column] = seat;
+                                    });
+
+                                    // Ghi danh sách ghế ra console
+                                    console.log("List of seats:", seatMap);
+
+                                    // Create the seat layout in the desired format
+                                    for (let i = 0; i < maxRows; i++) {
+                                        const rowLetter = String.fromCharCode(65 + i);
+                                        const rowDiv = document.createElement('div');
+                                        rowDiv.className = 'seat-row';
+
+                                        for (let j = 1; j <= maxColumns; j++) {
+                                            const seat = seatMap[rowLetter] && seatMap[rowLetter][j];
+                                            const seatDiv = document.createElement('div');
+                                            seatDiv.className = 'seat';
+
+                                            if (seat) {
+                                                seatDiv.classList.add(seat.status === 0 ? 'available' : 'unavailable');
+                                                seatDiv.innerText = `${rowLetter}${j}`;
+                                                seatDiv.addEventListener('click', function () {
+                                                    // Show modal when a seat is clicked
+                                                    document.getElementById('seatRow').value = rowLetter;
+                                                    document.getElementById('seatColumn').value = j;
+                                                    document.getElementById('seatStatus').value = seat.status;
+                                                    document.getElementById('seatType').value = seat.seatTypeId; // Set the seat type ID in the modal
+                                                    $('#seatDetailsModal').modal('show');
+                                                });
+                                            } else {
+                                                seatDiv.classList.add('empty');
+                                                seatDiv.innerText = '';
+                                            }
+
+                                            rowDiv.appendChild(seatDiv);
+                                        }
+
+                                        layoutContainer.appendChild(rowDiv);
+                                    }
+                                })
+                                .catch(error => console.error('Error fetching seats:', error));
+                        })
+                        .catch(error => console.error('Error fetching room details:', error));
+                } else {
+                    layoutContainer.innerHTML = "";
+                }
+            });
+
+
+            // Save seat
+            document.getElementById('saveSeatBtn').addEventListener('click', function () {
+                // Get values from form inputs
+                const row = document.getElementById('seatRow').value.trim();
+                const column = document.getElementById('seatColumn').value;
+                const status = document.getElementById('seatStatus').value;
+                const seatTypeId = document.getElementById('seatType').value;
+                const roomId = document.querySelector('select[name="RoomId"]').value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                // Validate inputs
+                if (!row || isNaN(column) || isNaN(status) || isNaN(seatTypeId) || isNaN(roomId)) {
+                    alert("Please make sure all fields are correctly filled out.");
+                    return;
+                }
+
+                // Prepare data for fetch
+                const formData = new FormData();
+                formData.append('roomId', roomId);
+                formData.append('row', row);
+                formData.append('column', column);
+                formData.append('status', status);
+                formData.append('seatTypeId', seatTypeId);
+                formData.append('__RequestVerificationToken', token); // CSRF token for validation
+
+                // Send the AJAX request using fetch
+                fetch('/Admin/Seat/ManageSeats?handler=UpdateSeat', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Success Response:', result);
+
+                        if (result && result.success) {
+                            console.log('Seat updated:', result.message);
+                            $('#seatDetailsModal').modal('hide');
+                            alert(result.message || 'Seat updated successfully!');
+                        } else {
+                            const errorMessage = result?.message || 'An unexpected error occurred.';
+                            console.error('Error updating seat:', errorMessage);
+                            alert(errorMessage);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        alert('An error occurred while updating the seat. Please try again.');
+                    });
+            });
+            // Add a new row for seat entry
+            document.getElementById('addSeatBtn').addEventListener('click', function () {
+                const container = document.getElementById('seatsContainer');
+                const newRow = document.createElement('div');
+                newRow.classList.add('form-row', 'seat-row', 'mb-2');
+                newRow.innerHTML = `
+                                <input type="text" name="Seats[${seatIndex}].Row" placeholder="Row" class="form-control col-md-2 mr-1" required />
+                                <input type="number" name="Seats[${seatIndex}].Column" placeholder="Column" class="form-control col-md-2 mr-1" required />
+                                <select name="Seats[${seatIndex}].SeatTypeId" class="form-control col-md-3 mr-1" required>
+                                    <option value="">Seat Type</option>
+        @foreach (var type in Model.SeatTypes)
+        {
+                                                <option value="@type.SeatTypeId">@type.SeatTypeName</option>
+        }
+                                </select>
+                                <select name="Seats[${seatIndex}].Status" class="form-control col-md-2 mr-1" required>
+                                    <option value="0">Available</option>
+                                    <option value="1">Unavailable</option>
+                                </select>
+                                <button type="button" class="btn btn-danger remove-seat-row">Remove</button>`;
+                container.appendChild(newRow);
+                seatIndex++; // Increment seat index for the next row
+
+                // Update seat layout after adding a new seat row
+                updateSeatLayout();
+            });
+
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-seat-row')) {
+                    e.target.closest('.seat-row').remove();
+                    updateSeatLayout(); // Update layout after removing a seat
+                }
+            });
+            $('.close').on('click', function () {
+                $('#seatDetailsModal').modal('hide');
+            });
+        });
+
+    </script>
+
+</body>
+</html>

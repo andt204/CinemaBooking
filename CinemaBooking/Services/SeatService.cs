@@ -2,6 +2,7 @@
 using CinemaBooking.Data;
 using CinemaBooking.Enum;
 using CinemaBooking.ViewModels;
+using CinemaBooking.ViewModels.Request;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Services
@@ -94,19 +95,29 @@ namespace CinemaBooking.Services
                 }).ToListAsync();
         }
 
-        public async Task DeleteSeatAsync(int seatId)
+        public async Task<SeatDto> UpdateSeatAsync(SeatDto seat)
         {
-            var seat = await _context.Seats.FindAsync(seatId);
-            if (seat != null)
-            {
-                _context.Seats.Remove(seat);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new Exception("Seat not found."); // Or handle as needed
-            }
-        }
+            var existingSeat = await _context.Seats
+                .FirstOrDefaultAsync(s => s.RoomId == seat.RoomId && s.Row == seat.Row && s.Column == seat.Column);
 
+            if (existingSeat == null)
+            {
+                return null; // Return null if the seat doesn't exist
+            }
+
+            // Update seat properties
+            existingSeat.Status = (byte)seat.Status; // Ensure the status is cast to byte
+            existingSeat.SeatTypeId = seat.SeatTypeId; // Update the seat type
+
+            _context.Seats.Update(existingSeat); // Mark the seat as modified
+            await _context.SaveChangesAsync(); // Commit changes to the database
+
+            return _mapper.Map<SeatDto>(existingSeat); // Return the updated seat as SeatDto
+        }
+        public async Task<Seat> GetSeatByRowAndColumnAsync(int roomId, string row, int column)
+        {
+            return await _context.Seats
+                .FirstOrDefaultAsync(s => s.RoomId == roomId && s.Row == row && s.Column == column);
+        }
     }
 }
