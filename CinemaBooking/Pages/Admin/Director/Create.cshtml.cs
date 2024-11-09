@@ -18,28 +18,42 @@ namespace CinemaBooking.Pages.Admin.Director
 
         [BindProperty]
         public string DirectorName { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+
+        public List<Data.Director> DirectorList { get; set; }
 
         public string ErrorMessage { get; private set; }
 
+        public async Task<IActionResult> OnGetAsync(string? title)
+        {
+            DirectorList = string.IsNullOrEmpty(title)
+                ? await _context.Directors.ToListAsync()
+                : await _context.Directors
+                    .Where(a => a.DirectorName.Contains(title))
+                    .ToListAsync();
+
+            return Page();
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             // Check ModelState first
-            if (!ModelState.IsValid)
-                return Page();
+            // if (!ModelState.IsValid)
+            //     return Page();
 
-            // Check if the director already exists
-            if (await _context.Directors.AnyAsync(d => d.DirectorName == DirectorName))
+            // Check if the actor already exists
+            if (await _context.Directors.AnyAsync(a => a.DirectorName == DirectorName))
             {
                 ModelState.AddModelError(string.Empty, "This director already exists!"); // Add error message to ModelState
-                return Page();
+                // return Page();
             }
 
-            var director = new Data.Director { DirectorName = DirectorName };
-            _context.Directors.Add(director);
+            var actor = new Data.Director { DirectorName = DirectorName };
+            _context.Directors.Add(actor);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Director has been successfully added!";
-            return Page();
+            return RedirectToPage();
         }
     }
 }
