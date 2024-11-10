@@ -1,0 +1,126 @@
+﻿@page
+@model CinemaBooking.Pages.Customer.Blog.BlogModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Blog";
+    Layout = "~/Pages/Shared/_UserLayout.cshtml";
+}
+
+<div class="container mt-5">
+    @if (Model.Account != null)
+    {
+        <div class="create-post-section mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Create">
+                        <div class="form-group">
+                            <input asp-for="NewPost.Title" class="form-control mb-2"
+                                   placeholder="Post title..." />
+                        </div>
+                        <div class="form-group">
+                            <textarea asp-for="NewPost.Content" class="form-control"
+                                      rows="3" placeholder="What's on your mind?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="posts-section">
+        @if (Model.Posts != null && Model.Posts.Any())
+        {
+            foreach (var post in Model.Posts)
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="post-header">
+                            <h5 class="card-title">@post.Title</h5>
+                            <div class="post-meta">
+                                <span class="author">@post.AuthorName</span>
+                                <span class="date">@post.CreatedDate.ToString("MMM dd, yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                        <p class="card-text">@post.Content</p>
+
+                        <div class="comments-section">
+                            @if (Model.Account != null)
+                            {
+                                <form method="post" asp-page-handler="Comment"
+                                      asp-route-postId="@post.PostId">
+                                    <div class="input-group">
+                                        <input type="text" name="CommentContent"
+                                               class="form-control" placeholder="Write a comment...">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            Comment
+                                        </button>
+                                    </div>
+                                </form>
+                            }
+
+                            <div class="comments-list mt-3">
+                                @foreach (var comment in post.Comments.OrderByDescending(c => c.CreatedAt))
+                                {
+                                    <div class="comment">
+                                        <strong>@comment.FullName</strong>
+                                        <span class="comment-text">@comment.Content</span>
+                                        <small class="text-muted">
+                                            @comment.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        </small>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No posts yet. Be the first to post!</p>
+        }
+    </div>
+</div>
+
+<style>
+    .post-header {
+        margin-bottom: 1rem;
+    }
+
+    .post-meta {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .post-meta span {
+        margin-right: 1rem;
+    }
+
+    .comment {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .comment:last-child {
+        border-bottom: none;
+    }
+
+    .comment-text {
+        margin: 0 0.5rem;
+    }
+</style>

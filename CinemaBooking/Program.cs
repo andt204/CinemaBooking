@@ -103,6 +103,7 @@ namespace CinemaBooking
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             builder.Services.AddScoped<MovieInteractionService>();
+            builder.Services.AddScoped<BlogService>();
             // Configure DbContext with SQL Server
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));

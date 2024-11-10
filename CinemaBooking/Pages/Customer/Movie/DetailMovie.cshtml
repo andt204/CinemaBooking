@@ -3,7 +3,7 @@
 @model CinemaBooking.Pages.Customer.Movie.DetailMovieModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    Layout = "~/Pages/Shared/_UserLayout.cshtml";
+    Layout = "/Pages/Shared/_UserLayout.cshtml";
 }
 <!--
 Author: W3layouts
@@ -143,7 +143,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 }
                                 else
                                 {
-                                    <p>Please <a href="/Account/Login">login</a> to rate and comment.</p>
+                                    <p>Please <a href="/Customer/Account/Login">login</a> to rate and comment.</p>
                                 }
 
                                 @if (TempData["SuccessMessage"] != null)

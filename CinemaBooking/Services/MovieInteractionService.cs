@@ -45,7 +45,7 @@ public class MovieInteractionService
         }
     }
 
-    public async Task<bool> AddCommentAsync(int movieId, int accountId, string content)
+    public async Task<bool> AddCommentAsync(int movieId, int accountId, string content, byte commentType)
     {
         try
         {
@@ -55,7 +55,8 @@ public class MovieInteractionService
                 AccountId = accountId,
                 Content = content,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                CommentType = commentType
             };
 
             await _context.Comments.AddAsync(comment);
