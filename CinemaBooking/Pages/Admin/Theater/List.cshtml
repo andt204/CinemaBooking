@@ -36,28 +36,25 @@
             </div>
             <div class="row filter-row">
                 <form method="get" class="row filter-row">
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col">
                         <div class="form-group form-focus">
                             <label class="focus-label">Theater ID</label>
                             <input type="number" class="form-control floating" asp-for="TheaterId">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col">
                         <div class="form-group form-focus">
                             <label class="focus-label">Theater Name</label>
                             <input type="text" class="form-control floating" asp-for="TheaterName">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col">
                         <div class="form-group form-focus">
                             <label class="focus-label">Location</label>
                             <input type="text" class="form-control floating" asp-for="Location">
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">
-                        <button type="submit" class="btn btn-success btn-block">Search</button>
-                    </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col">
                         <div class="form-group form-focus select-focus">
                             <label class="focus-label">Status</label>
                             <select class="select floating form-control" asp-for="Status">
@@ -66,6 +63,9 @@
                                 <option value="1">Inactive</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-success btn-block">Search</button>
                     </div>
                 </form>
             </div>
@@ -89,7 +89,14 @@
                                         <td>@theater.TheaterId</td>
                                         <td>@theater.TheaterName</td>
                                         <td>@theater.Location</td>
-                                        <td>@theater.Status</td>
+                                        @if (@theater.Status ==  0 )
+                                        {
+                                        <td><span class='custom-badge status-green'>Available</span></td>
+                                        }
+                                        else
+                                        {
+                                        <td><span class='custom-badge status-red'>Unavailable</span></td>
+                                        }
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

@@ -18,6 +18,9 @@ namespace CinemaBooking.Pages.Admin.Actor
 
         [BindProperty]
         public string ActorName { get; set; }
+        [BindProperty]
+        public int ActorId { get; set; } // Used to identify the actor for update/delete
+
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
 
@@ -37,15 +40,10 @@ namespace CinemaBooking.Pages.Admin.Actor
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            // Check ModelState first
-            // if (!ModelState.IsValid)
-            //     return Page();
-
-            // Check if the actor already exists
             if (await _context.Actors.AnyAsync(a => a.ActorName == ActorName))
             {
                 ModelState.AddModelError(string.Empty, "This actor already exists!"); // Add error message to ModelState
-                // return Page();
+                
             }
 
             var actor = new Data.Actor { ActorName = ActorName };
@@ -53,6 +51,39 @@ namespace CinemaBooking.Pages.Admin.Actor
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Actor has been successfully added!";
+            return RedirectToPage();
+        }
+        // Method to update an existing actor
+        public async Task<IActionResult> OnPostUpdateAsync()
+        {
+            var actor = await _context.Actors.FindAsync(ActorId);
+            if (actor == null)
+            {
+                ModelState.AddModelError("", "Actor not found.");
+                return Page();
+            }
+
+            actor.ActorName = ActorName;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Actor updated successfully!";
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var actor = await _context.Actors.FindAsync(id);
+            if (actor != null)
+            {
+                _context.Actors.Remove(actor);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Actor deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Actor not found.";
+            }
+
             return RedirectToPage();
         }
     }

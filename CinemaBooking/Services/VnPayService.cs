@@ -14,10 +14,10 @@ public class VnPayService : IVnPayService
     private string ticketId;
     private readonly CinemaBookingContext _context;
 
-    public VnPayService(IConfiguration config, CinemaBookingContext context)
+    public VnPayService(IConfiguration config)
     {
         _config = config;
-        _context = context;
+        // _context = context;
     }
 
     public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
