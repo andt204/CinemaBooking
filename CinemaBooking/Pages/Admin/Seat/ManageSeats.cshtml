@@ -86,11 +86,18 @@
             opacity: 0.9; /* Reduced hover effect for a cleaner look */
         }
 
+        .page-title {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h4 class="page-title">Add Multiple Seats to Room</h4>
+        <h4 class="page-title text-center" style="font-size: 2em; font-weight: bold;">Add Multiple Seats to Room</h4>
 
         @if (!ViewData.ModelState.IsValid)
         {

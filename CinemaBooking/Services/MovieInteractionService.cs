@@ -96,7 +96,7 @@ public class MovieInteractionService
                 {
                     CommentId = c.CommentId,
                     Content = c.Content,
-                    CreatedAt = c.CreatedAt,
+                    CreatedAt = c.CreatedAt ?? DateTime.MinValue,
                     FullName = c.Account.FullName
                 })
                 .ToListAsync();

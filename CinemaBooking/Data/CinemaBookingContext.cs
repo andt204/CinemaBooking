@@ -53,11 +53,6 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.RoleId, "IX_Account_RoleId");
-
-                entity.HasIndex(e => e.FullName, "UQ__account__F3DBC57261217132")
-                    .IsUnique();
-
                 entity.Property(e => e.Avatar).HasMaxLength(255);
 
                 entity.Property(e => e.DateOfBirth).HasColumnType("date");
@@ -76,7 +71,7 @@ namespace CinemaBooking.Data
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__account__role_id__300424B4");
+                    .HasConstraintName("FK_Account_Role");
             });
 
             modelBuilder.Entity<Actor>(entity =>
@@ -138,11 +133,13 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Comment_Movie");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.PostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Comment_Post");
             });
 
@@ -259,6 +256,7 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Theater)
                     .WithMany(p => p.Rooms)
                     .HasForeignKey(d => d.TheaterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Room_Theater");
             });
 
@@ -314,11 +312,13 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.MovieId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Showtime_Movie");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Showtime_Room");
             });
 
@@ -385,11 +385,13 @@ namespace CinemaBooking.Data
                 entity.HasOne(d => d.Seat)
                     .WithMany(p => p.TicketSeatAssignments)
                     .HasForeignKey(d => d.SeatId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TicketSeatAssignments_Seat");
 
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.TicketSeatAssignments)
                     .HasForeignKey(d => d.TicketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TicketSeatAssignments_Ticket");
             });
 

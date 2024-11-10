@@ -31,7 +31,7 @@ namespace CinemaBooking.Services
             }
 
             // Calculate the maximum seat capacity
-            var maxCapacity = room.RoomType.NumberOfRow.GetValueOrDefault() * room.RoomType.NumberOfColumn.GetValueOrDefault();
+            var maxCapacity = room.RoomType.NumberOfRow * room.RoomType.NumberOfColumn;
 
             // Validate the total number of seats to be created
             if (seatDtos.Count > maxCapacity)
