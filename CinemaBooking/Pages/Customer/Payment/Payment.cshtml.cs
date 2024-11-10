@@ -22,7 +22,7 @@ using System.Security.Principal;
 
 namespace CinemaBooking.Pages.Customer.Payment
 {
-    [Authorize(Roles = "Customer")]
+    // [Authorize(Roles = "Customer")]
     public class PaymentModel : PageModel
     {
       
@@ -76,16 +76,16 @@ namespace CinemaBooking.Pages.Customer.Payment
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var token = Request.Cookies["jwtToken"];
-            if (token != null)
-            {
-                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-                if (email != null)
-                {
-                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
-                }
-            }
+            // var token = Request.Cookies["jwtToken"];
+            // if (token != null)
+            // {
+            //     var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+            //     if (email != null)
+            //     {
+            //         account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+            //         ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+            //     }
+            // }
             TicketInfo = await (from t in _context.Tickets
                 join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
                 join m in _context.Movies on s.MovieId equals m.MovieId
