@@ -96,7 +96,7 @@ namespace CinemaBooking.Services
                 var seat = await _context.Seats.FindAsync(seatId);
                 if (seat != null)
                 {
-                    seat.Status = (byte)SeatStatus.Unavailable;
+                    seat.Status = (byte)SeatStatus.PendingPayment;
                     _context.Seats.Update(seat);
                 }
             }

@@ -44,5 +44,14 @@ namespace CinemaBooking.Pages.Admin.Room
             TempData["SuccessMessage"] = "Room status set to Unavailable successfully.";
             return RedirectToPage();
         }
+        public async Task<IActionResult> OnPostReactiveAsync(int id)
+        {
+            // Set room status to Unavailable
+            await _roomService.SetRoomStatusAsync(id, RoomStatus.Available);
+
+            // Set a success message and redirect to the same page
+            TempData["SuccessMessage"] = "Room status set to Available successfully.";
+            return RedirectToPage();
+        }
     }
 }

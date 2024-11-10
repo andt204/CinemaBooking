@@ -358,8 +358,8 @@
                                     var checkboxColor = seat.Status switch
                                     {
                                         SeatStatus.Available => "white",
-                                        SeatStatus.Unavailable => "yellow",
-                                        SeatStatus.Reserved => "red",
+                                        SeatStatus.Unavailable => "red",
+                                        SeatStatus.PendingPayment => "yellow",
                                         _ => "white"
                                     };
 

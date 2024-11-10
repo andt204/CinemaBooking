@@ -1,4 +1,5 @@
 ﻿@page
+@using CinemaBooking.Enum
 @model CinemaBooking.Pages.Admin.Room.ListRoomModel
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
@@ -114,40 +115,66 @@
                                         <td>@room.Theater.TheaterName</td>
                                         <td>@room.Status</td>
                                         <td class="text-right">
-                                            @if (room.Status == CinemaBooking.Enum.RoomStatus.Available)
-                                            {
-                                                <div class="dropdown dropdown-action">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="/Admin/Room/Edit/@room.RoomId"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@room.RoomId">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="/Admin/Room/Edit/@room.RoomId"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+
+                                                    @if (room.Status == RoomStatus.Available)
+                                                    {
+                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deactivate_room_@room.RoomId">
                                                             <i class="fa fa-trash-o m-r-5"></i> Deactivate
                                                         </a>
-                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#reactivate_room_@room.RoomId">
+                                                            <i class="fa fa-check m-r-5"></i> Reactivate
+                                                        </a>
+                                                    }
                                                 </div>
+                                            </div>
 
-                                                <!-- Delete confirmation modal for each room -->
-                                                <div id="delete_room_@room.RoomId" class="modal fade delete-modal" role="dialog">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-body text-center">
-                                                                <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
-                                                                <h3>Are you sure you want to deactivate this room?</h3>
-                                                                <div class="m-t-20">
-                                                                    <a href="#" class="btn btn-white" style="font-size: 10px" data-dismiss="modal">Close</a>
-                                                                    <form method="post" asp-page-handler="Delete" asp-route-id="@room.RoomId" style="display:inline;">
-                                                                        <button type="submit" class="btn btn-danger" style="font-size: 10px">Deactivate</button>
-                                                                    </form>
-                                                                </div>
+                                            <!-- Deactivate confirmation modal for each room -->
+                                            <div id="deactivate_room_@room.RoomId" class="modal fade delete-modal" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body text-center">
+                                                            <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                            <h3>Are you sure you want to deactivate this room?</h3>
+                                                            <div class="m-t-20">
+                                                                <a href="#" class="btn btn-white" style="font-size: 10px" data-dismiss="modal">Close</a>
+                                                                <form method="post" asp-page-handler="Delete" asp-route-id="@room.RoomId" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-danger" style="font-size: 10px">Deactivate</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            }
+                                            </div>
+
+                                            <!-- Reactivate confirmation modal for each room -->
+                                            <div id="reactivate_room_@room.RoomId" class="modal fade delete-modal" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body text-center">
+                                                            <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                            <h3>Are you sure you want to reactivate this room?</h3>
+                                                            <div class="m-t-20">
+                                                                <a href="#" class="btn btn-white" style="font-size: 10px" data-dismiss="modal">Close</a>
+                                                                <form method="post" asp-page-handler="Reactive" asp-route-id="@room.RoomId" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-success" style="font-size: 10px">Reactivate</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
+
                         </table>
                     </div>
                 </div>

@@ -27,18 +27,18 @@ namespace CinemaBooking.Pages.Customer.Booking {
 
 		public async Task OnGet(int movieId)
 		{
-            // Check if movieId is valid
-            var token = Request.Cookies["jwtToken"];
-            if (token != null)
-            {
-                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-                if (email != null)
-                {
-                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
-                }
-            }
-            if (movieId <= 0)
+			// Check if movieId is valid
+			var token = Request.Cookies["jwtToken"];
+			if (token != null)
+			{
+				var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+				if (email != null)
+				{
+					account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+					ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+				}
+			}
+			if (movieId <= 0)
 			{
 				// Handle invalid movieId case
 				Movie = new MovieDto
