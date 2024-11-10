@@ -129,6 +129,39 @@
 
             <!-- Seats Input Section -->
             <div id="seatsInputSection">
+                <div class="form-group">
+                    <label>Auto Add Seats</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" id="startRow" class="form-control" placeholder="Start Row (e.g., A)" maxlength="1" />
+                        </div>
+                        <div class="col">
+                            <input type="text" id="endRow" class="form-control" placeholder="End Row (e.g., D)" maxlength="1" />
+                        </div>
+                        <div class="col">
+                            <input type="number" id="numColumns" class="form-control" placeholder="Number of Columns (e.g., 6)" min="1" />
+                        </div>
+                        <div class="col">
+                            <select id="defaultSeatType" class="form-control">
+                                <option value="">Select Seat Type</option>
+                                @foreach (var type in Model.SeatTypes)
+                                {
+                                    <option value="@type.SeatTypeId">@type.SeatTypeName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select id="defaultStatus" class="form-control">
+                                <option value="0">Available</option>
+                                <option value="1">Unavailable</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <button type="button" id="autoAddSeatsBtn" class="btn btn-success">Auto Add Seats</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- New ID for the entire seats section -->
                 <h5>Seats</h5>
                 <div id="seatsContainer">
@@ -151,6 +184,7 @@
                 </div>
 
                 <button type="button" id="addSeatBtn" class="btn btn-secondary mt-2">Add Seat</button>
+                <button type="button" id="removeAllSeatsBtn" class="btn btn-danger mt-2">Remove All Seats</button>
                 <button type="submit" class="btn btn-primary mt-2">Save Seats</button>
             </div>
         </form>
@@ -210,8 +244,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             const roomSelect = document.querySelector('select[name="RoomId"]');
             const layoutContainer = document.getElementById('seatLayout');
-            const seatsInputSection = document.getElementById('seatsInputSection'); // New ID for the seat input section
+            const seatsInputSection = document.getElementById('seatsInputSection');
             const saveSeatBtn = document.getElementById('saveSeatBtn');
+            const addSeatBtn = document.getElementById('addSeatBtn');
             let seatIndex = 1;
 
             // Function to load and render seat layout based on selected room
@@ -223,15 +258,15 @@
                         .then(roomDetails => {
                             // Check if room status is Available
                             if (roomDetails.status === 0) { // Assuming 0 is Available
-                                seatsInputSection.style.display = 'none'; // Hide Seats input section
+                                seatsInputSection.style.display = 'none';
                                 alert("Only view access is allowed. Editing and adding seats are disabled when room status is 'Available'.");
                             } else {
-                                seatsInputSection.style.display = 'block'; // Show Seats input section
+                                seatsInputSection.style.display = 'block';
                             }
 
                             const maxRows = roomDetails.numberOfRow;
                             const maxColumns = roomDetails.numberOfColumn;
-                            layoutContainer.innerHTML = ""; // Clear the current layout
+                            layoutContainer.innerHTML = "";
 
                             fetch(`/Admin/Seat/ManageSeats?handler=Seats&roomId=${roomId}`)
                                 .then(response => response.json())
@@ -269,14 +304,14 @@
                                                     document.getElementById('seatStatus').value = seat.status;
                                                     document.getElementById('seatType').value = seat.seatTypeId;
 
-                                                    if (roomDetails.status === 0) { // View-only mode if Available
+                                                    if (roomDetails.status === 0) {
                                                         document.getElementById('seatStatus').disabled = true;
                                                         document.getElementById('seatType').disabled = true;
-                                                        saveSeatBtn.style.display = 'none'; // Hide Save button in modal
-                                                    } else { // Enable editing if Unavailable
+                                                        saveSeatBtn.style.display = 'none';
+                                                    } else {
                                                         document.getElementById('seatStatus').disabled = false;
                                                         document.getElementById('seatType').disabled = false;
-                                                        saveSeatBtn.style.display = 'block'; // Show Save button
+                                                        saveSeatBtn.style.display = 'block';
                                                     }
 
                                                     $('#seatDetailsModal').modal('show');
@@ -333,7 +368,7 @@
                         if (result && result.success) {
                             $('#seatDetailsModal').modal('hide');
                             alert(result.message || 'Seat updated successfully!');
-                            loadSeatLayout(); // Reload seat layout after successful update
+                            loadSeatLayout();
                         } else {
                             alert(result.message || 'An unexpected error occurred.');
                         }
@@ -353,31 +388,44 @@
                 const newRow = document.createElement('div');
                 newRow.classList.add('form-row', 'seat-row', 'mb-2');
                 newRow.innerHTML = `
-                        <input type="text" name="Seats[${seatIndex}].Row" placeholder="Row" class="form-control col-md-2 mr-1" required />
-                        <input type="number" name="Seats[${seatIndex}].Column" placeholder="Column" class="form-control col-md-2 mr-1" required />
-                        <select name="Seats[${seatIndex}].SeatTypeId" class="form-control col-md-3 mr-1" required>
-                            <option value="">Seat Type</option>
-        @foreach (var type in Model.SeatTypes)
-        {
-                                    <option value="@type.SeatTypeId">@type.SeatTypeName</option>
-        }
-                        </select>
-                        <select name="Seats[${seatIndex}].Status" class="form-control col-md-2 mr-1" required>
-                            <option value="0">Available</option>
-                            <option value="1">Unavailable</option>
-                        </select>
-                        <button type="button" class="btn btn-danger remove-seat-row">Remove</button>`;
+            <input type="text" name="Seats[${seatIndex}].Row" placeholder="Row" class="form-control col-md-2 mr-1" required />
+            <input type="number" name="Seats[${seatIndex}].Column" placeholder="Column" class="form-control col-md-2 mr-1" required />
+            <select name="Seats[${seatIndex}].SeatTypeId" class="form-control col-md-3 mr-1" required>
+                ${[...document.querySelectorAll('#defaultSeatType option')]
+                        .map(option => `<option value="${option.value}">${option.text}</option>`)
+                        .join('')}
+            </select>
+            <select name="Seats[${seatIndex}].Status" class="form-control col-md-2 mr-1" required>
+                <option value="0">Available</option>
+                <option value="1">Unavailable</option>
+            </select>
+            <button type="button" class="btn btn-danger remove-seat-row">Remove</button>`;
                 container.appendChild(newRow);
                 seatIndex++;
             }
 
-            // Attach add new row functionality to the Add Seat button
-            addSeatBtn.addEventListener('click', addNewSeatRow);
+            // Reindex all seat rows after a change
+            function reindexSeats() {
+                const seatRows = document.querySelectorAll('#seatsContainer .seat-row');
+                seatRows.forEach((row, index) => {
+                    row.querySelectorAll('input, select').forEach(input => {
+                        const name = input.name.replace(/\Seats\[\d+\]/, `Seats[${index}]`);
+                        input.setAttribute('name', name);
+                    });
+                });
+            }
 
-            // Remove seat row functionality
+            // Attach add new row functionality to the Add Seat button
+            addSeatBtn.addEventListener('click', () => {
+                addNewSeatRow();
+                reindexSeats();
+            });
+
+            // Remove seat row functionality with reindexing
             document.addEventListener('click', function (e) {
                 if (e.target && e.target.classList.contains('remove-seat-row')) {
                     e.target.closest('.seat-row').remove();
+                    reindexSeats();
                 }
             });
 
@@ -385,6 +433,64 @@
             $('.close').on('click', function () {
                 $('#seatDetailsModal').modal('hide');
             });
+
+            document.getElementById('autoAddSeatsBtn').addEventListener('click', function () {
+                const startRow = document.getElementById('startRow').value.toUpperCase();
+                const endRow = document.getElementById('endRow').value.toUpperCase();
+                const numColumns = parseInt(document.getElementById('numColumns').value, 10);
+                const defaultSeatTypeId = document.getElementById('defaultSeatType').value;
+                const defaultStatus = document.getElementById('defaultStatus').value;
+                const seatsContainer = document.getElementById('seatsContainer');
+
+                if (!startRow || !endRow || isNaN(numColumns) || numColumns < 1 || !defaultSeatTypeId || defaultStatus === "") {
+                    alert("Please enter valid row, column, seat type, and status values.");
+                    return;
+                }
+
+                const startRowCode = startRow.charCodeAt(0);
+                const endRowCode = endRow.charCodeAt(0);
+
+                if (startRowCode > endRowCode) {
+                    alert("End row must be after start row alphabetically.");
+                    return;
+                }
+
+                seatIndex = document.querySelectorAll('#seatsContainer .seat-row').length;
+
+                for (let rowCode = startRowCode; rowCode <= endRowCode; rowCode++) {
+                    const rowLetter = String.fromCharCode(rowCode);
+                    for (let col = 1; col <= numColumns; col++) {
+                        const newRow = document.createElement('div');
+                        newRow.classList.add('form-row', 'seat-row', 'mb-2');
+                        newRow.innerHTML = `
+                            <input type="text" name="Seats[${seatIndex}].Row" value="${rowLetter}" class="form-control col-md-2 mr-1" required />
+                            <input type="number" name="Seats[${seatIndex}].Column" value="${col}" class="form-control col-md-2 mr-1" required />
+                            <select name="Seats[${seatIndex}].SeatTypeId" class="form-control col-md-3 mr-1" required>
+                                <option value="">Seat Type</option>
+                                ${[...document.querySelectorAll('#defaultSeatType option')]
+                                .map(option => `<option value="${option.value}" ${option.value === defaultSeatTypeId ? "selected" : ""}>${option.text}</option>`)
+                                .join('')}
+                            </select>
+                            <select name="Seats[${seatIndex}].Status" class="form-control col-md-2 mr-1" required>
+                                <option value="0" ${defaultStatus === "0" ? "selected" : ""}>Available</option>
+                                <option value="1" ${defaultStatus === "1" ? "selected" : ""}>Unavailable</option>
+                            </select>
+                            <button type="button" class="btn btn-danger remove-seat-row">Remove</button>`;
+                        seatsContainer.appendChild(newRow);
+                        seatIndex++;
+                    }
+                }
+                reindexSeats();
+            });
+            // Function to clear all seat rows
+            function removeAllSeats() {
+                const seatsContainer = document.getElementById('seatsContainer');
+                seatsContainer.innerHTML = ""; // Xóa tất cả các hàng ghế
+                seatIndex = 1; // Reset lại chỉ số ghế
+            }
+
+            // Attach remove all functionality to the Remove All Seats button
+            removeAllSeatsBtn.addEventListener('click', removeAllSeats);
         });
     </script>
 </body>

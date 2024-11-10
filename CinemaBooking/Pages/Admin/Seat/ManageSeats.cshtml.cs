@@ -91,7 +91,7 @@ namespace CinemaBooking.Pages.Admin.Seat
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Validate the number of seats against the room's capacity
+            // Validate the room's existence
             var room = await _roomService.GetRoomByIdAsync(RoomId);
             if (room == null)
             {
@@ -107,10 +107,12 @@ namespace CinemaBooking.Pages.Admin.Seat
                 return Page();
             }
 
-            // Calculate the valid rows (e.g., "A", "B", "C" for NumberOfRow = 3)
+            // Calculate valid rows (e.g., "A", "B", "C" for NumberOfRow = 3)
             var validRows = Enumerable.Range(0, room.RoomType.NumberOfRow)
                                       .Select(i => (char)('A' + i))
                                       .ToList();
+
+            var duplicateSeats = new HashSet<string>();
 
             // Validate individual seat rows and columns
             foreach (var seat in Seats)
@@ -125,10 +127,23 @@ namespace CinemaBooking.Pages.Admin.Seat
                 // Check if Column is within valid limits
                 if (seat.Column < 1 || seat.Column > room.RoomType.NumberOfColumn)
                 {
-                    ModelState.AddModelError(string.Empty, $"Column value for seat at Row: {seat.Row}, Column: {seat.Column} must be one of value from 1 to {room.RoomType.NumberOfColumn}.");
+                    ModelState.AddModelError(string.Empty, $"Column value for seat at Row: {seat.Row}, Column: {seat.Column} must be one of the values from 1 to {room.RoomType.NumberOfColumn}.");
                 }
 
-                // Check if the seat already exists
+                // Create a unique key for each seat based on Row and Column
+                var seatKey = $"{seat.Row.ToUpper()}_{seat.Column}";
+
+                // Check if the seat already exists in the current list of seats
+                if (duplicateSeats.Contains(seatKey))
+                {
+                    ModelState.AddModelError(string.Empty, $"Duplicate seat entry detected at Row: {seat.Row.ToUpper()}, Column: {seat.Column}.");
+                }
+                else
+                {
+                    duplicateSeats.Add(seatKey);
+                }
+
+                // Check if the seat already exists in the database
                 if (await _seatService.SeatExistsAsync(RoomId, seat.Row.ToUpper(), seat.Column))
                 {
                     ModelState.AddModelError(string.Empty, $"Seat already exists at Row: {seat.Row.ToUpper()}, Column: {seat.Column}.");
@@ -155,6 +170,7 @@ namespace CinemaBooking.Pages.Admin.Seat
             TempData["SuccessMessage"] = "Seats successfully added!";
             return RedirectToPage("/Admin/Seat/ManageSeats");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
