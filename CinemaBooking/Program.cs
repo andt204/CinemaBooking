@@ -100,7 +100,7 @@ namespace CinemaBooking
             //builder.Services.AddSingleton<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("SMTPConfig"));
 
             builder.Services.AddScoped<MovieInteractionService>();
             builder.Services.AddScoped<BlogService>();
