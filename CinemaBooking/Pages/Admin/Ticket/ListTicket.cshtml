@@ -10,11 +10,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
 </head>
 
@@ -25,40 +25,133 @@
                 <div class="col-sm-4 col-3">
                     <h4 class="page-title">Ticket Management</h4>
                 </div>
-                
             </div>
+
+            <!-- Filter Section -->
+            <div class="row filter-row">
+                <form method="get" class="row filter-row" style="width: 100%;">
+                    <!-- Movie Name Filter -->
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus select-focus">
+                            <label class="focus-label">Movie Name</label>
+                            <select class="select floating" name="MovieName">
+                                <option value="">Select Movie</option>
+                                @foreach (var movie in Model.MovieNames)
+                                {
+                                    <option value="@movie" selected="@(Model.MovieName == movie)">
+                                        @movie
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus select-focus">
+                            <label class="focus-label">Status</label>
+                            <select class="select floating" name="Status">
+                                <option value="">Select Status</option>
+                                @foreach (var status in Model.Statuses)
+                                {
+                                    <option value="@status" selected="@(Model.Status == status)">
+                                        @status
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Booking Time Filter -->
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">From Date</label>
+                                <input type="date" class="form-control floating" name="FromDate"
+                                       value="@(Model.FromDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">To Date</label>
+                                <input type="date" class="form-control floating" name="ToDate"
+                                       value="@(Model.ToDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                    </div>
+
+                    <!-- Search Button -->
+                    <div class="col-sm-6 col-md-3">
+                        <button type="submit" class="btn btn-success btn-block"> Search </button>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <div class="col-sm-6 col-md-3">
+                        <a href="/Admin/Ticket/ListTicket" class="btn btn-secondary btn-block">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Table Section -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table">
+                        <table class="table table-border table-striped custom-table datatable mb-0">
                             <thead>
                                 <tr>
                                     <th>Ticket ID</th>
-                                    <th>Seat ID</th>
+                                    <th>Movie</th>
+                                    <th>Customer</th>
+                                    <th>Seat</th>
+                                    <th>Room</th>
+                                    <th>Show Date/Time</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Booking Time</th>
-                                    
+                                    <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>10</td>
-                                    <td>$12.00</td>
-                                    <td>Available</td>
-                                    <td>2024-10-09 12:30</td>
-                                   
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>12</td>
-                                    <td>$10.00</td>
-                                    <td>Sold Out</td>
-                                    <td>2024-10-09 18:00</td>
-                                    
-                                </tr>
-                                <!-- Các vé khác -->
+                                @if (Model.Tickets != null && Model.Tickets.Any())
+                                {
+                                    foreach (var ticket in Model.Tickets)
+                                    {
+                                        <tr>
+                                            <td>@ticket.TicketId</td>
+                                            <td>@ticket.MovieName</td>
+                                            <td>@ticket.CustomerName</td>
+                                            <td>@ticket.SeatInfo</td>
+                                            <td>@ticket.RoomName</td>
+                                            <td>@ticket.ShowDate.ToString("dd/MM/yyyy") @ticket.ShowTime.ToString(@"hh\:mm")</td>
+                                            <td>@ticket.TicketPrice.ToString("C")</td>
+                                            <td>
+                                                <span class="custom-badge status-@ticket.Status.ToLower()">
+                                                    @ticket.Status
+                                                </span>
+                                            </td>
+                                            <td>@ticket.BookingTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td class="text-right">
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                                       aria-expanded="false">
+                                                        <i class="fa fa-ellipsis-v"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="#" data-toggle="modal"
+                                                           data-target="#ticket_detail_@ticket.TicketId">
+                                                            <i class="fa fa-eye m-r-5"></i> View Detail
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center">No tickets found</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -67,39 +160,75 @@
         </div>
     </div>
 
-    <!-- Modal Xác Nhận Xóa -->
-    <div id="delete_ticket_1" class="modal fade delete-modal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h3>Are you sure want to delete this Ticket?</h3>
-                    <div class="m-t-20">
-                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="delete_ticket_2" class="modal fade delete-modal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h3>Are you sure want to delete this Ticket?</h3>
-                    <div class="m-t-20">
-                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <style>
+        .custom-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .status-active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-used {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .status-cancelled {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .filter-row {
+            margin-bottom: 20px;
+        }
+
+        .form-focus .focus-label {
+            opacity: 1;
+            font-weight: 300;
+        }
+
+        .cal-icon {
+            position: relative;
+            width: 100%;
+        }
+
+            .cal-icon:after {
+                color: #979797;
+                content: "\f073";
+                font-family: "FontAwesome";
+                font-size: 15px;
+                margin: 0 10px;
+                position: absolute;
+                right: 0;
+                top: 10px;
+            }
+    </style>
 
     <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
     <script src="~/admin/assets/js/popper.min.js"></script>
     <script src="~/admin/assets/js/bootstrap.min.js"></script>
+    <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
     <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/admin/assets/js/select2.min.js"></script>
     <script src="~/admin/assets/js/app.js"></script>
-</body>
 
+    <script>
+        $(document).ready(function() {
+            $('.select').select2({
+                width: '100%'
+            });
+
+            $('.datatable').DataTable({
+                "bFilter": false,
+                "bLengthChange": false,
+                "bInfo": false
+            });
+        });
+    </script>
+</body>
 </html>
