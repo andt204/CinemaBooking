@@ -1,4 +1,4 @@
-﻿    @page
+    @page
     @model CinemaBooking.Pages.Admin.ShowTime.CreateShowTimeModel
 @{
     Layout = "/Pages/Shared/_AdminLayout.cshtml";
@@ -182,6 +182,7 @@
                 </div>
             </div>
         </div>
+     
         <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -195,6 +196,7 @@
                             <input type="hidden" id="modalTheaterId">
                             <input type="hidden" id="modalRoomId">
                             <input type="hidden" id="modalDate">
+                            <input type="hidden" name="isAuto" value="true">
                             <div class="mb-3">
                                 <label id="displayDate" class="form-label" style="font-weight: bold; font-size: 16px;"></label>
                             </div>
@@ -260,20 +262,24 @@
             cinemaSelect.addEventListener('change', function () {
                 const selectedCinemaId = parseInt(cinemaSelect.value);
                 theaterSelect.innerHTML = '<option value="">Select a Room</option>';
+
+                // Find the selected cinema and its rooms with status == 0
                 const selectedCinema = cinemasData.find(cinema => cinema.TheaterId === selectedCinemaId);
 
                 if (selectedCinema && selectedCinema.Rooms && selectedCinema.Rooms.length > 0) {
                     selectedCinema.Rooms.forEach(room => {
-                        const option = document.createElement('option');
-                        option.value = room.RoomId;
-                        option.textContent = room.RoomName;
-                        theaterSelect.appendChild(option);
+                        if (room.Status === 0) { // Only add rooms with status == 0
+                            const option = document.createElement('option');
+                            option.value = room.RoomId;
+                            option.textContent = room.RoomName;
+                            theaterSelect.appendChild(option);
+                        }
                     });
 
-                    // Hiển thị theaterSelect sau khi chọn rạp
+                    // Display theaterSelect after selecting cinema
                     theaterSelect.style.display = 'block';
                 } else {
-                    // Ẩn theaterSelect nếu không có rạp nào được chọn
+                    // Hide theaterSelect if no valid rooms
                     theaterSelect.style.display = 'none';
                 }
             });
@@ -409,23 +415,41 @@
                             addButton.classList.add('add-slot-btn');
                             addButton.textContent = 'Add Slot';
 
+                            const autoButton = document.createElement('button');
+                            autoButton.classList.add('add-slot-btn');
+                            autoButton.textContent = 'Auto';
+                            autoButton.style.marginLeft = '5px'; // Add space between the buttons
+
+                            // Set up today's date for comparison
                             const today = new Date();
                             const dayElement = document.getElementById(`day${dayIndex}`);
                             const dayDate = new Date(dayElement.getAttribute('data-date'));
-                            dayDate.setHours(0, 0, 0, 0);
-                            console.log(today);
-                            console.log(dayDate);
+                            dayDate.setHours(0, 0, 0, 0); // Set to midnight for accurate date comparison
+
+                            // Enable or disable buttons based on date
                             if (dayDate > today) {
                                 addButton.classList.remove('disabled');
+                                autoButton.classList.remove('disabled');
+
+                                // Event listeners to open the modals for adding slots
                                 addButton.addEventListener('click', () => openAddSlotModal(dayIndex, dayElement.getAttribute('data-date')));
+                                autoButton.addEventListener('click', () => openAutoSlotModal(dayIndex, dayElement.getAttribute('data-date')));
                             } else {
                                 addButton.classList.add('disabled');
+                                autoButton.classList.add('disabled');
+
+                                // Set disabled style for both buttons
                                 addButton.style.backgroundColor = '#f1f1f1';
                                 addButton.style.color = '#aaa';
                                 addButton.style.cursor = 'not-allowed';
+                                autoButton.style.backgroundColor = '#f1f1f1';
+                                autoButton.style.color = '#aaa';
+                                autoButton.style.cursor = 'not-allowed';
                             }
 
+                            // Append the buttons to the UI as needed (e.g., within a cell or container)
                             cell.appendChild(addButton);
+                            cell.appendChild(autoButton);
                         }
                         row.appendChild(cell);
                     }
@@ -466,7 +490,40 @@
                     });
                 }
             }
+     
+            function openAutoSlotModal(dayIndex, date) {
+                // Set modal to "Add" mode and clear previous values
+                isUpdateAction = false;
+                currentShowtimeId = null;
+                document.getElementById('submitSlot').textContent = 'Auto Add Slot';
+                document.getElementById('addSlotForm').classList.add('auto-mode');
+                const theaterName = cinemaSelect.options[cinemaSelect.selectedIndex].text;
+                const roomName = theaterSelect.options[theaterSelect.selectedIndex].text;
+                const roomId = theaterSelect.value;
+                const dateObj = new Date(date);
+                const formattedDate = dateObj.toISOString().split('T')[0];
 
+                document.getElementById('modalTheaterName').value = theaterName;
+                document.getElementById('modalRoomName').value = roomName;
+                document.getElementById('modalDate').value = formattedDate;
+                document.getElementById('displayDate').textContent = `Show Date: ${formattedDate}`;
+
+                // Remove startTime and endTime fields
+                document.getElementById('startTime').parentElement.style.display = 'none';
+                document.getElementById('endTime').parentElement.style.display = 'none';
+
+                // Populate movie selection
+                const movieSelect = document.getElementById('movieSelect');
+                movieSelect.innerHTML = '';
+                movies.forEach(movie => {
+                    const option = document.createElement('option');
+                    option.value = movie.MovieId;
+                    option.textContent = movie.Title;
+                    movieSelect.appendChild(option);
+                });
+
+                $('#addSlotModal').modal('show'); // Show modal
+            }
 
 
             // Tính toán tự động endTime khi chọn startTime
@@ -494,7 +551,7 @@
                 isUpdateAction = true; // Đặt chế độ thành "Update"
                 currentShowtimeId = showtime.ShowtimeId; // Lưu lại ID của slot cần cập nhật
                 document.getElementById('submitSlot').textContent = 'Update Slot'; // Thay đổi nút thành "Update Slot"
-
+                
                 // Điền thông tin của slot vào modal
                 document.getElementById('modalTheaterName').value = cinemaSelect.options[cinemaSelect.selectedIndex].text;
                 document.getElementById('modalRoomName').value = theaterSelect.options[theaterSelect.selectedIndex].text;
@@ -548,7 +605,7 @@
                 isUpdateAction = false; // Đặt chế độ thành "Add"
                 currentShowtimeId = null; // Không có ID showtime khi thêm mới
                 document.getElementById('submitSlot').textContent = 'Add Slot';
-
+                document.getElementById('addSlotForm').classList.remove('auto-mode');
                 const theaterName = cinemaSelect.options[cinemaSelect.selectedIndex].text;
                 const roomName = theaterSelect.options[theaterSelect.selectedIndex].text;
                 const roomId = theaterSelect.value;
@@ -576,29 +633,36 @@
                 $('#addSlotModal').modal('show'); // Hiển thị modal
             }
 
-
             document.getElementById('addSlotForm').addEventListener('submit', function (event) {
                 event.preventDefault();
 
+                const isAutoMode = document.getElementById('addSlotForm').classList.contains('auto-mode');
                 const roomId = theaterSelect.value;
                 const movieId = document.getElementById('movieSelect').value;
-                const startTime = document.getElementById('startTime').value;
                 const date = document.getElementById('modalDate').value;
 
+                // Add isAuto explicitly to formData
                 const formData = {
                     RoomId: roomId,
                     MovieId: movieId,
-                    StartHour: startTime,
                     Date: date,
+                    IsAuto: isAutoMode, // Pass the isAuto flag to backend
                     __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                 };
 
-                // Chỉ thêm `ShowtimeId` nếu đang ở chế độ cập nhật
+                // Only include StartHour if not in auto mode
+                if (!isAutoMode) {
+                    formData.StartHour = document.getElementById('startTime').value;
+                }
+
+                // Include ShowtimeId if updating
                 if (isUpdateAction && currentShowtimeId) {
                     formData.ShowtimeId = currentShowtimeId;
                 }
 
-                const url = isUpdateAction ? `/Admin/ShowTime/UpdateShowTime` : '/Admin/ShowTime/CreateShowTime';
+                const url = isUpdateAction
+                    ? `/Admin/ShowTime/UpdateShowTime`
+                    : '/Admin/ShowTime/CreateShowTime';
 
                 $.ajax({
                     url: url,
@@ -626,7 +690,7 @@
                 });
             });
 
-
+       
 
 
             document.addEventListener('DOMContentLoaded', function () {
