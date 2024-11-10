@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaBooking.Migrations
 {
     [DbContext(typeof(CinemaBookingContext))]
-    [Migration("20241107040323_1107")]
-    partial class _1107
+    [Migration("20241110151909_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,7 @@ namespace CinemaBooking.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("DateOfBirth")
+                        .IsRequired()
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -71,10 +72,7 @@ namespace CinemaBooking.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.HasIndex(new[] { "RoleId" }, "IX_Account_RoleId");
-
-                    b.HasIndex(new[] { "FullName" }, "UQ__account__F3DBC57261217132")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Account", (string)null);
                 });
@@ -157,16 +155,16 @@ namespace CinemaBooking.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("MovieId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PostId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<byte?>("Status")
+                    b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -381,7 +379,7 @@ namespace CinemaBooking.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
-                    b.Property<int?>("TheaterId")
+                    b.Property<int>("TheaterId")
                         .HasColumnType("int");
 
                     b.HasKey("RoomId");
@@ -401,13 +399,10 @@ namespace CinemaBooking.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomTypeId"), 1L, 1);
 
-                    b.Property<int?>("NumberOfColumn")
+                    b.Property<int>("NumberOfColumn")
                         .HasColumnType("int");
 
-                    b.Property<int?>("NumberOfRow")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberOfSeat")
+                    b.Property<int>("NumberOfRow")
                         .HasColumnType("int");
 
                     b.Property<string>("RoomTypeName")
@@ -462,7 +457,7 @@ namespace CinemaBooking.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SeatTypeId"), 1L, 1);
 
-                    b.Property<decimal?>("SeatPrice")
+                    b.Property<decimal>("SeatPrice")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("SeatTypeName")
@@ -486,10 +481,10 @@ namespace CinemaBooking.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int?>("MovieId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("StartHour")
@@ -513,12 +508,14 @@ namespace CinemaBooking.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TheaterId"), 1L, 1);
 
                     b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("Status")
+                    b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("TheaterName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TheaterId");
@@ -546,7 +543,7 @@ namespace CinemaBooking.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
-                    b.Property<decimal?>("TicketPrice")
+                    b.Property<decimal>("TicketPrice")
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("TicketId");
@@ -590,10 +587,10 @@ namespace CinemaBooking.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketSeatId"), 1L, 1);
 
-                    b.Property<int?>("SeatId")
+                    b.Property<int>("SeatId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TicketId")
+                    b.Property<int>("TicketId")
                         .HasColumnType("int");
 
                     b.HasKey("TicketSeatId");
@@ -642,7 +639,7 @@ namespace CinemaBooking.Migrations
                         .WithMany("Accounts")
                         .HasForeignKey("RoleId")
                         .IsRequired()
-                        .HasConstraintName("FK__account__role_id__300424B4");
+                        .HasConstraintName("FK_Account_Role");
 
                     b.Navigation("Role");
                 });
@@ -677,11 +674,13 @@ namespace CinemaBooking.Migrations
                     b.HasOne("CinemaBooking.Data.Movie", "Movie")
                         .WithMany("Comments")
                         .HasForeignKey("MovieId")
+                        .IsRequired()
                         .HasConstraintName("FK_Comment_Movie");
 
                     b.HasOne("CinemaBooking.Data.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
+                        .IsRequired()
                         .HasConstraintName("FK_Comment_Post");
 
                     b.Navigation("Account");
@@ -754,6 +753,7 @@ namespace CinemaBooking.Migrations
                     b.HasOne("CinemaBooking.Data.Theater", "Theater")
                         .WithMany("Rooms")
                         .HasForeignKey("TheaterId")
+                        .IsRequired()
                         .HasConstraintName("FK_Room_Theater");
 
                     b.Navigation("RoomType");
@@ -785,11 +785,13 @@ namespace CinemaBooking.Migrations
                     b.HasOne("CinemaBooking.Data.Movie", "Movie")
                         .WithMany("Showtimes")
                         .HasForeignKey("MovieId")
+                        .IsRequired()
                         .HasConstraintName("FK_Showtime_Movie");
 
                     b.HasOne("CinemaBooking.Data.Room", "Room")
                         .WithMany("Showtimes")
                         .HasForeignKey("RoomId")
+                        .IsRequired()
                         .HasConstraintName("FK_Showtime_Room");
 
                     b.Navigation("Movie");
@@ -840,11 +842,13 @@ namespace CinemaBooking.Migrations
                     b.HasOne("CinemaBooking.Data.Seat", "Seat")
                         .WithMany("TicketSeatAssignments")
                         .HasForeignKey("SeatId")
+                        .IsRequired()
                         .HasConstraintName("FK_TicketSeatAssignments_Seat");
 
                     b.HasOne("CinemaBooking.Data.Ticket", "Ticket")
                         .WithMany("TicketSeatAssignments")
                         .HasForeignKey("TicketId")
+                        .IsRequired()
                         .HasConstraintName("FK_TicketSeatAssignments_Ticket");
 
                     b.Navigation("Seat");

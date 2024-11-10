@@ -17,7 +17,7 @@ namespace CinemaBooking.Data
         public int ShowtimeId { get; set; }
         public byte Status { get; set; }
         public DateTime BookingTime { get; set; }
-        public decimal? TicketPrice { get; set; }
+        public decimal TicketPrice { get; set; }
 
         public virtual Account Account { get; set; } = null!;
         public virtual Showtime Showtime { get; set; } = null!;

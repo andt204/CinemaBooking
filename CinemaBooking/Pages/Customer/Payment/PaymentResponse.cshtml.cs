@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages;
 
-[Authorize(Roles = "Customer")]
+
 public class PaymentResponse : PageModel
 {
 

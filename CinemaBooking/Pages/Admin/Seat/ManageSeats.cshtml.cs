@@ -1,6 +1,7 @@
 ﻿using CinemaBooking.Enum;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Admin.Seat
 {
+    [Authorize(Roles = "Admin")]
     public class ManageSeatsModel : PageModel
     {
         private readonly RoomService _roomService;
@@ -22,7 +24,7 @@ namespace CinemaBooking.Pages.Admin.Seat
         }
 
         [BindProperty]
-        public int RoomId { get; set; } = 0; // Default value
+        public int RoomId { get; set; } = 0; 
 
         [BindProperty]
         public string? Row { get; set; } = string.Empty;
@@ -52,14 +54,16 @@ namespace CinemaBooking.Pages.Admin.Seat
         {
             var seats = await _seatService.GetSeatsByRoomIdAsync(roomId);
 
-            // Chuyển đổi trạng thái của từng ghế trước khi trả về kết quả
+            // Convert seat data to include only necessary properties
             var result = seats.Select(seat => new
             {
                 seat.RoomId,
                 seat.Row,
                 seat.Column,
                 seat.SeatTypeId,
-                Status = seat.Status == SeatStatus.Available ? SeatStatus.Available : SeatStatus.Unavailable
+                Type = seat.SeatType?.SeatTypeName, // Ensure only the name is passed
+                Status = seat.Status == SeatStatus.Unavailable ? SeatStatus.Unavailable : SeatStatus.Available,
+                RoomStatus = seat.Room.Status,
             });
 
             return new JsonResult(result);
@@ -80,7 +84,8 @@ namespace CinemaBooking.Pages.Admin.Seat
             {
                 room.RoomType.NumberOfRow,
                 room.RoomType.NumberOfColumn,
-                room.RoomType.RoomTypeName
+                room.RoomType.RoomTypeName,
+                room.Status
             };
 
             return new JsonResult(roomDetails);
@@ -104,14 +109,26 @@ namespace CinemaBooking.Pages.Admin.Seat
                 return Page();
             }
 
+            // Calculate the valid rows (e.g., "A", "B", "C" for NumberOfRow = 3)
+            var validRows = Enumerable.Range(0, room.RoomType.NumberOfRow)
+                                      .Select(i => (char)('A' + i))
+                                      .ToList();
+
             // Validate individual seat rows and columns
             foreach (var seat in Seats)
             {
-                //// Check if Column is within valid limits
-                //if (seat.Column < 1 || seat.Column > room.RoomType.NumberOfColumn)
-                //{
-                //    ModelState.AddModelError(string.Empty, $"Column must be between 1 and {room.RoomType.NumberOfColumn} for seatat Row: {seat.Row}, Column: {seat.Column}.");
-                //}
+                // Check if Row is within valid limits (case insensitive)
+                if (!validRows.Contains(char.ToUpper(seat.Row[0])))
+                {
+                    var validRowLetters = string.Join(", ", validRows);
+                    ModelState.AddModelError(string.Empty, $"Row must be one of the following: {validRowLetters} for seat at Row: {seat.Row}, Column: {seat.Column}.");
+                }
+
+                // Check if Column is within valid limits
+                if (seat.Column < 1 || seat.Column > room.RoomType.NumberOfColumn)
+                {
+                    ModelState.AddModelError(string.Empty, $"Column value for seat at Row: {seat.Row}, Column: {seat.Column} must be one of value from 1 to {room.RoomType.NumberOfColumn}.");
+                }
 
                 // Check if the seat already exists
                 if (await _seatService.SeatExistsAsync(RoomId, seat.Row.ToUpper(), seat.Column))
@@ -140,6 +157,7 @@ namespace CinemaBooking.Pages.Admin.Seat
             TempData["SuccessMessage"] = "Seats successfully added!";
             return RedirectToPage("/Admin/Seat/ManageSeats");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostUpdateSeatAsync()
@@ -177,7 +195,5 @@ namespace CinemaBooking.Pages.Admin.Seat
             // Trả về thông báo thành công dưới dạng JSON
             return new JsonResult(new { success = true, message = "Seat updated successfully!" });
         }
-
-
     }
 }
