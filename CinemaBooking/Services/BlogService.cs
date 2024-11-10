@@ -36,13 +36,13 @@ namespace CinemaBooking.Services
                         .Select(c => new BlogCommentDto
                         {
                             CommentId = c.CommentId,
-                            PostId = c.PostId.Value,
+                            PostId = c.PostId,
                             AccountId = c.AccountId,
                             Content = c.Content,
-                            CreatedAt = c.CreatedAt,
+                            CreatedAt = c.CreatedAt ?? DateTime.MinValue,
                             UpdatedAt = c.UpdatedAt,
                             FullName = c.Account.FullName,
-                            Status = c.Status ?? 1,
+                            Status = c.Status,
                             CommentType = c.CommentType
                         }).ToList()
                 })

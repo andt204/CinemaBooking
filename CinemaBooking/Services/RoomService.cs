@@ -69,9 +69,8 @@ namespace CinemaBooking.Services
                     {
                         RoomTypeId = room.RoomType.RoomTypeId,
                         RoomTypeName = room.RoomType.RoomTypeName,
-                        NumberOfSeat = room.RoomType.NumberOfSeat ?? 0,
-                        NumberOfRow = room.RoomType.NumberOfRow ?? 0,
-                        NumberOfColumn = room.RoomType.NumberOfColumn ?? 0
+                        NumberOfRow = room.RoomType.NumberOfRow,
+                        NumberOfColumn = room.RoomType.NumberOfColumn
                     } : null,
 
                     // Map Theater to TheaterDto

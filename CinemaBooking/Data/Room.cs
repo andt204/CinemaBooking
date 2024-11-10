@@ -13,12 +13,12 @@ namespace CinemaBooking.Data
 
         public int RoomId { get; set; }
         public int RoomTypeId { get; set; }
-        public int? TheaterId { get; set; }
+        public int TheaterId { get; set; }
         public string RoomName { get; set; } = null!;
         public byte Status { get; set; }
 
         public virtual RoomType RoomType { get; set; } = null!;
-        public virtual Theater? Theater { get; set; }
+        public virtual Theater Theater { get; set; } = null!;
         public virtual ICollection<Seat> Seats { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
     }

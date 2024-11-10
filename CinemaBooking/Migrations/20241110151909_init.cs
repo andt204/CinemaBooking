@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaBooking.Migrations
 {
-    public partial class _1107 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,9 +68,8 @@ namespace CinemaBooking.Migrations
                     RoomTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoomTypeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NumberOfSeat = table.Column<int>(type: "int", nullable: true),
-                    NumberOfColumn = table.Column<int>(type: "int", nullable: true),
-                    NumberOfRow = table.Column<int>(type: "int", nullable: true)
+                    NumberOfColumn = table.Column<int>(type: "int", nullable: false),
+                    NumberOfRow = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,7 +83,7 @@ namespace CinemaBooking.Migrations
                     SeatTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SeatTypeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SeatPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
+                    SeatPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,9 +96,9 @@ namespace CinemaBooking.Migrations
                 {
                     TheaterId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TheaterName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<byte>(type: "tinyint", nullable: true)
+                    TheaterName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +144,7 @@ namespace CinemaBooking.Migrations
                     Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
@@ -155,7 +154,7 @@ namespace CinemaBooking.Migrations
                 {
                     table.PrimaryKey("PK_Account", x => x.AccountId);
                     table.ForeignKey(
-                        name: "FK__account__role_id__300424B4",
+                        name: "FK_Account_Role",
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "RoleId");
@@ -168,7 +167,7 @@ namespace CinemaBooking.Migrations
                     RoomId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoomTypeId = table.Column<int>(type: "int", nullable: false),
-                    TheaterId = table.Column<int>(type: "int", nullable: true),
+                    TheaterId = table.Column<int>(type: "int", nullable: false),
                     RoomName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false)
                 },
@@ -317,10 +316,10 @@ namespace CinemaBooking.Migrations
                 {
                     ShowtimeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomId = table.Column<int>(type: "int", nullable: true),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
                     StartHour = table.Column<TimeSpan>(type: "time", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: true)
+                    MovieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -343,12 +342,12 @@ namespace CinemaBooking.Migrations
                 {
                     CommentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MovieId = table.Column<int>(type: "int", nullable: true),
-                    PostId = table.Column<int>(type: "int", nullable: true),
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    PostId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: true),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     CommentType = table.Column<byte>(type: "tinyint", nullable: false)
                 },
@@ -382,7 +381,7 @@ namespace CinemaBooking.Migrations
                     ShowtimeId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     BookingTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    TicketPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
+                    TicketPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -450,8 +449,8 @@ namespace CinemaBooking.Migrations
                 {
                     TicketSeatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TicketId = table.Column<int>(type: "int", nullable: true),
-                    SeatId = table.Column<int>(type: "int", nullable: true)
+                    TicketId = table.Column<int>(type: "int", nullable: false),
+                    SeatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -472,12 +471,6 @@ namespace CinemaBooking.Migrations
                 name: "IX_Account_RoleId",
                 table: "Account",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__account__F3DBC57261217132",
-                table: "Account",
-                column: "FullName",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ActorMovieAssignments_ActorId",

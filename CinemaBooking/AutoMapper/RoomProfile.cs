@@ -17,9 +17,8 @@ namespace CinemaBooking.AutoMapper
                  .ForMember(dest => dest.Status, opt => opt.MapFrom(src => (byte)src.Status)); // Converts RoomStatus to byte for database
 
             CreateMap<RoomType, RoomTypeDto>()
-                .ForMember(dest => dest.NumberOfSeat, opt => opt.MapFrom(src => src.NumberOfSeat ?? 0))
-                .ForMember(dest => dest.NumberOfColumn, opt => opt.MapFrom(src => src.NumberOfColumn ?? 0))
-                .ForMember(dest => dest.NumberOfRow, opt => opt.MapFrom(src => src.NumberOfRow ?? 0))
+                .ForMember(dest => dest.NumberOfColumn, opt => opt.MapFrom(src => src.NumberOfColumn))
+                .ForMember(dest => dest.NumberOfRow, opt => opt.MapFrom(src => src.NumberOfRow))
                 .ReverseMap();
         }
     }
