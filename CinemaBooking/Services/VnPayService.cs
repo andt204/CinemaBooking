@@ -12,7 +12,7 @@ public class VnPayService : IVnPayService
 {
     private readonly IConfiguration _config;
     private string ticketId;
-    private readonly CinemaBookingContext _context;
+    private readonly CinemaBookingContext _context = new CinemaBookingContext();
 
     public VnPayService(IConfiguration config)
     {

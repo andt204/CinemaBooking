@@ -68,7 +68,7 @@ namespace CinemaBooking.Pages.Customer.Account
 
                     if (account.RoleId == 1)
                     {
-                        return RedirectToPage("/Admin/ShowTime/CreateShowTime");
+                        return RedirectToPage("/Admin/Account/List");
                     }
                     return RedirectToPage("/Customer/Movie/List");
                 }
@@ -111,7 +111,7 @@ namespace CinemaBooking.Pages.Customer.Account
                     {
                         if (account.RoleId == 1)
                         {
-                            return RedirectToPage("/HomeAdmin");
+                            return RedirectToPage("/Admin/Account/List");
                         }
                         else
                         {

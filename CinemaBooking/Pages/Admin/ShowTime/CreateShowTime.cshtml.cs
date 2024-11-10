@@ -131,10 +131,7 @@ namespace CinemaBooking.Pages.Admin.ShowTime
                     return BadRequest(new { success = false, message = "Invalid start time. Please choose a time between 9:00 AM and 11:59 PM." });
                 }
                 // Check if StartHour is within operating hours
-                if (StartHour < new TimeSpan(9, 0, 0) || StartHour > new TimeSpan(23, 59, 0))
-                {
-                    return BadRequest(new { success = false, message = "Invalid start time. Please choose a time between 9:00 AM and 11:59 PM." });
-                }
+           
 
                 // Calculate the end time for the new showtime
                 var newShowtimeEnd = StartHour.Add(TimeSpan.FromMinutes(movie.Length + 20));
@@ -179,13 +176,13 @@ namespace CinemaBooking.Pages.Admin.ShowTime
                 // Auto mode: Generate multiple showtimes from 9:00 AM to 2:00 AM
                 var startTime = new TimeSpan(9, 0, 0); // Start from 9:00 AM
                 var endTimeLimit = new TimeSpan(2, 0, 0); // End at 2:00 AM next day
-                var dayEndTime = endTimeLimit < startTime ? endTimeLimit.Add(TimeSpan.FromDays(1)) : endTimeLimit;
+                var lastStartTime = new TimeSpan(23, 59, 0); // Latest possible start time at 11:59 PM
 
                 // List to store new showtimes for batch insertion
                 var newShowtimes = new List<Showtime>();
                 var currentStartTime = startTime;
 
-                while (currentStartTime < dayEndTime)
+                while (currentStartTime <= lastStartTime)
                 {
                     // Calculate end time for the current showtime
                     var newShowtimeEnd = currentStartTime.Add(TimeSpan.FromMinutes(movie.Length + 20)); // 20-min break included
