@@ -66,7 +66,7 @@
                     <select id="categorySelect" class="form-control" name="CategoryIds" multiple onchange="addTag('categorySelect', 'categoryDisplay')">
                         @foreach (var category in Model.Categories)
                         {
-                            <option value="@category.CategoryId">@category.CategoryName</option>
+                        <option value="@category.CategoryId">@category.CategoryName</option>
                         }
                     </select>
                     <div id="categoryDisplay" class="mt-2"></div>
@@ -160,7 +160,7 @@
                     <select id="actorSelect" class="form-control" name="ActorIds" multiple onchange="addTag('actorSelect', 'actorDisplay')">
                         @foreach (var actor in Model.Actors)
                         {
-                            <option value="@actor.Value">@actor.Text</option>
+                        <option value="@actor.Value">@actor.Text</option>
                         }
                     </select>
                     <div id="actorDisplay" class="mt-2"></div>
@@ -171,35 +171,70 @@
             </form>
         </div>
     </div>
-    <script type="text/javascript">
-        function addTag(selectId, displayId) {
-            // Lấy text và giá trị của tùy chọn đang chọn
-            var selectedOption = $("#" + selectId + " option:selected");
-            var selectedTagText = selectedOption.text();
-            var selectedTagValue = selectedOption.val();
+<script type="text/javascript">
 
-            // Kiểm tra nếu một lựa chọn hợp lệ được thực hiện và tag chưa tồn tại
-            if (selectedTagValue && !$("#" + displayId).find(`span[data-value='${selectedTagValue}']`).length) {
-                // Tạo phần tử tag với thuộc tính `data-value` để tránh trùng lặp
+    function addTag(selectId, displayId) {
+        // Lấy option mới được chọn (chỉ lấy option vừa mới được chọn)
+        var selectedOptions = $("#" + selectId + " option:selected");
+        var displayDiv = $("#" + displayId);
+
+        selectedOptions.each(function() {
+            var selectedTagValue = $(this).val();
+            var selectedTagText = $(this).text();
+
+            // Kiểm tra xem tag đã tồn tại chưa
+            if (!displayDiv.find(`span[data-value='${selectedTagValue}']`).length) {
                 var tagElement = $(
-                    `<span data-value="${selectedTagValue}" style="background-color: #007bff; padding: 5px; margin-right: 5px; border-radius: 5px; color: white;">
-                            ${selectedTagText}
-                            <span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span>
-                        </span>`
+                    `<span data-value="${selectedTagValue}" style="display: inline-block; background-color: #007bff; padding: 5px; margin: 5px; border-radius: 5px; color: white;">
+                    ${selectedTagText}
+                    <span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span>
+                </span>`
                 );
 
-                // Thêm tag vào vùng hiển thị
-                $("#" + displayId).append(tagElement);
+                // Thêm tag mới vào display
+                displayDiv.append(tagElement);
 
-                // Xử lý xóa tag khi nhấp vào dấu "x"
-                tagElement.find(".remove-tag").on("click", function () {
-                    // Xóa tag khỏi vùng hiển thị
+                // Xử lý sự kiện xóa tag
+                tagElement.find(".remove-tag").on("click", function() {
+                    // Bỏ chọn trong select
+                    $(`#${selectId} option[value='${selectedTagValue}']`).prop("selected", false);
+                    // Xóa tag
                     $(this).parent().remove();
-                    // Bỏ chọn mục trong dropdown
-                    $("#" + selectId + " option[value='" + selectedTagValue + "']").prop("selected", false);
                 });
             }
-        }
+        });
+    }
+
+    // Thêm đoạn code này để xử lý form submission
+    $(document).ready(function() {
+        $('form').on('submit', function() {
+            // Lấy tất cả các giá trị đã chọn từ selects
+            var selectedCategories = $('#categorySelect').val() || [];
+            var selectedActors = $('#actorSelect').val() || [];
+
+            // Xóa các hidden inputs cũ nếu có
+            $('input[name="CategoryIds"]').remove();
+            $('input[name="ActorIds"]').remove();
+
+            // Thêm hidden inputs mới cho categories
+            selectedCategories.forEach(function(categoryId) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'CategoryIds',
+                    value: categoryId
+                }).appendTo('form');
+            });
+
+            // Thêm hidden inputs mới cho actors
+            selectedActors.forEach(function(actorId) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'ActorIds',
+                    value: actorId
+                }).appendTo('form');
+            });
+        });
+    });
     </script>
 
     <!-- Popup cho thêm mới category -->
