@@ -24,54 +24,56 @@ namespace CinemaBooking.Pages.Customer.Movie
             _context = context;
         }
 
-		public async Task<IActionResult> OnGetAsync(string? searchTitle)
-		{
-			Console.WriteLine($"SearchTitle: {searchTitle}");
-			SearchTitle = searchTitle;
-			var currentTime = DateTime.Now;
-			var token = Request.Cookies["jwtToken"];
-			if (token != null)
-			{
-				var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
-				if (email != null)
-				{
-					account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
-					ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
-				}
-			}
-			// Tìm kiếm phim theo tiêu đề
-			var movies = _context.Movies.AsQueryable();
-			if (!string.IsNullOrEmpty(SearchTitle))
-			{
-				movies = movies.Where(m => m.Title.Contains(SearchTitle));
-			}
+        public async Task<IActionResult> OnGetAsync(string? searchTitle)
+        {
+	        Console.WriteLine($"SearchTitle: {searchTitle}");
+	        SearchTitle = searchTitle;
+	        var currentTime = DateTime.Now;
+	        var token = Request.Cookies["jwtToken"];
+	        if (token != null)
+	        {
+		        var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+		        if (email != null)
+		        {
+			        account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+			        ViewData["Account"] = account;
+		        }
+	        }
 
-			var movieList = await movies
-				.Select(m => new Data.Movie
-				{
-					MovieId = m.MovieId,
-					Title = m.Title,
-					Length = m.Length,
-					Description = m.Description,
-					AgeLimit = m.AgeLimit,
-					PublishTime = m.PublishTime,
-					Country = m.Country,
-					Image = m.Image,
-					Status = m.Status,
-					VideoTrailer = m.VideoTrailer,
-					ImageBackground = m.ImageBackground
-				}).ToListAsync();
+	        // Tìm kiếm phim theo tiêu đề và status = 1
+	        var movies = _context.Movies.Where(m => m.Status == 1).AsQueryable(); // Thêm điều kiện status = 1
 
-			// Phân loại phim đang chiếu và sắp chiếu
-			NowShowingMovies = movieList.Where(m => m.PublishTime <= currentTime).ToList();
-			ComingSoonMovies = movieList.Where(m => m.PublishTime > currentTime).ToList();
+	        if (!string.IsNullOrEmpty(SearchTitle))
+	        {
+		        movies = movies.Where(m => m.Title.Contains(SearchTitle));
+	        }
 
-			// Lấy BannerMovies và TrailerVideoUrls
-			BannerMovies = NowShowingMovies.OrderByDescending(m => m.PublishTime).Take(5).ToList();
-			BannerMovies.AddRange(ComingSoonMovies.OrderBy(m => m.PublishTime).Take(5));
-			TrailerVideoUrls = BannerMovies.Select(m => m.VideoTrailer).ToList();
+	        var movieList = await movies
+		        .Select(m => new Data.Movie
+		        {
+			        MovieId = m.MovieId,
+			        Title = m.Title,
+			        Length = m.Length,
+			        Description = m.Description,
+			        AgeLimit = m.AgeLimit,
+			        PublishTime = m.PublishTime,
+			        Country = m.Country,
+			        Image = m.Image,
+			        Status = m.Status,
+			        VideoTrailer = m.VideoTrailer,
+			        ImageBackground = m.ImageBackground
+		        }).ToListAsync();
 
-			return Page();
-		}
+	        // Phân loại phim đang chiếu và sắp chiếu
+	        NowShowingMovies = movieList.Where(m => m.PublishTime <= currentTime).ToList();
+	        ComingSoonMovies = movieList.Where(m => m.PublishTime > currentTime).ToList();
+
+	        // Lấy BannerMovies và TrailerVideoUrls 
+	        BannerMovies = NowShowingMovies.OrderByDescending(m => m.PublishTime).Take(5).ToList();
+	        BannerMovies.AddRange(ComingSoonMovies.OrderBy(m => m.PublishTime).Take(5));
+	        TrailerVideoUrls = BannerMovies.Select(m => m.VideoTrailer).ToList();
+
+	        return Page();
+        }
     }
 }
