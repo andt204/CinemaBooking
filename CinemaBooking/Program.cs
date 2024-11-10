@@ -104,6 +104,7 @@ namespace CinemaBooking
             builder.Services.AddHostedService<PendingTicketMonitorService>();
 
             builder.Services.AddScoped<MovieInteractionService>();
+            builder.Services.AddScoped<BlogService>();
             // Configure DbContext with SQL Server
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));

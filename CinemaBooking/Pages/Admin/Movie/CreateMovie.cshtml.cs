@@ -55,8 +55,14 @@ namespace CinemaBooking.Pages.Admin.Movie
             Countries = countryList?.ConvertAll(c => c.CountryName);
         }
 
-        public async Task<IActionResult> OnPostAsync(int[] ActorIds, int[] CategoryIds, IFormFile image, IFormFile imageBackground)
-        {
+        // public async Task<IActionResult> OnPostAsync(int[] ActorIds, int[] CategoryIds, IFormFile image, IFormFile imageBackground)
+        // {
+            public async Task<IActionResult> OnPostAsync(List<int> ActorIds, List<int> CategoryIds, IFormFile image, IFormFile imageBackground)
+            {
+                if (ActorIds == null) ActorIds = new List<int>();
+                if (CategoryIds == null) CategoryIds = new List<int>();
+                Console.WriteLine("Category IDs: " + string.Join(", ", CategoryIds));
+                Console.WriteLine("Actor IDs: " + string.Join(", ", ActorIds));
             var newMovie = new Data.Movie
             {
                 Title = Movie.Title,

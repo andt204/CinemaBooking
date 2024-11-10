@@ -18,20 +18,33 @@ namespace CinemaBooking.Pages.Admin.Category
 
         [BindProperty]
         public string CategoryName { get; set; }
+        [BindProperty]
+        public int CategoryId { get; set; } // Used to identify the actor for update/delete
+
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        public List<Data.Category> CategoryList { get; set; }
 
         public string ErrorMessage { get; private set; }
 
+        public async Task<IActionResult> OnGetAsync(string? title)
+        {
+            CategoryList = string.IsNullOrEmpty(title)
+                ? await _context.Categories.ToListAsync()
+                : await _context.Categories
+                    .Where(a => a.CategoryName.Contains(title))
+                    .ToListAsync();
+
+            return Page();
+        }
+        
         public async Task<IActionResult> OnPostAsync()
         {
-            // Check ModelState first
-            if (!ModelState.IsValid)
-                return Page();
-
-            // Check if the category already exists
-            if (await _context.Categories.AnyAsync(c => c.CategoryName == CategoryName))
+            
+            if (await _context.Categories.AnyAsync(a => a.CategoryName == CategoryName))
             {
                 ModelState.AddModelError(string.Empty, "This category already exists!"); // Add error message to ModelState
-                return Page();
+                // return Page();
             }
 
             var category = new Data.Category { CategoryName = CategoryName };
@@ -39,7 +52,40 @@ namespace CinemaBooking.Pages.Admin.Category
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Category has been successfully added!";
-            return Page();
+            return RedirectToPage();
+        }
+        // Method to update an existing actor
+        public async Task<IActionResult> OnPostUpdateAsync()
+        {
+            var actor = await _context.Categories.FindAsync(CategoryId);
+            if (actor == null)
+            {
+                ModelState.AddModelError("", "Category not found.");
+                return Page();
+            }
+
+            actor.CategoryName = CategoryName;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Category updated successfully!";
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var actor = await _context.Categories.FindAsync(id);
+            if (actor != null)
+            {
+                _context.Categories.Remove(actor);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Category deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Category not found.";
+            }
+
+            return RedirectToPage();
         }
     }
 }

@@ -7,81 +7,89 @@
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>Employee</title>
+
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
-    <title>vcl</title>
+
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div class="page-wrapper">
-        <div class="content">
-            <div class="row">
-                <div class="col-sm-4 col-3">
-                    <h4 class="page-title">Account</h4>
-                </div>
-
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-4 col-3">
+                <h4 class="page-title">Accounts</h4>
             </div>
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["SuccessMessage"]
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    @TempData["ErrorMessage"]
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            }
-            <form method="get" class="form-inline">
-                <input class="form-control mr-sm-2" name="name" type="text" placeholder="Search"
-                       aria-label="Search" style="height: 30px;">
-                <button class="btn btn-outline-success my-2 my-sm-0 ml-2"
-                        type="submit">
-                    Search
+        </div>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
-            </form>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
 
-                        <table class="table table-striped custom-table mb-0 datatable">
-                            <thead>
-                            <tr>
-                                <th>Account ID</th>
-                                <th style="min-width:200px;">Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th style="min-width: 110px;">Hire Date</th>
-                                <th style="min-width: 110px;">Status</th>
-                                <th class="text-right">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @if (Model.Accounts == null)
-                            {
-                                <p>No data</p>
-                            }
-                            else
-                            {
-                                @foreach (var account in Model.Accounts)
+        <div class="row filter-row">
+            <form method="get" class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group form-focus">
+                        <label class="focus-label">Enter Name</label>
+                        <input type="text" class="form-control floating" name="name">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <button type="submit" class="btn btn-success btn-block">Search</button>
+                </div>
+                @* <input class="form-control mr-sm-2" name="name" type="text" placeholder="Search" *@
+                @*        aria-label="Search" style="height: 30px;"> *@
+                @* <button class="btn btn-outline-success my-2 my-sm-0 ml-2" *@
+                @*         type="submit"> *@
+                @*     Search *@
+                @* </button> *@
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-border table-striped custom-table datatable mb-0">
+                        <thead>
+                        <tr>
+                            <th>Account ID</th>
+                            <th style="min-width:200px;">Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th style="min-width: 110px;">Hire Date</th>
+                            <th style="min-width: 110px;">Status</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model.Accounts == null)
+                        {
+                            <p>No data</p>
+                        }
+                        else
+                        {
+                            @foreach (var account in Model.Accounts)
                             {
                                 <tr>
                                     <td>@account.AccountId</td>
@@ -91,11 +99,11 @@
                                     <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>
                                     @if (account.Status == 1)
                                     {
-                                        <td>Active</td>
+                                        <td><span class='custom-badge status-green'>Active</span></td>
                                     }
                                     else
                                     {
-                                        <td>InActive</td>
+                                        <td><span class='custom-badge status-red'>InActive</span></td>
                                     }
 
 
@@ -106,16 +114,19 @@
                                                 <i class="fa fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@account.AccountId">
-                                                    @if (account.Status == 1)
-                                                    {
-                                                        <i class="fa fa-trash-o m-r-5">InActive</i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="fa fa-trash-o m-r-5">Active</i>
-                                                    }
-                                                </a>
+                                                @if (account.Status == 1)
+                                                {
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@account.AccountId">
+                                                        <i class="fa fa-refresh m-r-5"></i>InActive
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_room_@account.AccountId">
+
+                                                        <i class="fa fa-refresh m-r-5"></i>Active
+                                                    </a>
+                                                }
                                             </div>
                                         </div>
                                     </td>
@@ -138,25 +149,22 @@
                                     </div>
                                 </tr>
                             }
-                            }
-                            
-                            </tbody>
-                        </table>
-
-                    </div>
+                        }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div id="delete_room" class="modal fade delete-modal" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <img src="assets/img/sent.png" alt="" width="50" height="46">
-                        <h3>Are you sure want to delete this Account?</h3>
-                        <div class="m-t-20">
-                            <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </div>
+    </div>
+    <div id="delete_room" class="modal fade delete-modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img src="assets/img/sent.png" alt="" width="50" height="46">
+                    <h3>Are you sure want to delete this Account?</h3>
+                    <div class="m-t-20">
+                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>
@@ -164,15 +172,14 @@
     </div>
 </div>
 
-<div class="sidebar-overlay" data-reff=""></div>
+
 <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
 <script src="~/admin/assets/js/popper.min.js"></script>
 <script src="~/admin/assets/js/bootstrap.min.js"></script>
 <script src="~/admin/assets/js/jquery.dataTables.min.js"></script>
 <script src="~/admin/assets/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/admin/assets/js/jquery.slimscroll.js"></script>
 <script src="~/admin/assets/js/select2.min.js"></script>
-<script src="~/admin/assets/js/moment.min.js"></script>
-<script src="~/admin/assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="~/admin/assets/js/app.js"></script>
 </body>
 </html>
