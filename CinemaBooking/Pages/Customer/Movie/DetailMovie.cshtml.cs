@@ -142,7 +142,7 @@ namespace CinemaBooking.Pages.Customer.Movie
             CommentContent = Request.Form["CommentContent"].ToString();
             if (!string.IsNullOrWhiteSpace(CommentContent))
             {
-                var commentSuccess = await _movieInteractionService.AddCommentAsync(MovieId, userId.Value, CommentContent);
+                var commentSuccess = await _movieInteractionService.AddCommentAsync(MovieId, userId.Value, CommentContent, 1);
                 if (!commentSuccess)
                 {
                     TempData["ErrorMessage"] = string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString())

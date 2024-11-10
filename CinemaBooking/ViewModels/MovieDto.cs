@@ -43,6 +43,7 @@ namespace CinemaBooking.ViewModels
         public int AccountId { get; set; }
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string FullName { get; set; }
+            public string FullName { get; set; }
+        public byte Status { get; set; }
     }
 }
