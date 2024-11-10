@@ -1,25 +1,23 @@
 ﻿@page
-@model CinemaBooking.Pages.Admin.Post.List
+@model CinemaBooking.Pages.Admin.Post.ListModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
 Layout = "/Pages/Shared/_AdminLayout.cshtml";
 ViewData["Title"] = "Post List";
 }
-
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>Employee</title>
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="~/admin/assets/css/style.css">
-    <title>vcl</title>
 </head>
 <body>
 
@@ -30,18 +28,57 @@ ViewData["Title"] = "Post List";
                 <div class="col-sm-4 col-3">
                     <h4 class="page-title">Post</h4>
                 </div>
-                <div class="col-sm-8 col-9 text-right m-b-20">
-                    <a href="/Admin/Post/Add" class="btn btn-primary float-right btn-rounded"><i class="fa fa-plus"></i> Add Post</a>
-                </div>
             </div>
-            <form action="employee" method="get" class="form-inline">
-                <input class="form-control mr-sm-2" name="searchValue" type="text" placeholder="Search"
-                       aria-label="Search" style="height: 30px;">
-                <button class="btn btn-outline-success my-2 my-sm-0"
-                        type="submit">
-                    Search
-                </button>
-            </form>
+                <div class="row filter-row">
+                    <form method="get" class="row filter-row">
+                        <!-- Post Title Filter -->
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group form-focus">
+                                <label class="focus-label">Post Title</label>
+                                <input type="text" class="form-control floating" name="Title" value="@Model.Title">
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group form-focus select-focus">
+                                <label class="focus-label">Status</label>
+                                <select class="select floating" name="Status">
+                                    <option value="">Select Status</option>
+                                    <option value="Active" selected="@(Model.Status == "Active")">Active</option>
+                                    <option value="Hidden" selected="@(Model.Status == "Hidden")">Hidden</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Date Range Filter -->
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group form-focus">
+                                <label class="focus-label">From Date</label>
+                                <input type="date" class="form-control floating" name="FromDate"
+                                       value="@(Model.FromDate?.ToString("yyyy-MM-dd"))">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group form-focus">
+                                <label class="focus-label">To Date</label>
+                                <input type="date" class="form-control floating" name="ToDate"
+                                       value="@(Model.ToDate?.ToString("yyyy-MM-dd"))">
+                            </div>
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="col-sm-12 col-md-2">
+                            <button type="submit" class="btn btn-success btn-block">Search</button>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <div class="col-sm-12 col-md-2">
+                            <a href="/Admin/Post/List" class="btn btn-secondary btn-block">Reset</a>
+                        </div>
+                    </form>
+                </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -59,35 +96,71 @@ ViewData["Title"] = "Post List";
                                 <th class="text-right">Action</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            @* @foreach (var account in Model.Accounts) *@
-                            @* { *@
-                            @*     <tr> *@
-                            @*         <td>@account.AccountId</td> *@
-                            @*         <td>@account.Username</td> *@
-                            @*         <td>@account.Email</td> *@
-                            @*         <td>@account.PhoneNumber</td> *@
-                            @*         <td>@account.DateOfBirth?.ToString("yyyy-MM-dd")</td> *@
-                            @*         <td class="text-right"> *@
-                            @*             <!-- Thêm các nút hành động tại đây --> *@
-                            @*             <a href="#" class="btn btn-primary">Edit</a> *@
-                            @*             <a href="#" class="btn btn-danger">Delete</a> *@
-                            @*         </td> *@
-                            @*     </tr> *@
-                            @* } *@
-                            <td class="text-right">
-                                <div class="dropdown dropdown-action">
-                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                       aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        
-                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_movie">
-                                            <i class="fa fa-trash-o m-r-5"></i> Hidden
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                            </tbody>
+                                <tbody>
+                                    @if (Model.Posts != null && Model.Posts.Any())
+                                    {
+                                        foreach (var post in Model.Posts)
+                                        {
+                                            <tr>
+                                                <td>@post.PostId</td>
+                                                <td>@post.Title</td>
+                                                <td>@(post.Content.Length > 100 ? post.Content.Substring(0, 100) + "..." : post.Content)</td>
+                                                <td>@post.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                                <td>@(post.ModifiedDate?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                                                <td>@post.AuthorName</td>
+                                                <td>
+                                                    @if (post.Status == 1)
+                                                    {
+                                                        <span class="badge badge-success">Active</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Hidden</span>
+                                                    }
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="dropdown dropdown-action">
+                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if (post.Status == 1)
+                                                            {
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#hide_post_@post.PostId">
+                                                                    <i class="fa fa-eye-slash m-r-5"></i> Hide
+                                                                </a>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Hide Post Modal -->
+                                            <div id="hide_post_@post.PostId" class="modal fade delete-modal" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body text-center">
+                                                            <img src="~/admin/assets/img/sent.png" alt="" width="50" height="46">
+                                                            <h3>Are you sure you want to hide this post?</h3>
+                                                            <div class="m-t-20">
+                                                                <form method="post" asp-page-handler="Hide" asp-route-postId="@post.PostId">
+                                                                    <a href="#" class="btn btn-white" data-dismiss="modal">Cancel</a>
+                                                                    <button type="submit" class="btn btn-danger">Hide</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="8" class="text-center">No posts found</td>
+                                        </tr>
+                                    }
+                                </tbody>
                         </table>
 
                     </div>
@@ -111,6 +184,14 @@ ViewData["Title"] = "Post List";
     </div>
 </div>
 <div class="sidebar-overlay" data-reff=""></div>
+    <script>
+        $(document).ready(function () {
+            $('.select').select2({
+                minimumResultsForSearch: -1,
+                width: '100%'
+            });
+        });
+    </script>
 <script src="~/admin/assets/js/jquery-3.2.1.min.js"></script>
 <script src="~/admin/assets/js/popper.min.js"></script>
 <script src="~/admin/assets/js/bootstrap.min.js"></script>
