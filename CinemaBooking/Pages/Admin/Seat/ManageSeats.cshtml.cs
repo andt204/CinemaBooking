@@ -1,6 +1,7 @@
 ﻿using CinemaBooking.Enum;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CinemaBooking.Pages.Admin.Seat
 {
+    [Authorize(Roles = "Admin")]
     public class ManageSeatsModel : PageModel
     {
         private readonly RoomService _roomService;

@@ -1,11 +1,12 @@
 ﻿using CinemaBooking.Data;
 using CinemaBooking.Repositories.SeatType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Pages.Admin.SeatType;
-
+[Authorize(Roles = "Admin")]
 public class List : PageModel
 {
     private readonly CinemaBookingContext _context;
