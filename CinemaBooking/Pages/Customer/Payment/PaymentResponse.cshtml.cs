@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CinemaBooking.Pages;
 
-//[Authorize(Roles = "Customer")]
+[Authorize(Roles = "Customer")]
 public class PaymentResponse : PageModel
 {
     private readonly CinemaBookingContext _context =new CinemaBookingContext();
