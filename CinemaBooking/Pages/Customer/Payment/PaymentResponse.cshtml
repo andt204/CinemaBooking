@@ -2,7 +2,7 @@
 @model CinemaBooking.Pages.PaymentResponse
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    Layout = "/Pages/Shared/_UserLayout.cshtml";
+   
     ViewData["Title"] = "Payment Response";
 }
 
@@ -71,10 +71,16 @@
         {
             <p>No payment response available.</p>
         }
-
-        <div class="text-center">
-            <a href="/Customer/Ticket/DetailTicket/@Model.PaymentResponseModel.TicketId" class="btn btn-secondary btn-back">Back to Detail Ticket</a>
-        </div>
+            <div class="text-center">
+                @if (Model.PaymentResponseModel != null && Model.PaymentResponseModel.Success)
+                {
+                    <a href="/Customer/Ticket/DetailTicket/@Model.PaymentResponseModel.TicketId" class="btn btn-secondary btn-back">Back to Detail Ticket</a>
+                }
+                else
+                {
+                    <a href="/Customer/Movie/List" class="btn btn-secondary btn-back">Back to Home Page</a>
+                }
+            </div>
     </div>
 </div>
 <!-- Bootstrap Toast -->

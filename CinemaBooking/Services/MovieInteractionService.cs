@@ -65,6 +65,7 @@ public class MovieInteractionService
         }
         catch (Exception)
         {
+            
             return false;
         }
     }

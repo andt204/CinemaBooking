@@ -1,4 +1,4 @@
-using CinemaBooking.Data;
+﻿using CinemaBooking.Data;
 using CinemaBooking.Helper;
 using CinemaBooking.Services;
 using CinemaBooking.ViewModels;
@@ -10,6 +10,8 @@ namespace CinemaBooking.Pages.Customer.Blog
 {
     public class BlogModel : PageModel
     {
+        [BindProperty]
+        public Data.Account account { get; set; }
         private readonly CinemaBookingContext _context;
         private readonly BlogService _blogService;
         private readonly IConfiguration _configuration;
@@ -38,7 +40,19 @@ namespace CinemaBooking.Pages.Customer.Blog
 
         private async Task<int?> GetCurrentUserIdAsync()
         {
+
+
             var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
+         
             if (string.IsNullOrEmpty(token))
             {
                 return null;
