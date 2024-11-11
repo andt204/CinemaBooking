@@ -195,6 +195,13 @@
             </div>
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
+  @if (TempData["Ss1"] != null)
+  {
+  // Ví dụ trong View:
+  <div class="alert alert-success">
+      @TempData["Ss1"]
+  </div>
+  }
     </div>
 </main>
 
