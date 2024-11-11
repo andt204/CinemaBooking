@@ -119,7 +119,16 @@
                                             <td>@ticket.TicketId</td>
                                             <td>@ticket.MovieName</td>
                                             <td>@ticket.CustomerName</td>
-                                            <td>@ticket.SeatInfo</td>
+                                            <td>
+                                                @if (ticket.SeatInfo != null && ticket.SeatInfo.Any())
+                                                {
+                                                    @string.Join(", ", ticket.SeatInfo) <!-- Display seats as a comma-separated list -->
+                                                }
+                                                else
+                                                {
+                                                    <span>N/A</span> <!-- Display N/A if no seat info is available -->
+                                                }
+                                            </td>
                                             <td>@ticket.RoomName</td>
                                             <td>@ticket.ShowDate.ToString("dd/MM/yyyy") @ticket.ShowTime.ToString(@"hh\:mm")</td>
                                             <td>@ticket.TicketPrice.ToString("C")</td>
