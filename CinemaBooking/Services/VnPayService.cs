@@ -57,10 +57,10 @@ public class VnPayService : IVnPayService
         return paymentUrl;
     }
 
-    public VnPaymentResponseModel MakePayment(IQueryCollection colletions)
+    public VnPaymentResponseModel MakePayment(IQueryCollection collections)
     {
         var vnpay = new VnPayLibrary();
-        foreach (var (key, value) in colletions)
+        foreach (var (key, value) in collections)
         {
             if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
             {
@@ -72,20 +72,32 @@ public class VnPayService : IVnPayService
         var txnRef = vnpay.GetResponseData("vnp_TxnRef");
         var transactionId = vnpay.GetResponseData("vnp_TransactionNo");
         var responseCode = vnpay.GetResponseData("vnp_ResponseCode");
-        var secureHash = colletions.FirstOrDefault(p => p.Key.Equals("vnp_SecureHash")).Value;
+        var secureHash = collections.FirstOrDefault(p => p.Key.Equals("vnp_SecureHash")).Value;
         var amount = Convert.ToInt64(vnpay.GetResponseData("vnp_Amount"));
         var transactionStatus = vnpay.GetResponseData("vnp_TransactionStatus");
 
+        // Validate the signature
         bool checkSignature = vnpay.ValidateSignature(secureHash, _config["VnPay:HashSecret"]);
         if (!checkSignature)
         {
             return new VnPaymentResponseModel
             {
-                Success = false
+                Success = false,
+               
             };
         }
 
-        // Lấy ticketId từ cache
+        // Check transaction status and response code to ensure payment was successful
+        if (responseCode != "00" || transactionStatus != "00") // Assuming "00" means success
+        {
+            return new VnPaymentResponseModel
+            {
+                Success = false,
+        
+            };
+        }
+
+        // Retrieve ticketId from cache
         string ticketId;
         if (!_cache.TryGetValue(txnRef, out ticketId))
         {
@@ -95,14 +107,19 @@ public class VnPayService : IVnPayService
         else
         {
             Console.WriteLine($"Retrieved from cache - OrderId: {txnRef}, TicketId: {ticketId}");
-            // Xóa khỏi cache sau khi đã sử dụng
+            // Remove from cache after using it
             _cache.Remove(txnRef);
         }
 
-        var ticket = _context.Tickets.FirstOrDefault(s => s.TicketId.ToString() == ticketId );
-        ticket.Status = 1;
-        _context.Tickets.Update(ticket);
-        _context.SaveChanges();
+        // Update the ticket status to indicate successful payment
+        var ticket = _context.Tickets.FirstOrDefault(s => s.TicketId.ToString() == ticketId);
+        if (ticket != null)
+        {
+            ticket.Status = 1;
+            _context.Tickets.Update(ticket);
+            _context.SaveChanges();
+        }
+
         return new VnPaymentResponseModel
         {
             Success = true,
@@ -115,4 +132,5 @@ public class VnPayService : IVnPayService
             TicketId = ticketId
         };
     }
+
 }

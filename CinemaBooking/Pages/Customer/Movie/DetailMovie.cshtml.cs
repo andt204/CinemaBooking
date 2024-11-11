@@ -8,14 +8,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using CinemaBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaBooking.Pages.Customer.Movie
 {
+    [Authorize(Roles = "Customer")]
     public class DetailMovieModel : PageModel
     {
         private readonly CinemaBookingContext _context;
         private readonly MovieInteractionService _movieInteractionService;
 
+        [BindProperty]
         public Data.Account account { get; set; }
         public Data.Movie Movie { get; set; }
         public List<CommentDto> Comments { get; set; }
@@ -97,6 +100,16 @@ namespace CinemaBooking.Pages.Customer.Movie
 
         public async Task<IActionResult> OnGetAsync(int movieId)
         {
+            var token = Request.Cookies["jwtToken"];
+            if (token != null)
+            {
+                var email = DecodeJwtToken.DecodeJwtTokenAndGetEmail(token);
+                if (email != null)
+                {
+                    account = _context.Accounts.FirstOrDefault(x => x.AccountId == Int32.Parse(email));
+                    ViewData["Account"] = account; // Truyền dữ liệu account vào ViewData
+                }
+            }
             MovieId = movieId;
             await LoadMovieData();
             if (Movie == null)
