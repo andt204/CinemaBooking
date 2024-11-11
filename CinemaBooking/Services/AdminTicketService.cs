@@ -32,8 +32,8 @@ public class AdminTicketService
                         SeatInfo = seat.Row + seat.Column.ToString(),
                         TicketPrice = t.TicketPrice,
                         Status = t.Status == 1 ? "Active" :
-                                t.Status == 2 ? "Used" :
-                                t.Status == 0 ? "Cancelled" : "Unknown",
+                                t.Status == 2 ? "Cancelled" :
+                                t.Status == 3 ? "Used" : "Pending",
                         BookingTime = t.BookingTime,
                         ShowDate = s.Date,
                         ShowTime = s.StartHour,
