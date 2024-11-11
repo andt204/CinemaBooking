@@ -1,4 +1,161 @@
-﻿@page "{id:int}"
+﻿@* @page "{id:int}" *@
+@* @model CinemaBooking.Pages.Customer.Ticket.DetailTicketModel *@
+@* @{ *@
+@* Layout = "~/Pages/Shared/_UserLayout.cshtml"; *@
+@* } *@
+@* *@
+@* <!DOCTYPE html> *@
+@* <html> *@
+@* <head> *@
+@*     <title>Ticket Details for ABCD 2</title> *@
+@*     <link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' /> *@
+@*     <link href="~/customer/assets1/css/style.css" rel="stylesheet" type='text/css' media="all" /> *@
+@*     <script src="~/customer/assets1/js/jquery.min.js"></script> *@
+@*     <script src="~/customer/assets1/js/bootstrap.min.js"></script> *@
+@*     <meta name="viewport" content="width=device-width, initial-scale=1"> *@
+@*     <style> *@
+@*         body { *@
+@*             font-family: 'Open Sans', sans-serif; *@
+@*             background-color: #f4f4f4; *@
+@*         } *@
+@* *@
+@*         .container { *@
+@*             margin-top: 20px; *@
+@*         } *@
+@* *@
+@*         .main-content { *@
+@*             background: white; *@
+@*             border-radius: 8px; *@
+@*             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); *@
+@*             padding: 20px; *@
+@*         } *@
+@* *@
+@*         .article-left { *@
+@*             margin-bottom: 20px; *@
+@*         } *@
+@* *@
+@*         h3 { *@
+@*             color: #333; *@
+@*             font-size: 24px; *@
+@*             margin-bottom: 10px; *@
+@*         } *@
+@* *@
+@*         p { *@
+@*             color: #555; *@
+@*             line-height: 1.6; *@
+@*         } *@
+@* *@
+@*         h4 { *@
+@*             color: #333; *@
+@*             font-size: 20px; *@
+@*             margin-top: 20px; *@
+@*         } *@
+@* *@
+@*         .article-img img { *@
+@*             width: 100%; *@
+@*             border-radius: 5px; *@
+@*         } *@
+@* *@
+@*         .show-time { *@
+@*             display: inline-block; *@
+@*             background: #007bff; *@
+@*             color: white; *@
+@*             padding: 10px 15px; *@
+@*             border-radius: 5px; *@
+@*             text-decoration: none; *@
+@*             transition: background 0.3s; *@
+@*         } *@
+@* *@
+@*         .show-time:hover { *@
+@*             background: #0056b3; *@
+@*         } *@
+@* *@
+@*         .nav-tabs { *@
+@*             border-bottom: 2px solid #ddd; *@
+@*         } *@
+@* *@
+@*         .nav-tabs > li > a { *@
+@*             border: 1px solid transparent; *@
+@*             border-radius: 4px 4px 0 0; *@
+@*             margin-right: 5px; *@
+@*             padding: 10px 15px; *@
+@*             color: #007bff; *@
+@*         } *@
+@* *@
+@*         .nav-tabs > li > a:hover { *@
+@*             border-color: #ddd; *@
+@*         } *@
+@* *@
+@*         .nav-tabs > .active > a { *@
+@*             background: white; *@
+@*             border-color: #ddd; *@
+@*             color: #333; *@
+@*         } *@
+@* *@
+@*         .tab-content { *@
+@*             padding: 15px; *@
+@*             border: 1px solid #ddd; *@
+@*             border-radius: 0 0 4px 4px; *@
+@*         } *@
+@*     </style> *@
+@* </head> *@
+@* <body> *@
+@* <div class="container"> *@
+@*     <div class="main-content"> *@
+@*         <div class="bootstrap_container"> *@
+@*             <nav class="navbar navbar-default w3_megamenu" role="navigation"> *@
+@*                 <div class="navbar-header"> *@
+@*                     <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"> *@
+@*                         <span class="icon-bar"></span> *@
+@*                         <span class="icon-bar"></span> *@
+@*                         <span class="icon-bar"></span> *@
+@*                     </button> *@
+@*                     <a href="/Customer/Movie/List" class="navbar-brand"><i class="fa fa-home"></i></a> *@
+@*                 </div> *@
+@*                 <div id="defaultmenu" class="navbar-collapse collapse"> *@
+@*                     <ul class="nav navbar-nav"> *@
+@*                         <li><a href="/Customer/Movie/List">Home</a></li> *@
+@*                     </ul> *@
+@*                 </div> *@
+@*             </nav> *@
+@*         </div> *@
+@*         <div class="m-single-article"> *@
+@*             <div class="article-left"> *@
+@*                 <h3>Ticket Details for Movie: @Model.TicketInfo.Title</h3> *@
+@*                 <p><strong>Theatre:</strong> @Model.TicketInfo.TheaterName</p> *@
+@*                 <p><strong>Location:</strong> @Model.TicketInfo.Location</p> *@
+@* *@
+@*                 <p> *@
+@*                     <strong>Seat Info:</strong> *@
+@*                     $1$ @foreach (var seat in Model.Seat) #1# *@
+@*                     $1$ { #1# *@
+@*                     $1$ <span>@seat.Column, @seat.Row</span> #1# *@
+@*                     $1$ #1# *@
+@*                     $1$ <br /> #1# *@
+@*                     $1$ } #1# *@
+@*                     @for (int i = 0; i < Model.Seat.Count; i++) *@
+@*                     { *@
+@*                     <span>@Model.Seat[i].Column@Model.Seat[i].Row</span>@(i < Model.Seat.Count - 1 ? ", " : "") *@
+@*                     } *@
+@*                 </p> *@
+@*                 <p><strong>Price:</strong> @Model.TicketInfo.TicketPrice₫</p> *@
+@*                 <div class="clearfix"></div> *@
+@*                 <h4>Movie Information</h4> *@
+@*                 <p><strong>Title:</strong> @Model.TicketInfo.Title</p> *@
+@*                 <p><strong>Duration:</strong> @Model.TicketInfo.Length minutes</p> *@
+@*                 <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p> *@
+@*                 <div class="article-img"> *@
+@*                     <img src="@Model.TicketInfo.Image" *@
+@*                          class="img-responsive" alt="@Model.TicketInfo.Title" /> *@
+@*                 </div> *@
+@*             </div> *@
+@*             <div class="clearfix"></div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* </body> *@
+@* </html> *@
+@page "{id:int}"
 @model CinemaBooking.Pages.Customer.Ticket.DetailTicketModel
 @{
 Layout = "~/Pages/Shared/_UserLayout.cshtml";
@@ -30,122 +187,109 @@ Layout = "~/Pages/Shared/_UserLayout.cshtml";
             padding: 20px;
         }
 
-        .article-left {
-            margin-bottom: 20px;
+        .ticket-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
         }
 
-        h3 {
+        .ticket-details {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .movie-details {
+            flex: 1;
+            border-left: 1px solid #eee;
+            padding-left: 20px;
+        }
+
+        h3, h4 {
             color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         p {
             color: #555;
             line-height: 1.6;
+            margin-bottom: 15px;
         }
 
-        h4 {
-            color: #333;
-            font-size: 20px;
-            margin-top: 20px;
-        }
-
-        .article-img img {
+        .movie-poster {
+            position: relative;
             width: 100%;
-            border-radius: 5px;
+            max-width: 300px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .show-time {
+        .movie-poster img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-poster:hover img {
+            transform: scale(1.05);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #444;
+            min-width: 100px;
             display: inline-block;
-            background: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background 0.3s;
         }
 
-        .show-time:hover {
-            background: #0056b3;
+        .seat-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
         }
 
-        .nav-tabs {
-            border-bottom: 2px solid #ddd;
-        }
-
-        .nav-tabs > li > a {
-            border: 1px solid transparent;
-            border-radius: 4px 4px 0 0;
-            margin-right: 5px;
-            padding: 10px 15px;
-            color: #007bff;
-        }
-
-        .nav-tabs > li > a:hover {
-            border-color: #ddd;
-        }
-
-        .nav-tabs > .active > a {
-            background: white;
-            border-color: #ddd;
-            color: #333;
-        }
-
-        .tab-content {
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 0 0 4px 4px;
-        }
+        
     </style>
 </head>
 <body>
 <div class="container">
     <div class="main-content">
-        <div class="bootstrap_container">
-            <nav class="navbar navbar-default w3_megamenu" role="navigation">
-                <div class="navbar-header">
-                    <button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="/Customer/Movie/List" class="navbar-brand"><i class="fa fa-home"></i></a>
-                </div>
-                <div id="defaultmenu" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/Customer/Movie/List">Home</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        <div class="m-single-article">
-            <div class="article-left">
+        
+
+        <div class="ticket-info">
+            <!-- Left Section - Ticket Details -->
+            <div class="ticket-details">
                 <h3>Ticket Details for Movie: @Model.TicketInfo.Title</h3>
-                <p><strong>Theatre:</strong> @Model.TicketInfo.TheaterName</p>
-                <p><strong>Location:</strong> @Model.TicketInfo.Location</p>
-
-                <p>
-                    <strong>Seat Info:</strong>
-                    @foreach (var seat in Model.Seat)
+                
+                <p><span class="info-label">Theatre:</span> @Model.TicketInfo.TheaterName</p>
+                <p><span class="info-label">Location:</span> @Model.TicketInfo.Location</p>
+                
+                <div class="seat-info">
+                    <span class="info-label">Seat Info:</span>
+                    @for (int i = 0; i < Model.Seat.Count; i++)
                     {
-                    <span>@seat.Column, @seat.Row</span>
-
-                    <br />
+                        <span>@Model.Seat[i].Column@Model.Seat[i].Row</span>@(i < Model.Seat.Count - 1 ? ", " : "")
                     }
-                </p>
-                <p><strong>Price:</strong> @Model.TicketInfo.TicketPrice₫</p>
-                <div class="clearfix"></div>
-                <h4>Movie Information</h4>
-                <p><strong>Title:</strong> @Model.TicketInfo.Title</p>
-                <p><strong>Duration:</strong> @Model.TicketInfo.Length minutes</p>
-                <p><strong>Booking Time:</strong> @Model.formattedBookingTime</p>
-                <div class="article-img">
-                    <img src="@Model.TicketInfo.ImageBackground"
-                         class="img-responsive" alt="@Model.TicketInfo.Title" />
+                </div>
+                
+                <p><span class="info-label">Price:</span> @Model.TicketInfo.TicketPrice₫</p>
+                <p><span class="info-label">Booking Time:</span> @Model.formattedBookingTime</p>
+            </div>
+
+            <!-- Right Section - Movie Information -->
+            <div class="movie-details">
+                <h3>Movie Information</h3>
+                <p><span class="info-label">Title:</span> @Model.TicketInfo.Title</p>
+                <p><span class="info-label">Duration:</span> @Model.TicketInfo.Length minutes</p>
+                
+                <div class="movie-poster">
+                    <img src="@Model.TicketInfo.Image" alt="@Model.TicketInfo.Title" />
                 </div>
             </div>
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>

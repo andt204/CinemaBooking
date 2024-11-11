@@ -2,7 +2,7 @@
 @using System.Web
 @model CinemaBooking.Pages.Customer.Movie.ListModel
 @{
-	Layout = "~/Pages/Shared/_UserLayout.cshtml";
+    Layout = "~/Pages/Shared/_UserLayout.cshtml";
 }
 <!--
 Author: W3layouts
@@ -14,275 +14,292 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <html>
 
 <head>
-	<title>My Show a Entertainment Category Flat Bootstarp responsive Website Template | Movies :: w3layouts</title>
-	<link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css' />
-	<!-- Custom Theme files -->
-	<link href="~/customer/assets1/css/style.css" rel="stylesheet" type="text/css" media="all" />
-	<!-- Custom Theme files -->
-	<script src="~/customer/assets1/js/jquery.min.js"></script>
-	<script src="~/customer/assets1/js/bootstrap.min.js"></script>
-	<!-- Custom Theme files -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-	<script
-		type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-	<!--webfont-->
-	<link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
-	<!-- start menu -->
-	<link href="~/customer/assets1/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
-	<script type="text/javascript" src="~/customer/assets1/js/megamenu.js"></script>
-	<script>$(document).ready(function () { $(".megamenu").megamenu(); });</script>
-	<script type="text/javascript" src="~/customer/assets1/js/jquery.leanModal.min.js"></script>
-	<link rel="stylesheet" href="~/customer/assets1/css/font-awesome.min.css" />
-	<script src="~/customer/assets1/js/easyResponsiveTabs.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$('#horizontalTab').easyResponsiveTabs({
-				type: 'default', //Types: default, vertical, accordion
-				width: 'auto', //auto or any width like 600px
-				fit: true   // 100% fit in a container
-			});
-		});
-	</script>
-	<link rel="stylesheet" href="~/customer/assets1/css/menu.css" />
-	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-	<![endif]-->
-	<!---- start-smoth-scrolling---->
-	<script type="text/javascript" src="~/customer/assets1/js/move-top.js"></script>
-	<script type="text/javascript" src="~/customer/assets1/js/easing.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function ($) {
-			$(".scroll").click(function (event) {
-				event.preventDefault();
-				$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1200);
-			});
-		});
-	</script>
-	<!---- start-smoth-scrolling---->
-	<script src="~/customer/assets1/js/responsiveslides.min.js"></script>
-	<script>
-		$(function () {
-			$("#slider").responsiveSlides({
-				auto: true,
-				speed: 500,
-				namespace: "callbacks",
-				pager: true,
-			});
-		});
-	</script>
-	<style>
-		.search-form {
-			margin: 20px 10px; /* Thêm khoảng cách trên và dưới */
-		}
+    <title>My Show a Entertainment Category Flat Bootstarp responsive Website Template | Movies :: w3layouts</title>
+    <link href="~/customer/assets1/css/bootstrap.css" rel='stylesheet' type='text/css'/>
+    <!-- Custom Theme files -->
+    <link href="~/customer/assets1/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <!-- Custom Theme files -->
+    <script src="~/customer/assets1/js/jquery.min.js"></script>
+    <script src="~/customer/assets1/js/bootstrap.min.js"></script>
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="My Show Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design"/>
+    <script
+        type="application/x-javascript"> addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        } </script>
+    <!--webfont-->
+    <link href='//fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <!-- start menu -->
+    <link href="~/customer/assets1/css/megamenu.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="~/customer/assets1/js/megamenu.js"></script>
+    <script>$(document).ready(function () {
+            $(".megamenu").megamenu();
+        });</script>
+    <script type="text/javascript" src="~/customer/assets1/js/jquery.leanModal.min.js"></script>
+    <link rel="stylesheet" href="~/customer/assets1/css/font-awesome.min.css"/>
+    <script src="~/customer/assets1/js/easyResponsiveTabs.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#horizontalTab').easyResponsiveTabs({
+                type: 'default', //Types: default, vertical, accordion
+                width: 'auto', //auto or any width like 600px
+                fit: true   // 100% fit in a container
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="~/customer/assets1/css/menu.css"/>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <!---- start-smoth-scrolling---->
+    <script type="text/javascript" src="~/customer/assets1/js/move-top.js"></script>
+    <script type="text/javascript" src="~/customer/assets1/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1200);
+            });
+        });
+    </script>
+    <!---- start-smoth-scrolling---->
+    <script src="~/customer/assets1/js/responsiveslides.min.js"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                speed: 500,
+                namespace: "callbacks",
+                pager: true,
+            });
+        });
+    </script>
+    <style>
+        .search-form {
+            margin: 20px 10px;
+        }
+
+        .search-input {
+            width: 80%;
+            padding: 10px; /* Thêm khoảng đệm bên trong */
+            border: 1px solid #ccc; /* Đường viền xám */
+            border-radius: 5px; /* Bo góc cho ô */
+            flex: 1; /* Cho phép ô chiếm toàn bộ không gian có sẵn */
+            margin-right: 10px;
+            margin-top: 10px; /* Khoảng cách bên phải */
+            font-size: 16px; /* Kích thước chữ */
+        }
+
+        .search-button {
+            padding: 10px 15px; /* Thêm khoảng đệm bên trong */
+            background-color: #007bff; /* Màu nền nút */
+            color: white; /* Màu chữ */
+            border: none; /* Không có đường viền */
+            border-radius: 5px; /* Bo góc cho nút */
+            cursor: pointer; /* Con trỏ khi hover */
+            font-size: 16px; /* Kích thước chữ */
+            transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+        }
+
+        .search-button:hover {
+            background-color: #0056b3; /* Màu nền khi hover */
+        }
+
+        .m-r-date {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .m-r-date a {
+            display: inline-block; /* Đảm bảo nút nằm trên một dòng */
+            padding: 5px 15px; /* Thêm padding cho nút */
+            background-color: #ff5733; /* Màu nền nổi bật cho nút */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px; /* Bo tròn nút */
+        }
+
+        .m-r-date a:hover {
+            background-color: #e74c3c; /* Thay đổi màu khi hover */
+        }
 
 
-/* Tạo kiểu cho ô nhập liệu */
-.search-input {
-	width: 80%;
-    padding: 10px; /* Thêm khoảng đệm bên trong */
-    border: 1px solid #ccc; /* Đường viền xám */
-    border-radius: 5px; /* Bo góc cho ô */
-    flex: 1; /* Cho phép ô chiếm toàn bộ không gian có sẵn */
-    margin-right: 10px;
-	margin-top:10px;/* Khoảng cách bên phải */
-    font-size: 16px; /* Kích thước chữ */
-}
-
-/* Tạo kiểu cho nút tìm kiếm */
-.search-button {
-    padding: 10px 15px; /* Thêm khoảng đệm bên trong */
-    background-color: #007bff; /* Màu nền nút */
-    color: white; /* Màu chữ */
-    border: none; /* Không có đường viền */
-    border-radius: 5px; /* Bo góc cho nút */
-    cursor: pointer; /* Con trỏ khi hover */
-    font-size: 16px; /* Kích thước chữ */
-    transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
-}
-
-/* Hiệu ứng hover cho nút */
-.search-button:hover {
-    background-color: #0056b3; /* Màu nền khi hover */
-}
-		/* Đặt nút Book Now ra giữa */
-		.m-r-date {
-			width:100%;
-			margin-top: 10px;
-		}
-
-			.m-r-date a {
-				display: inline-block; /* Đảm bảo nút nằm trên một dòng */
-				padding: 5px 15px; /* Thêm padding cho nút */
-				background-color: #ff5733; /* Màu nền nổi bật cho nút */
-				color: white;
-				text-decoration: none;
-				border-radius: 5px; /* Bo tròn nút */
-			}
-
-				.m-r-date a:hover {
-					background-color: #e74c3c; /* Thay đổi màu khi hover */
-				}
-
-
-	</style>
+    </style>
 </head>
 
 <body>
-	<div class="container">
-		<div class="main-content">
-			<form method="get" class="search-form">
-				<div class="search-form">
-					<input type="text" name="searchTitle" placeholder="Search movie title..." value="@Model.SearchTitle" class="search-input" />
-					<button type="submit" class="search-button">Search</button>
-				</div>
-				<div class="main-banner">
-				<div class="banner col-md-8">
-					<section class="slider">
-						<div class="flexslider">
-							<ul class="slides">
-								@foreach (var movie in Model.BannerMovies)
-								{
-									<li>
-										<a href="/Customer/Movie/DetailMovie/@movie.MovieId">
-											<img src="@movie.ImageBackground"
-												class="img-responsive" alt="@movie.Title" />
-										</a>
-									</li>
-								}
-							</ul>
-						</div>
-					</section>
-					<!-- FlexSlider -->
-					<script defer src="~/customer/assets1/js/jquery.flexslider.js"></script>
-					<link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css"
-						media="screen" />
-					<script type="text/javascript">
-						$(function () {
-							SyntaxHighlighter.all();
-						});
-						$(window).load(function () {
-							$('.flexslider').flexslider({
-								animation: "slide",
-								start: function (slider) {
-									$('body').removeClass('loading');
-								}
-							});
-						});
-					</script>
-				</div>
-				@{
-					// Hàm chuyển đổi URL YouTube sang định dạng nhúng
-					string GetEmbedUrl(string url)
-					{
-						var uri = new Uri(url);
-						var query = HttpUtility.ParseQueryString(uri.Query);
-						var videoId = query["v"];
-						return $"https://www.youtube.com/embed/{videoId}";
-					}
-				}
+<div class="container">
+    <div class="main-content">
+        <form method="get" class="search-form">
+            <div class="search-form">
+                <input type="text" name="searchTitle" placeholder="Search movie title..." value="@Model.SearchTitle"
+                       class="search-input"/>
+                <button type="submit" class="search-button">Search</button>
+            </div>
+            <div class="main-banner">
+                <div class="banner col-md-8">
+                    <section class="slider">
+                        <div class="flexslider">
+                            <ul class="slides">
+                                @foreach (var movie in Model.BannerMovies)
+                                {
+                                    <li>
+                                        <a href="/Customer/Movie/DetailMovie/@movie.MovieId">
+                                            <img src="@movie.ImageBackground"
+                                                 class="img-responsive" alt="@movie.Title"/>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </section>
+                    <!-- FlexSlider -->
+                    <script defer src="~/customer/assets1/js/jquery.flexslider.js"></script>
+                    <link rel="stylesheet" href="~/customer/assets1/css/flexslider.css" type="text/css"
+                          media="screen"/>
+                    <script type="text/javascript">
+                        $(function () {
+                            SyntaxHighlighter.all();
+                        });
+                        $(window).load(function () {
+                            $('.flexslider').flexslider({
+                                animation: "slide",
+                                start: function (slider) {
+                                    $('body').removeClass('loading');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                @{
+                    // Hàm chuyển đổi URL YouTube sang định dạng nhúng
+                    string GetEmbedUrl(string url)
+                    {
+                        var uri = new Uri(url);
+                        var query = HttpUtility.ParseQueryString(uri.Query);
+                        var videoId = query["v"];
+                        return $"https://www.youtube.com/embed/{videoId}";
+                    }
+                }
 
-				<div class="col-md-4 banner-right">
-						<div class="slider1">
-							<div class="callbacks_container">
-								<ul class="rslides" id="slider">
-									@foreach (var trailerUrl in Model.TrailerVideoUrls)
-									{
-										<li>
-											<iframe src="@GetEmbedUrl(trailerUrl)" frameborder="0" allowfullscreen></iframe>
-										</li>
-									}
-								</ul>
-							</div>
-						</div>
-						<script>
-							$(function () {
-								$("#slider").responsiveSlides({
-									auto: false,  // Không tự động chuyển slide
-									nav: true,    // Hiện nút điều hướng
-									speed: 500,   // Tốc độ chuyển slide
-									namespace: "callbacks",
-									pager: false, // Không hiển thị pager
-								});
-							});
-						</script>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			<div class="now-showing-movies">
-				<h3 class="m-head">Now Showing</h3>
-				@foreach (var movie in Model.NowShowingMovies)
-				{
-					<div class="col-md-3 movie-preview">
-						<a href="/Customer/Movie/DetailMovie/@movie.MovieId" class="mask">
-							<img src="@movie.Image" class="img-responsive zoom-img"
-								alt="@movie.Title" />
-							<div class="m-movie-title">
-								<a class="m-movie-link"
-									href="/Customer/Movie/DetailMovie/@movie.MovieId">@movie.Title</a>
-								<div class="clearfix"></div>
-								<div class="m-r-date">
-									<p>
-										<i class="far fa-calendar"></i>@movie.PublishTime.ToShortDateString()
-										&nbsp;&nbsp;&nbsp;&nbsp;Duration:@movie.Length minute
-									</p>
-										<a href="/Customer/CinemaSelection/CinemaSelection/@movie.MovieId">Book Now</a>
-								</div>
-							</div>
-						</a>
-					</div>
-				}
-				<div class="clearfix"></div>
-			</div>
+                <div class="col-md-4 banner-right">
+                    <div class="slider1">
+                        <div class="callbacks_container">
+                            <ul class="rslides" id="slider">
+                                @foreach (var trailerUrl in Model.TrailerVideoUrls)
+                                {
+                                    <li>
+                                        <iframe src="@GetEmbedUrl(trailerUrl)" frameborder="0" allowfullscreen></iframe>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <script>
+                        $(function () {
+                            $("#slider").responsiveSlides({
+                                auto: false,  // Không tự động chuyển slide
+                                nav: true,    // Hiện nút điều hướng
+                                speed: 500,   // Tốc độ chuyển slide
+                                namespace: "callbacks",
+                                pager: false, // Không hiển thị pager
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="now-showing-movies">
+                <h3 class="m-head">Now Showing</h3>
+                <div class="row">
+                    @foreach (var movie in Model.NowShowingMovies)
+                    {
+                        <div class="col-md-3 movie-preview">
+                            <a href="/Customer/Movie/DetailMovie/@movie.MovieId" class="mask">
+                                <img src="@movie.Image" class="img-responsive zoom-img"
+                                     alt="@movie.Title"/>
+                                <div class="m-movie-title">
+                                    <a class="m-movie-link"
+                                       href="/Customer/Movie/DetailMovie/@movie.MovieId">
+                                        @movie.Title
+                                    </a>
+                                    <div class="clearfix"></div>
+                                    <div class="m-r-date">
+                                        <p>
+                                            <i class="far fa-calendar"></i>@movie.PublishTime.ToShortDateString()
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Duration:@movie.Length minute
+                                        </p>
+                                        <a href="/Customer/CinemaSelection/CinemaSelection/@movie.MovieId">Book Now</a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
 
-			<div class="now-showing-movies">
-				<h3 class="m-head">Coming Soon</h3>
-				@foreach (var movie in Model.ComingSoonMovies)
-				{
-					<div class="col-md-3 movie-preview">
-						<a href="/Customer/Movie/DetailMovie/@movie.MovieId" class="mask">
-							<img src="@movie.Image" class="img-responsive zoom-img"
-								alt="@movie.Title" />
-							<div class="m-movie-title">
-								<a class="m-movie-link"
-								   href="/Customer/Movie/DetailMovie/@movie.MovieId">@movie.Title</a>
-								<div class="clearfix"></div>
-								<div class="m-r-date">
-									<p><i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()</p>
-								</div>
-							</div>
-						</a>
-					</div>
-				}
-				<div class="clearfix"></div>
-			</div>
-			</form>
-		</div>
-	</div>
+            <div class="now-showing-movies">
+                <h3 class="m-head">Coming Soon</h3>
+                <div class="row">
+                    @foreach (var movie in Model.ComingSoonMovies)
+                    {
+                        <div class="col-md-3 movie-preview">
+                            <a href="/Customer/Movie/DetailMovie/@movie.MovieId" class="mask">
+                                <img src="@movie.Image" class="img-responsive zoom-img"
+                                     alt="@movie.Title"/>
+                                <div class="m-movie-title">
+                                    <a class="m-movie-link"
+                                       href="/Customer/Movie/DetailMovie/@movie.MovieId">
+                                        @movie.Title
+                                    </a>
+                                    <div class="clearfix"></div>
+                                    <div class="m-r-date">
+                                        <p>
+                                            <i class="fa fa-calendar-o"></i>@movie.PublishTime.ToShortDateString()
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+</div>
 
-	<a href="#home" class="scroll" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;">
-		</span></a>
-	
+<a href="#home" class="scroll" id="toTop" style="display: block;">
+    <span id="toTopHover" style="opacity: 1;">
+    </span>
+</a>
+
 </body>
 <script type="text/javascript">
-	$(document).ready(function () {
-		/*
-		var defaults = {
-				containerID: 'toTop', // fading element id
-			containerHoverID: 'toTopHover', // fading element hover id
-			scrollSpeed: 1200,
-			easingType: 'linear'
-			};
-		*/
+    $(document).ready(function () {
+        /*
+        var defaults = {
+                containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+            };
+        */
 
-		$().UItoTop({ easingType: 'easeOutQuart' });
+        $().UItoTop({easingType: 'easeOutQuart'});
 
-	});
+    });
 </script>
 
 </html>

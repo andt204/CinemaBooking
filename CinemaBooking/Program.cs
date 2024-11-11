@@ -100,11 +100,13 @@ namespace CinemaBooking
             //builder.Services.AddSingleton<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("SMTPConfig"));
             builder.Services.AddHostedService<PendingTicketMonitorService>();
 
             builder.Services.AddScoped<MovieInteractionService>();
             builder.Services.AddScoped<BlogService>();
+            builder.Services.AddScoped<AdminPostService>();
+            builder.Services.AddScoped<AdminTicketService>();
             // Configure DbContext with SQL Server
             builder.Services.AddDbContext<CinemaBookingContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CinemaBooking")));

@@ -173,51 +173,25 @@
     </div>
 <script type="text/javascript">
 
-    function addTag(selectId, displayId) {
-        // Lấy option mới được chọn (chỉ lấy option vừa mới được chọn)
-        var selectedOptions = $("#" + selectId + " option:selected");
-        var displayDiv = $("#" + displayId);
-
-        selectedOptions.each(function() {
-            var selectedTagValue = $(this).val();
-            var selectedTagText = $(this).text();
-
-            // Kiểm tra xem tag đã tồn tại chưa
-            if (!displayDiv.find(`span[data-value='${selectedTagValue}']`).length) {
-                var tagElement = $(
-                    `<span data-value="${selectedTagValue}" style="display: inline-block; background-color: #007bff; padding: 5px; margin: 5px; border-radius: 5px; color: white;">
-                    ${selectedTagText}
-                    <span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span>
-                </span>`
-                );
-
-                // Thêm tag mới vào display
-                displayDiv.append(tagElement);
-
-                // Xử lý sự kiện xóa tag
-                tagElement.find(".remove-tag").on("click", function() {
-                    // Bỏ chọn trong select
-                    $(`#${selectId} option[value='${selectedTagValue}']`).prop("selected", false);
-                    // Xóa tag
-                    $(this).parent().remove();
-                });
-            }
-        });
-    }
-
-    // Thêm đoạn code này để xử lý form submission
     $(document).ready(function() {
-        $('form').on('submit', function() {
-            // Lấy tất cả các giá trị đã chọn từ selects
-            var selectedCategories = $('#categorySelect').val() || [];
-            var selectedActors = $('#actorSelect').val() || [];
+        $('form').on('submit', function(e) {
+            e.preventDefault(); // Ngăn form submit mặc định
 
-            // Xóa các hidden inputs cũ nếu có
+            // Lấy các giá trị đã chọn từ displays thay vì từ selects
+            var categoryTags = $('#categoryDisplay span').map(function() {
+                return $(this).data('value');
+            }).get();
+
+            var actorTags = $('#actorDisplay span').map(function() {
+                return $(this).data('value');
+            }).get();
+
+            // Xóa tất cả hidden inputs cũ
             $('input[name="CategoryIds"]').remove();
             $('input[name="ActorIds"]').remove();
 
-            // Thêm hidden inputs mới cho categories
-            selectedCategories.forEach(function(categoryId) {
+            // Thêm hidden inputs mới cho categories (chỉ thêm mỗi giá trị một lần)
+            categoryTags.forEach(function(categoryId) {
                 $('<input>').attr({
                     type: 'hidden',
                     name: 'CategoryIds',
@@ -225,16 +199,52 @@
                 }).appendTo('form');
             });
 
-            // Thêm hidden inputs mới cho actors
-            selectedActors.forEach(function(actorId) {
+            // Thêm hidden inputs mới cho actors (chỉ thêm mỗi giá trị một lần)
+            actorTags.forEach(function(actorId) {
                 $('<input>').attr({
                     type: 'hidden',
                     name: 'ActorIds',
                     value: actorId
                 }).appendTo('form');
             });
+
+            // Submit form
+            this.submit();
         });
     });
+
+    function addTag(selectId, displayId) {
+        var select = document.getElementById(selectId);
+        var displayDiv = document.getElementById(displayId);
+
+        // Lấy option được chọn cuối cùng
+        var selectedOption = select.options[select.selectedIndex];
+
+        // Kiểm tra xem tag đã tồn tại chưa
+        if (!document.querySelector(`#${displayId} span[data-value='${selectedOption.value}']`)) {
+            var tagElement = document.createElement('span');
+            tagElement.setAttribute('data-value', selectedOption.value);
+            tagElement.style.cssText = 'display: inline-block; background-color: #007bff; padding: 5px; margin: 5px; border-radius: 5px; color: white;';
+
+            tagElement.innerHTML = `
+            ${selectedOption.text}
+            <span class="remove-tag" style="margin-left: 8px; cursor: pointer; font-weight: bold; color: #ffcccc;"> &times;</span>
+        `;
+
+            displayDiv.appendChild(tagElement);
+
+            // Xử lý sự kiện xóa tag
+            tagElement.querySelector('.remove-tag').addEventListener('click', function() {
+                // Bỏ chọn trong select
+                selectedOption.selected = false;
+                // Xóa tag
+                tagElement.remove();
+            });
+        }
+
+        // Bỏ chọn option sau khi đã thêm tag
+        selectedOption.selected = false;
+    }
     </script>
 
     <!-- Popup cho thêm mới category -->

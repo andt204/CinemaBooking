@@ -1,80 +1,100 @@
-﻿using Microsoft.Extensions.Options;
-using MailKit.Net.Smtp;
-using MimeKit;
-using CinemaBooking.Data;
+﻿using System.Net;
+using System.Net.Mail;
+using System.Text;
+using Microsoft.Extensions.Options;
 using CinemaBooking.EmailModels;
-using CinemaBooking.Helper;
-
 namespace CinemaBooking.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly CinemaBookingContext _context;
-    private readonly EmailSettings _emailSettings;
-    public EmailService(CinemaBookingContext context, IOptions<EmailSettings> emailSettings)
+   
+    private const string templatePath = @"EmailTemplate/{0}.html";
+    private readonly EmailSettings _smtpConfig;
+    public EmailService(IOptions<EmailSettings> smtpConfig)
     {
-        _context     = context;
-        _emailSettings = emailSettings.Value ;
+        _smtpConfig = smtpConfig.Value;
     }
+     public async Task SendTestEmail(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("Hello, This is an email about us resetting your password when you performed the forgot password function.", userEmailOptions.PlaceHolders);
+           
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("TestEmail"), userEmailOptions.PlaceHolders);
 
-    public void SendNewPasswordByEmail(string email, string newPassword)
-    {
-     
-        var message = new MimeMessage();
-      
-        message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-        message.To.Add(new MailboxAddress("", email));
-        message.Subject = "Khôi phục mật khẩu";
-        message.Body = new TextPart("plain")
-        {
-            Text = $"Mật khẩu mới của bạn là: {newPassword}"
-        };
-        if (message != null)
-        {
-            Console.WriteLine(message);
+            await SendEmail(userEmailOptions);
         }
-        else
+
+        public async Task SendEmailForEmailConfirmation(UserEmailOptions userEmailOptions)
         {
-            Console.WriteLine("null roi");
+            userEmailOptions.Subject = UpdatePlaceHolders("Hello {{UserName}}, Confirm your email id.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("EmailConfirm"), userEmailOptions.PlaceHolders);
+
+            await SendEmail(userEmailOptions);
         }
-        try
+
+        public async Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions)
         {
-            using (var client = new SmtpClient())
+            userEmailOptions.Subject = UpdatePlaceHolders("Hello {{UserName}}, reset your password.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("ForgotPassword"), userEmailOptions.PlaceHolders);
+
+            await SendEmail(userEmailOptions);
+        }
+        
+
+        private async Task SendEmail(UserEmailOptions userEmailOptions)
+        {
+            MailMessage mail = new MailMessage
             {
-                client.Connect(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                client.Authenticate(_emailSettings.Username, _emailSettings.Password);
-                client.Send(message);
-                client.Disconnect(true);
+                Subject = userEmailOptions.Subject,
+                Body = userEmailOptions.Body,
+                From = new MailAddress(_smtpConfig.SenderAddress, _smtpConfig.SenderDisplayName),
+                IsBodyHtml = _smtpConfig.IsBodyHTML
+            };
+          
+            foreach (var toEmail in userEmailOptions.ToEmails)
+            {
+                mail.To.Add(toEmail);
             }
+
+            NetworkCredential networkCredential = new NetworkCredential(_smtpConfig.UserName, _smtpConfig.Password);
+
+            SmtpClient smtpClient = new SmtpClient
+            {
+                Host = _smtpConfig.Host,
+                Port = _smtpConfig.Port,
+                EnableSsl = _smtpConfig.EnableSSL,
+                UseDefaultCredentials = _smtpConfig.UseDefaultCredentials,
+                Credentials = networkCredential
+            };
+          
+            mail.BodyEncoding = Encoding.Default;
+
+            await smtpClient.SendMailAsync(mail);
         }
-        catch (Exception ex)
+
+        private string GetEmailBody(string templateName)
         {
-            // In ra lỗi nếu kết nối SMTP hoặc gửi email thất bại
-            Console.WriteLine($"Lỗi khi gửi email: {ex.Message}");
-            throw new Exception("Có lỗi khi gửi email khôi phục mật khẩu.");
+            var body = File.ReadAllText(string.Format(templatePath, templateName));
+            return body;
         }
-    }
 
-    public void ForgotPassword(string email)
-    {
-        // Lấy thông tin tài khoản từ Database
-        var account = _context.Accounts.FirstOrDefault(a => a.Email == email);
-        if (account == null)
+        private string UpdatePlaceHolders(string text, List<KeyValuePair<string, string>> keyValuePairs)
         {
-            throw new Exception("Không tìm thấy tài khoản với email đã cung cấp.");
+            if (!string.IsNullOrEmpty(text) && keyValuePairs != null)
+            {
+                foreach (var placeholder in keyValuePairs)
+                {
+                    if (text.Contains(placeholder.Key))
+                    {
+                        text = text.Replace(placeholder.Key, placeholder.Value);
+                    }
+                }
+            }
+
+            return text;
         }
 
-        // Tạo mật khẩu mới
-        var newPassword = PasswordGenerator.GeneratePassword(8);
-
-        // Mã hóa mật khẩu mới (nếu cần)
-        account.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-        _context.SaveChanges();
-
-        // Gửi mật khẩu mới qua email
-       
-
-        SendNewPasswordByEmail(email, newPassword);
-    }
+    
 }
 
