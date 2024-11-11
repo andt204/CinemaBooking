@@ -53,6 +53,12 @@ namespace CinemaBooking.Services
 
         public async Task<(Ticket?, string)> CreateCustomerTicket(CreateUserTicketRequest request)
         {
+            // Check if SeatIds is null or empty
+            if (string.IsNullOrWhiteSpace(request.SeatIds))
+            {
+                return (null, "Seat IDs cannot be null or empty. Please select at least one seat.");
+            }
+
             var seatIdsList = request.SeatIds
                               .Split(',')
                               .Select(int.Parse)
@@ -116,5 +122,6 @@ namespace CinemaBooking.Services
             await _context.SaveChangesAsync();
             return (ticket, "Ticket created successfully.");
         }
+
     }
 }
