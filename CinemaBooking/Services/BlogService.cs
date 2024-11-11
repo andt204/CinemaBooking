@@ -36,7 +36,7 @@ namespace CinemaBooking.Services
                         .Select(c => new BlogCommentDto
                         {
                             CommentId = c.CommentId,
-                            PostId = c.PostId,
+                            PostId = c.PostId ?? 0,
                             AccountId = c.AccountId,
                             Content = c.Content,
                             CreatedAt = c.CreatedAt ?? DateTime.MinValue,
@@ -83,15 +83,21 @@ namespace CinemaBooking.Services
                     Content = content,
                     CreatedAt = DateTime.Now,
                     Status = 1,
-                    CommentType = 2 // Blog comment type
+                    CommentType = 2, // Blog comment type
+                    MovieId = null // Set MovieId to null explicitly
                 };
 
                 await _context.Comments.AddAsync(comment);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                // Log the exception for debugging purposes
+                Console.WriteLine($"Error adding comment: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // Return false to indicate failure
                 return false;
             }
         }
