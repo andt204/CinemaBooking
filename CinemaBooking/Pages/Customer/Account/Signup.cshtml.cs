@@ -129,7 +129,7 @@ namespace CinemaBooking.Pages.Customer.Account
                 await _accountRepository.CreateAsync(Account);
 
                 _logger.LogInformation("Account successfully added.");
-                messageSuccess = "Register Successfully";
+             TempData["Ss1"] = "Register Successfully";
             }
             catch (Exception ex)
             {
