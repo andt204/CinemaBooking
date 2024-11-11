@@ -49,7 +49,7 @@ namespace CinemaBooking.Pages.Admin.ShowTime
                 .Include(s => s.Room)
                 .ToList();
 
-            Movies = _context.Movies.ToList();
+          Movies = _context.Movies.Where(m => m.Status == 1).ToList();
 
        
                 foreach (var cinema in Cinemas)
