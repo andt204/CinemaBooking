@@ -62,7 +62,7 @@ namespace CinemaBooking.Pages.Customer.Account
                     {
                         HttpOnly = true,
                         Secure = true,
-                        SameSite = SameSiteMode.Strict,
+                          SameSite = SameSiteMode.Lax,
                         Expires = DateTimeOffset.UtcNow.AddMinutes(60)
                     });
 
