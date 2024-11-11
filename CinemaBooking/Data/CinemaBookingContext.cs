@@ -53,6 +53,8 @@ namespace CinemaBooking.Data
             {
                 entity.ToTable("Account");
 
+                entity.HasIndex(e => e.RoleId, "IX_Account_RoleId");
+
                 entity.Property(e => e.Avatar).HasMaxLength(255);
 
                 entity.Property(e => e.DateOfBirth).HasColumnType("date");
@@ -128,19 +130,17 @@ namespace CinemaBooking.Data
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Account");
+                    .HasConstraintName("FK_Comment_Account1");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Movie");
+                    .HasConstraintName("FK_Comment_Movie1");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Post");
+                    .HasConstraintName("FK_Comment_Post1");
             });
 
             modelBuilder.Entity<Director>(entity =>

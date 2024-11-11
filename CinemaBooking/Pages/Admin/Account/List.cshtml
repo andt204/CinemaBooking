@@ -96,7 +96,7 @@
                                     <td>@account.FullName</td>
                                     <td>@account.Email</td>
                                     <td>@account.PhoneNumber</td>
-                                    <td>@account.DateOfBirth?.ToString("dd-mm-yyyy")</td>
+                                    <td>@account.DateOfBirth.ToString("dd-mm-yyyy")</td>
                                     @if (account.Status == 1)
                                     {
                                         <td><span class='custom-badge status-green'>Active</span></td>
