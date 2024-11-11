@@ -12,10 +12,10 @@ public class AdminTicketService
     }
 
     public async Task<List<AdminTicketDto>> GetAllTicketsAsync(
-        string movieName = "",
-        string status = "",
-        DateTime? fromDate = null,
-        DateTime? toDate = null)
+    string movieName = "",
+    string status = "",
+    DateTime? fromDate = null,
+    DateTime? toDate = null)
     {
         var query = from t in _context.Tickets
                     join s in _context.Showtimes on t.ShowtimeId equals s.ShowtimeId
@@ -24,20 +24,32 @@ public class AdminTicketService
                     join r in _context.Rooms on s.RoomId equals r.RoomId
                     join tsa in _context.TicketSeatAssignments on t.TicketId equals tsa.TicketId
                     join seat in _context.Seats on tsa.SeatId equals seat.SeatId
+                    group new { seat.Row, seat.Column } by new
+                    {
+                        t.TicketId,
+                        m.Title,
+                        a.FullName,
+                        t.TicketPrice,
+                        t.Status,
+                        t.BookingTime,
+                        s.Date,
+                        s.StartHour,
+                        r.RoomName
+                    } into ticketGroup
                     select new AdminTicketDto
                     {
-                        TicketId = t.TicketId,
-                        MovieName = m.Title,
-                        CustomerName = a.FullName,
-                        SeatInfo = seat.Row + seat.Column.ToString(),
-                        TicketPrice = t.TicketPrice,
-                        Status = t.Status == 1 ? "Active" :
-                                t.Status == 2 ? "Cancelled" :
-                                t.Status == 3 ? "Used" : "Pending",
-                        BookingTime = t.BookingTime,
-                        ShowDate = s.Date,
-                        ShowTime = s.StartHour,
-                        RoomName = r.RoomName
+                        TicketId = ticketGroup.Key.TicketId,
+                        MovieName = ticketGroup.Key.Title,
+                        CustomerName = ticketGroup.Key.FullName,
+                        SeatInfo = ticketGroup.Select(seat => seat.Row + seat.Column.ToString()).ToList(),
+                        TicketPrice = ticketGroup.Key.TicketPrice,
+                        Status = ticketGroup.Key.Status == 1 ? "Active" :
+                                 ticketGroup.Key.Status == 2 ? "Cancelled" :
+                                 ticketGroup.Key.Status == 3 ? "Used" : "Pending",
+                        BookingTime = ticketGroup.Key.BookingTime,
+                        ShowDate = ticketGroup.Key.Date,
+                        ShowTime = ticketGroup.Key.StartHour,
+                        RoomName = ticketGroup.Key.RoomName
                     };
 
         if (!string.IsNullOrEmpty(movieName))
@@ -65,9 +77,10 @@ public class AdminTicketService
             .ToListAsync();
     }
 
+
     public async Task<List<string>> GetAllStatusesAsync()
     {
-        return new List<string> { "Active", "Used", "Cancelled" };
+        return new List<string> { "Active", "Used", "Cancelled", "Pending"};
     }
 
     public async Task<List<string>> GetAllMovieNamesAsync()
