@@ -37,7 +37,7 @@ namespace CinemaBooking.Pages.Admin.ShowTime
         {
             // Retrieve data from the database with necessary navigation properties included
             Cinemas = _context.Theaters
-                .Include(t => t.Rooms.Where(r => r.Status == 1)) // Filter rooms with status == 0
+                .Include(t => t.Rooms.Where(r => r.Status == 0)) // Filter rooms with status == 0
                 .ToList();
 
             Rooms = _context.Rooms
@@ -49,7 +49,7 @@ namespace CinemaBooking.Pages.Admin.ShowTime
                 .Include(s => s.Room)
                 .ToList();
 
-          Movies = _context.Movies.Where(m => m.Status == 0).ToList();
+          Movies = _context.Movies.Where(m => m.Status == 1).ToList();
 
        
                 foreach (var cinema in Cinemas)
